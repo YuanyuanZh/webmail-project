@@ -1,4 +1,4 @@
-package services;
+package managers;
 
 /**
  * Created by yuanyuan on 10/22/14.
