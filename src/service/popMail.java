@@ -121,7 +121,7 @@ public class popMail {
     }
 
 
-    private void getMailContent(int i)throws IOException {
+    private void getMailContent(int i)throws IOException,SQLException {
         String reply =sendCommand("RETR " + i+enter);
         System.out.println("RETR" + i);
         System.out.println(reply);
@@ -144,15 +144,15 @@ public class popMail {
                 //System.out.println(subject);
             }
             if(content.startsWith("Date")) {
-                String[] temp = content.trim().split(":");
+                String[] temp = content.trim().split(": ");
                 EDate=temp[1];
                 //System.out.println(subject);
             }
-            if(content.startsWith("Message-Id")) {
+            /*if(content.startsWith("Message-Id")) {
                 String[] temp = content.trim().split(":");
                 MsgID=temp[1];
                 //System.out.println(msgID);
-            }
+            }*/
             if (content.equals("")){
                 break;
             }
@@ -167,9 +167,12 @@ public class popMail {
         System.out.println("From: "+From);
         System.out.println("To: "+To);
         System.out.println("Subject: "+Subject);
-        System.out.println("MessageID: "+MsgID);
+        //System.out.println("MessageID: "+MsgID);
         System.out.println("Date: "+EDate);
         System.out.println("Body:"+content.toString());
+        sqliteJDBC q=new sqliteJDBC();
+        q.connectToDB();
+        q.insertEmails(Subject,From,To,content.toString(),EDate,1,1,true);
     }
 
     private boolean deleteMail(int i)throws IOException{
@@ -206,17 +209,13 @@ public class popMail {
         for(int i=1;i<=mailNumbers;i++)
         {
         mailReceive.getMailContent(i);
-        sqliteJDBC q=new sqliteJDBC();
-        q.connectToDB();
-        q.mailInsertStatement(mailReceive.getMsgID(),mailReceive.getSubject(),mailReceive.getFrom(),mailReceive.getTo(),
-                    mailReceive.getContent(),mailReceive.EDate,1,1);
 
         }
-        boolean flag=mailReceive.deleteMail(1);
+        /*boolean flag=mailReceive.deleteMail(1);
         if(flag){
             System.out.println("message deleted");
         }else System.out.println("message delete failed");
-        mailReceive.cancelDelete();
+        //mailReceive.cancelDelete();*/
         mailReceive.logout();
 
 
