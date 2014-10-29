@@ -1,12 +1,10 @@
-package cs601.webmail.pojo;
-
-/**
- * Created by yuanyuan on 10/25/14.
- */
+package cs601.webmail.entity;
 
 import java.io.Serializable;
 
-
+/**
+ * Created by yuanyuan on 10/26/14.
+ */
 public class MailSummary implements Serializable {
 
     private String subject;

@@ -1,23 +1,19 @@
-package cs601.webmail;
+package cs601.webmail.mail;
 
-import cs601.webmail.util.MimeUtils;
+import cs601.webmail.MailServerCredential;
 import org.apache.log4j.Logger;
 
-import javax.net.ssl.SSLSocket;
+
 import javax.net.ssl.SSLSocketFactory;
 import java.io.*;
 import java.net.InetSocketAddress;
 import java.net.Socket;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
- * ref: https://www.ietf.org/rfc/rfc1939.txt
- *
+ * * ref: https://www.ietf.org/rfc/rfc1939.txt
  * ref: http://mike-java.blogspot.com/2008/03/simple-pop3-client-in-java-tutorial.html
- *
+ * Created by yuanyuan on 10/28/14.
  */
 public class Pop3Client {
 
@@ -39,6 +35,9 @@ public class Pop3Client {
     private boolean sslEnabled = false;
 
     private final static int DEFAULT_PORT = 110;
+
+    private final static String OK = "+OK";
+    private final static String ERR = "+ERR";
 
     public void setDebug(boolean debug) {
         this.debug = debug;
@@ -102,6 +101,10 @@ public class Pop3Client {
     public void login(String username, String password) throws IOException {
         sendCommand("USER " + username);
         sendCommand("PASS " + password);
+
+        if (debug) {
+            System.out.println("[DEBUG] login with " + username);
+        }
     }
 
     public void logout() throws IOException {
@@ -121,7 +124,137 @@ public class Pop3Client {
         return Integer.parseInt(values[1]);
     }
 
-    protected Message getMessage(int i) throws IOException {
+    public Pop3MessageInfo listUniqueIdentifier(int messageId) throws IOException {
+        String response = sendCommand("UIDL " + messageId);
+
+        if (response != null && response.startsWith(OK)) {
+            return __parseUID(response.substring(3));
+        }
+
+        return null;
+    }
+
+    public Pop3MessageInfo[] listUniqueIdentifiers() throws IOException {
+        String response = sendCommand("UIDL");
+
+        if (response != null && response.startsWith(OK)) {
+
+            List<String> lines = new ArrayList<String>();
+
+            while (!(response = readResponseLine()).equals(".")) {
+                lines.add(response);
+            }
+
+            Pop3MessageInfo[] messageInfos = new Pop3MessageInfo[lines.size()];
+            ListIterator<String> iterator = lines.listIterator();
+
+            for (int i = 0, len = messageInfos.length; i < len; i++) {
+                messageInfos[i] = __parseUID(iterator.next());
+            }
+
+            return messageInfos;
+        }
+
+        return null;
+    }
+
+    private static Pop3MessageInfo __parseUID(String line)
+    {
+        int num;
+        StringTokenizer tokenizer;
+
+        tokenizer = new StringTokenizer(line);
+
+        if (!tokenizer.hasMoreElements()) {
+            return null;
+        }
+
+        num = 0;
+
+        try
+        {
+            num = Integer.parseInt(tokenizer.nextToken());
+
+            if (!tokenizer.hasMoreElements()) {
+                return null;
+            }
+
+            line = tokenizer.nextToken();
+        }
+        catch (NumberFormatException e)
+        {
+            return null;
+        }
+
+        return new Pop3MessageInfo(num, line);
+    }
+
+    public Pop3MessageInfo listMessage(int messageId) throws IOException {
+        String response = sendCommand("LIST " + messageId);
+
+        if (response != null && response.startsWith(OK)) {
+            return __parseStatus(response.substring(3));
+        }
+
+        return null;
+    }
+
+    public Pop3MessageInfo[] listMessages() throws IOException {
+        String response = sendCommand("LIST");
+
+        if (response != null && response.startsWith(OK)) {
+
+            List<String> lines = new ArrayList<String>();
+
+            while (!(response = readResponseLine()).equals(".")) {
+                lines.add(response);
+            }
+
+            Pop3MessageInfo[] messageInfos = new Pop3MessageInfo[lines.size()];
+            ListIterator<String> iterator = lines.listIterator();
+
+            for (int i = 0, len = messageInfos.length; i < len; i++) {
+                messageInfos[i] = __parseStatus(iterator.next());
+            }
+
+            return messageInfos;
+        }
+
+        return null;
+    }
+
+    private static Pop3MessageInfo __parseStatus(String line)
+    {
+        int num, size;
+        StringTokenizer tokenizer;
+
+        tokenizer = new StringTokenizer(line);
+
+        if (!tokenizer.hasMoreElements()) {
+            return null;
+        }
+
+        num = size = 0;
+
+        try
+        {
+            num = Integer.parseInt(tokenizer.nextToken());
+
+            if (!tokenizer.hasMoreElements()) {
+                return null;
+            }
+
+            size = Integer.parseInt(tokenizer.nextToken());
+        }
+        catch (NumberFormatException e)
+        {
+            return null;
+        }
+
+        return new Pop3MessageInfo(num, size);
+    }
+
+    public Pop3Message getMessage(int i) throws IOException {
         String response = sendCommand("RETR " + i);
         Map<String, List<String>> headers = new HashMap<String, List<String>>();
         String headerName = null;
@@ -157,20 +290,19 @@ public class Pop3Client {
         while (!(response = readResponseLine()).equals(".")) {
             bodyBuilder.append(response + "\n");
         }
-        return new Message(headers, bodyBuilder.toString());
-
+        return new Pop3Message(headers, bodyBuilder.toString());
     }
 
-    public List<Message> getMessages() throws IOException {
+    public List<Pop3Message> getMessages() throws IOException {
         int numOfMessages = getNumberOfNewMessages();
-        List<Message> messageList = new ArrayList<Message>();
+        List<Pop3Message> messageList = new ArrayList<Pop3Message>();
         for (int i = 1; i <= numOfMessages; i++) {
             messageList.add(getMessage(i));
         }
         return messageList;
     }
 
-    public List<Message> getMessages(int retriveCount) throws IOException {
+    public List<Pop3Message> getMessages(int retriveCount) throws IOException {
         int numOfMessages = getNumberOfNewMessages();
 
         if (retriveCount > numOfMessages) {
@@ -181,7 +313,7 @@ public class Pop3Client {
             throw new IllegalArgumentException("negative count overflow");
         }
 
-        List<Message> messageList = new ArrayList<Message>();
+        List<Pop3Message> messageList = new ArrayList<Pop3Message>();
 
         // get old first
         if (retriveCount > 0) {
@@ -218,16 +350,24 @@ public class Pop3Client {
         Pop3Client client = new Pop3Client(true);
         client.setDebug(true);
         client.connect("pop.gmail.com", 995);
-        client.login("yolandazhang2010@gmail.com", "Zyy@638708");
+        client.login("yuanyuantest2014@gmail.com", "zyy638708");
+
+//        Pop3Client client = Pop3Client.createInstance();
 
         System.out.println("Number of new emails: " + client.getNumberOfNewMessages());
 
-        List<Message> messages = client.getMessages(1);
-        for (int index = 0; index < messages.size(); index++) {
-            System.out.println("--- Message num. " + index + " ---");
-            System.out.println(messages.get(index).getHeaders());
-            System.out.println(messages.get(index).getBody());
-        }
+
+
+        Pop3MessageInfo[] mms = client.listUniqueIdentifiers();
+
+        System.out.println(mms.length);
+
+
+//        List<Message> messages = client.getMessages(-10);
+//        for (int index = 0; index < messages.size(); index++) {
+//            System.out.println("--- Message num. " + index + " ---");
+//            System.out.println(messages.get(index).getBody());
+//        }
 
         client.logout();
         client.disconnect();

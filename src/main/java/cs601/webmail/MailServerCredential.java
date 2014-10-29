@@ -7,6 +7,12 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
+/**
+ * Created by yuanyuan on 10/24/14.
+ *
+ * @deprecated User @{Configurer} instead
+ */
+@Deprecated
 public class MailServerCredential {
 
     private String email;
@@ -86,6 +92,11 @@ public class MailServerCredential {
                 List<String> lines = FileUtils.readLines(file);
 
                 for (String line : lines) {
+
+                    if (line == null || line.length() == 0 || line.startsWith("#")) {
+                        continue; //skip it
+                    }
+
                     int colonPos = line.indexOf("=");
                     String propName = line.substring(0, colonPos);
                     String propValue = line.substring(colonPos + 1);
@@ -115,4 +126,3 @@ public class MailServerCredential {
     }
 
 }
-

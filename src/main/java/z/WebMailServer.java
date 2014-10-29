@@ -21,13 +21,14 @@ public class WebMailServer {
 
         String classPath = WebMailServer.class.getResource("/").getPath();
 
-//        if ( args.length<2 ) {
-//            System.err.println("java cs601.webmail.Server static-files-dir log-dir");
-//            System.exit(1);
-//        }
-//
-//        String staticFilesDir = args[0];
-//        String logDir = args[1];
+       /* if ( args.length<2 ) {
+            System.err.println("java cs601.webmail.Server static-files-dir log-dir");
+            System.exit(1);
+       }
+
+        String staticFilesDir = args[0];
+        String logDir = args[1];
+        Server server = new Server(8080);*/
 
         String staticFilesDir = classPath + "static";
         String logDir = PropertyExpander.expandSystemProperties("${user.home}/logs");

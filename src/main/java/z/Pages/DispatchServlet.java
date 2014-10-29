@@ -9,8 +9,7 @@ import java.lang.reflect.Constructor;
 import java.util.HashMap;
 import java.util.Map;
 
-import cs601.webmail.application.RequestContext;
-import cs601.webmail.application.RequestContextFactory;
+
 import org.apache.log4j.Logger;
 import z.managers.ErrorManager;
 
@@ -33,7 +32,20 @@ public class DispatchServlet extends HttpServlet {
         //mapping.put("/register",register.class");
     }
 
-    public void doGet(HttpServletRequest request,
+
+    /*static ServiceManager serviceManager;
+
+    @Override
+    public void init() throws ServletException {
+
+        // init service container
+        if (serviceManager == null) {
+            serviceManager = ServiceManagerFactory.create();
+        }
+
+    }
+
+   /* public void doGet(HttpServletRequest request,
                       HttpServletResponse response)
             throws ServletException, IOException
     {
@@ -45,7 +57,7 @@ public class DispatchServlet extends HttpServlet {
         }
         //response.setContentType("text/html");
 
-        RequestContextFactory.create(request, response);
+        RequestContextFactory.create(request, response, serviceManager);
 
         try {
             p.generate();
@@ -56,7 +68,20 @@ public class DispatchServlet extends HttpServlet {
                 context.release();
             }
         }
-     }
+     }*/
+    public void doGet(HttpServletRequest request,
+                      HttpServletResponse response)
+            throws ServletException, IOException
+    {
+        String uri = request.getRequestURI();
+        Page p = createPage(uri, request, response);
+        if ( p==null ) {
+            response.sendRedirect("/files/error.html");
+            return;
+        }
+        response.setContentType("text/html");
+        p.generate();
+    }
 
     public Page createPage(String uri,
                            HttpServletRequest request,

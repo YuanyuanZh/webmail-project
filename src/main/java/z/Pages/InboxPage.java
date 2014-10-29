@@ -1,18 +1,17 @@
 package z.Pages;
 
-import cs601.webmail.MailServerCredential;
-import cs601.webmail.Message;
+import cs601.webmail.mail.Pop3Message;
+import cs601.webmail.service.MailService;
+import cs601.webmail.service.impl.MailServiceImpl;
 import cs601.webmail.util.DateTimeUtils;
-import cs601.webmail.util.MimeUtils;
-import cs601.webmail.Pop3Client;
-import cs601.webmail.pojo.MailSummary;
+import cs601.webmail.mail.Pop3Client;
+import cs601.webmail.entity.MailSummary;
 import org.codehaus.jackson.map.ObjectMapper;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -43,6 +42,11 @@ public class InboxPage extends Page {
         response.setContentType("application/json;charset=UTF-8");
         response.setCharacterEncoding("UTF-8");
 
+
+        MailService mailService = new MailServiceImpl();
+
+        System.out.println("mailserice got ok? " + (mailService != null));
+
         Map model = new HashMap();
         model.put("state", "ok");
 
@@ -52,18 +56,18 @@ public class InboxPage extends Page {
             System.out.println("Number of new emails: " + client.getNumberOfNewMessages());
 
             int totalCount = client.getNumberOfNewMessages();
-            List<Message> messages = client.getMessages(-10);
+            List<Pop3Message> messages = client.getMessages(-10);
 
             List<MailSummary> mailSummaries = new ArrayList<MailSummary>();
 
             if (messages != null && messages.size() > 0) {
                 for (int i = messages.size() - 1; i >=0 ; i--) {
-                    Message message = messages.get(i);
+                    Pop3Message message = messages.get(i);
                     MailSummary mailSummary = new MailSummary();
 
                     mailSummary.setMessageIndex(i);
 
-                    String subject = MimeUtils.decodeText(getHeaderValue(message.getHeaders().get("Subject")));
+                    String subject = getHeaderValue(message.getHeaders().get("Subject"));
                     mailSummary.setSubject(subject);
                     mailSummary.setFrom(getFromTo(getHeaderValue(message.getHeaders().get("From"))));
                     mailSummary.setTo(getFromTo(getHeaderValue(message.getHeaders().get("To"))));
@@ -119,9 +123,9 @@ public class InboxPage extends Page {
         boolean hasQuote = ss[0].startsWith("\"");
 
         if (hasQuote) {
-            sender = "\"" + MimeUtils.decodeText(sender.replace("\"", "")) + "\"";
+            sender = "\"" + sender.replace("\"", "") + "\"";
         } else {
-            sender = MimeUtils.decodeText(sender);
+            sender =sender;
         }
 
         return sender + " " + ss[1];
