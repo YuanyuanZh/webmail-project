@@ -1,13 +1,17 @@
 package z.Pages;
 
+import cs601.webmail.entity.Account;
+import cs601.webmail.entity.Mail;
 import cs601.webmail.mail.Pop3Message;
+import cs601.webmail.service.AccountService;
 import cs601.webmail.service.MailService;
+import cs601.webmail.service.impl.AccountServiceImpl;
 import cs601.webmail.service.impl.MailServiceImpl;
 import cs601.webmail.util.DateTimeUtils;
 import cs601.webmail.mail.Pop3Client;
 import cs601.webmail.entity.MailSummary;
 import org.codehaus.jackson.map.ObjectMapper;
-
+import cs601.webmail.db.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.UnsupportedEncodingException;
@@ -44,7 +48,41 @@ public class InboxPage extends Page {
 
 
         MailService mailService = new MailServiceImpl();
+        AccountService accountService=new AccountServiceImpl();
 
+   /*     Account currentAccount=accountService.findById(-1l);
+
+        String curPage = request.getParameter("page");
+        PageRequest pageRequest = new PageRequest(Order.desc("MSGID"));
+        pageRequest.pageSize = PageRequest.DEFAULT_PAGE_SIZE;
+        pageRequest.page = curPage != null ? Integer.parseInt(curPage) : 1;
+
+        Map model = new HashMap();
+
+        try {
+            cs601.webmail.db.Page<Mail> pageResult=mailService.findByAccountAndPage(currentAccount,pageRequest);
+            model.put("state", "ok");
+
+            if(pageResult!=null){
+                model.put("total",pageResult.getTotal());
+                model.put("position",pageResult.getPosition());
+                model.put("pageSize",pageResult.getPageSize());
+
+                List<Mail> mails=pageResult.getPageList();
+                for(Mail m:mails){
+                    m.setDate(formatDate(m.getDate()));
+                }
+                model.put("message",mails);
+            }
+
+        }catch (Exception e) {
+
+            model.put("state", "error");
+            model.put("msg", e.getMessage());
+        }
+        ObjectMapper om = new ObjectMapper();
+        om.writeValue(getOut(), model);
+    }*/
         System.out.println("mailserice got ok? " + (mailService != null));
 
         Map model = new HashMap();
@@ -56,7 +94,7 @@ public class InboxPage extends Page {
             System.out.println("Number of new emails: " + client.getNumberOfNewMessages());
 
             int totalCount = client.getNumberOfNewMessages();
-            List<Pop3Message> messages = client.getMessages(-10);
+            List<Pop3Message> messages = client.getMessages(-1);
 
             List<MailSummary> mailSummaries = new ArrayList<MailSummary>();
 

@@ -11,7 +11,7 @@ public interface AccountDao {
 
     Account findById(Long id);
 
-    List<Account> listAll();
+    List<String> listEmails();
 
     void save(Account account);
 

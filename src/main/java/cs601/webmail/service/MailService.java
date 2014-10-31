@@ -1,5 +1,8 @@
 package cs601.webmail.service;
 
+import cs601.webmail.db.Page;
+import cs601.webmail.db.PageRequest;
+import cs601.webmail.entity.Account;
 import cs601.webmail.entity.Mail;
 
 import java.util.List;
@@ -17,4 +20,7 @@ public interface MailService {
     Mail findById(int id);
 
     List<Mail> findByFolder(String folder);
+    int syncMails(Account account);
+
+    Page<Mail> findByAccountAndPage(Account account, PageRequest pageRequest);
 }

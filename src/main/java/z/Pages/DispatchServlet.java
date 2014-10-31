@@ -8,7 +8,7 @@ import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.util.HashMap;
 import java.util.Map;
-
+import cs601.webmail.application.Configuration;
 
 import org.apache.log4j.Logger;
 import z.managers.ErrorManager;
@@ -26,12 +26,22 @@ public class DispatchServlet extends HttpServlet {
     static {
         mapping.put("/", HomePage.class);
         mapping.put("/inbox", InboxPage.class);
+        mapping.put("/login", LoginPage.class);
+        mapping.put("/rest/mail/sync", SyncMailsPage.class);
         //mapping.put("/register",register.class");
         //mapping.put("/edit_profile",edit_profile.class");
         //mapping.put("/search",search.class");
         //mapping.put("/register",register.class");
     }
+   /* private Configuration configuration;
 
+    public void init()throws ServletException {
+        configuration = Configuration.getDefault();
+
+        String scanPackage = configuration.getString(Configuration.SCAN_PACKAGE);
+
+
+    }*/
 
     /*static ServiceManager serviceManager;
 

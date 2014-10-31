@@ -3,19 +3,57 @@ package z.Pages;
 /**
  * Created by yuanyuan on 10/15/14.
  */
+import org.codehaus.jackson.map.ObjectMapper;
 import z.managers.ErrorManager;
 import z.misc.VerifyException;
+import cs601.webmail.service.AjaxResponse;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 
+
 public abstract class Page {
+
+
     HttpServletRequest request;
+
+
     HttpServletResponse response;
     PrintWriter out;
     int pageNum;
+
+    protected void renderText(String text) {
+
+        if (text == null || text.length() == 0) {
+            return;
+        }
+
+        response.setContentType("text/plain;charset=UTF-8");
+        response.setCharacterEncoding("UTF-8");
+
+        getOut().println(text);
+    }
+
+    protected void renderJson(Object respObject) {
+
+        response.setContentType("application/json;charset=UTF-8");
+        response.setCharacterEncoding("UTF-8");
+
+        AjaxResponse ajaxResponse = AjaxResponse.OK;
+
+        if (respObject != null) {
+            ajaxResponse.setData(respObject);
+        }
+
+        ObjectMapper om = new ObjectMapper();
+        try {
+            om.writeValue(getOut(), ajaxResponse);
+        } catch (IOException e) {
+            // ignore
+        }
+    }
 
     public Page(HttpServletRequest request,
                 HttpServletResponse response)
@@ -71,7 +109,7 @@ public abstract class Page {
             ErrorManager.instance().error(e);
         }
         finally {
-            getOut().close();
+            PrintWriter writer = getOut();
         }
     }
 

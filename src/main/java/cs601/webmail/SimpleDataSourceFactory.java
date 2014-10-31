@@ -1,6 +1,6 @@
 package cs601.webmail;
 
-import cs601.webmail.application.Configurer;
+import cs601.webmail.application.Configuration;
 import org.sqlite.SQLiteDataSource;
 
 import javax.sql.DataSource;
@@ -14,7 +14,7 @@ import java.sql.SQLException;
 public class SimpleDataSourceFactory {
 
     public DataSource create() {
-        String dbPath = (String) Configurer.getDefault().get(Configurer.DB_PATH);
+        String dbPath = (String) Configuration.getDefault().get(Configuration.DB_PATH);
 
         if (dbPath == null
                 || dbPath.length() == 0) {

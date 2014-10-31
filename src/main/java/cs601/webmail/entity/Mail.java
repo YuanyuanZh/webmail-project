@@ -12,6 +12,14 @@ import java.io.Serializable;
 @Table(tableName = "emails")
 public class Mail implements Serializable {
 
+    public static final int NO_FLAG =0;
+    public static final int FLAG_NEW =1;
+    public static final int FLAG_UNREAD=2;
+    public static final int FLAG_REMOVED=4;
+
+    public static final int FLAG_YES=1;
+    public static final int FLAG_NO=0;
+
     @Id
     @Column(columnName = "MSGID", propertyName = "id")
     private Long id;
@@ -46,6 +54,18 @@ public class Mail implements Serializable {
 
     @Column(columnName = "CONTENT_TYPE", propertyName = "contentType")
     private String contentType = "text/plain";
+
+    @Column(columnName = "UID",propertyName = "uid")
+    private String uid;
+
+    @Column(columnName = "FLAG_NEW", propertyName = "flagNew")
+    private int flagNew = 1;
+
+    @Column(columnName = "FLAG_UNREAD", propertyName = "flagUnread")
+    private int flagUnread = 1;
+
+    @Column(columnName = "FLAG_FAV", propertyName = "flagFav")
+    private int flagFav = 0;
 
 
     public Long getUserId() {
@@ -134,6 +154,41 @@ public class Mail implements Serializable {
 
     public void setRead(boolean read) {
         this.read = read;
+    }
+
+    public int getFlagFav() {
+        return flagFav;
+    }
+
+    public void setFlagFav(int flagFav) {
+        this.flagFav = flagFav;
+    }
+
+    public static int getNoFlag() {
+        return NO_FLAG;
+    }
+
+    public int getFlagUnread() {
+        return flagUnread;
+    }
+
+    public void setFlagUnread(int flagUnread) {
+        this.flagUnread = flagUnread;
+    }
+
+    public int getFlagNew() {
+        return flagNew;
+    }
+
+    public void setFlagNew(int flagNew) {
+        this.flagNew = flagNew;
+    }
+    public String getUid() {
+        return uid;
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
     }
 
     @Override
