@@ -1,5 +1,9 @@
 package cs601.webmail;
 
+/**
+ * Created by yuanyuan on 11/3/14.
+ */
+
 import cs601.webmail.util.PropertyExpander;
 import org.apache.commons.io.FileUtils;
 

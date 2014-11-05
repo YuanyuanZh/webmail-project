@@ -108,7 +108,7 @@ html, body{overflow: hidden!important;}
     border-right: 1px solid #ccc;
 }
 .wrapper{
-    backgroud-color: #ebebeb;
+    /*background-color: #ebebeb;*/
 }
 .mail-menu.nav-stacked > li > a{
     border-top: 0;
@@ -122,8 +122,13 @@ html, body{overflow: hidden!important;}
 .mail-menu.nav-stacked > .active > a{
     background-color: #f1f1f1;
     border-right-color: #3c8dbc;
-    color: #A0A0A0;
+    color: #777;
 }
+
+.mail-menu.nav-stacked > .active span {
+    color: #333;
+}
+
 .mail-menu.nav-stacked > li i{
     margin-right: 15px;
 }

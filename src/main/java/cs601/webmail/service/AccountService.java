@@ -11,5 +11,6 @@ public interface AccountService {
     Account findById(Long id);
 
     void addAccount(Account account);
-    List<String> emailAccount();
+    List<String> emailAccount(Account account);
+    void deleteAccount(Account account);
 }

@@ -1,4 +1,4 @@
-package z.Pages;
+package cs601.webmail.page;
 
 /**
  * Created by yuanyuan on 10/15/14.
@@ -6,10 +6,15 @@ package z.Pages;
 
 import java.io.IOException;
 import java.lang.reflect.Constructor;
+import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
+
+import cs601.webmail.Constants;
 import cs601.webmail.application.Configuration;
 
+import cs601.webmail.MVC.RequestContext;
+import cs601.webmail.MVC.RequestContextFactory;
 import org.apache.log4j.Logger;
 import z.managers.ErrorManager;
 
@@ -23,86 +28,83 @@ public class DispatchServlet extends HttpServlet {
     private static final Logger LOGGER = Logger.getLogger(DispatchServlet.class);
 
     public static Map<String,Class> mapping = new HashMap<String, Class>();
+
     static {
-        mapping.put("/", HomePage.class);
-        mapping.put("/inbox", InboxPage.class);
-        mapping.put("/login", LoginPage.class);
-        mapping.put("/rest/mail/sync", SyncMailsPage.class);
+        mapping.put("/",HomePage.class);
+        mapping.put("/inbox",InboxPage.class);
+        mapping.put("/login",LoginPage.class);
+        mapping.put("/loginResponse",LoginResponse.class);
+        mapping.put("/register",LoginPage.class);
+        //mapping.put("/inbox",);
         //mapping.put("/register",register.class");
         //mapping.put("/edit_profile",edit_profile.class");
         //mapping.put("/search",search.class");
         //mapping.put("/register",register.class");
+        mapping.put("/rest/mail/sync", SyncMailsPage.class);
     }
-   /* private Configuration configuration;
 
-    public void init()throws ServletException {
-        configuration = Configuration.getDefault();
+    private Configuration configuration;
 
-        String scanPackage = configuration.getString(Configuration.SCAN_PACKAGE);
-
-
-    }*/
-
-    /*static ServiceManager serviceManager;
+   // private PersistenceContextFactory persistenceContextFactory;
 
     @Override
     public void init() throws ServletException {
 
-        // init service container
-        if (serviceManager == null) {
-            serviceManager = ServiceManagerFactory.create();
-        }
+        configuration = Configuration.getDefault();
 
+       // persistenceContextFactory = new PersistenceContextFactory();
     }
 
-   /* public void doGet(HttpServletRequest request,
-                      HttpServletResponse response)
-            throws ServletException, IOException
-    {
-        String uri = request.getRequestURI();
-        Page p = createPage(uri, request, response);
-        if ( p == null ) {
-            response.sendRedirect("/files/error.html");
-            return;
-        }
-        //response.setContentType("text/html");
-
-        RequestContextFactory.create(request, response, serviceManager);
-
-        try {
-            p.generate();
-        }
-        finally {
-            RequestContext context = RequestContext.getCurrentInstance();
-            if (context != null) {
-                context.release();
-            }
-        }
-     }*/
     public void doGet(HttpServletRequest request,
                       HttpServletResponse response)
             throws ServletException, IOException
     {
         String uri = request.getRequestURI();
-        Page p = createPage(uri, request, response);
-        if ( p==null ) {
+        Page p = createPage(uri);
+
+        if ( p == null ) {
             response.sendRedirect("/files/error.html");
             return;
         }
-        response.setContentType("text/html");
-        p.generate();
-    }
 
-    public Page createPage(String uri,
-                           HttpServletRequest request,
-                           HttpServletResponse response)
+        if (Constants.DEBUG_MODE)
+            System.out.println("[DEBUG] request URI " + request.getRequestURI());
+
+        try {
+
+            //preparePersistenceContext();
+
+            RequestContextFactory.create(request, response);
+
+            p.generate();
+
+        }
+        catch (Exception e) {
+
+            if ("STREAM".equalsIgnoreCase(e.getMessage())) {
+                // ignore
+            } else {
+                e.printStackTrace();
+                response.sendRedirect("/files/error.html?code=1000&msg=" + URLEncoder.encode(e.getMessage(), "utf-8"));
+            }
+        }
+        finally {
+
+            RequestContext context = RequestContext.getCurrentInstance();
+            if (context != null) {
+                context.release();
+            }
+
+            //releasePersistenceContext();
+        }
+     }
+    public Page createPage(String uri)
     {
         Class pageClass = mapping.get(uri);
         try {
 
-            Constructor<Page> ctor = pageClass.getConstructor(HttpServletRequest.class,
-                    HttpServletResponse.class);
-            return ctor.newInstance(request, response);
+            Constructor<Page> ctor = pageClass.getConstructor();
+            return ctor.newInstance();
         }
         catch (Exception e) {
             LOGGER.error("Create page failed for :" + uri);

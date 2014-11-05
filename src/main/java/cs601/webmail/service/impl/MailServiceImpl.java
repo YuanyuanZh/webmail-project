@@ -1,7 +1,9 @@
 package cs601.webmail.service.impl;
 
 import cs601.webmail.Constants;
+import cs601.webmail.application.Configuration;
 import cs601.webmail.dao.MailDao;
+import cs601.webmail.dao.impl.MailDaojdbcImpl;
 import cs601.webmail.entity.Account;
 import cs601.webmail.entity.Mail;
 import cs601.webmail.mail.Pop3Client;
@@ -28,6 +30,7 @@ public class MailServiceImpl implements MailService {
     private static final Logger LOGGER = Logger.getLogger(MailServiceImpl.class);
 
     public MailServiceImpl() {
+        mailDao=new MailDaojdbcImpl();
     }
 
 
@@ -81,9 +84,16 @@ public class MailServiceImpl implements MailService {
     }
 
     private int doSyncMails(Account account) throws IOException {
-        Pop3Client client = Pop3Client.createInstance();
+        String popServer= Configuration.getDefault().get("pop");
+        int popPort=Configuration.getDefault().getInteger("pop.port");
+        boolean sslEnable=Configuration.getDefault().getBoolean("pop.ssl");
+        String username=Configuration.getDefault().get("email");
+        String password=Configuration.getDefault().get("password");
+
+        Pop3Client client = Pop3Client.createInstance(popServer,popPort,sslEnable);
 
         List<String> currentUIDs = mailDao.findAllMailUIDs();
+        client.login(username, password);
 
         Map<String, Long> localUIDMap = _parseLocalUIDMap(currentUIDs);
         Collection<String> localUIDs = localUIDMap.keySet();

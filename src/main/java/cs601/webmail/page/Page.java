@@ -1,26 +1,22 @@
-package z.Pages;
+package cs601.webmail.page;
 
 /**
  * Created by yuanyuan on 10/15/14.
  */
+import cs601.webmail.MVC.AjaxResponse;
+import cs601.webmail.MVC.RequestContext;
 import org.codehaus.jackson.map.ObjectMapper;
 import z.managers.ErrorManager;
 import z.misc.VerifyException;
-import cs601.webmail.service.AjaxResponse;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
-
+import java.io.Writer;
 
 public abstract class Page {
 
-
-    HttpServletRequest request;
-
-
-    HttpServletResponse response;
     PrintWriter out;
     int pageNum;
 
@@ -30,16 +26,16 @@ public abstract class Page {
             return;
         }
 
-        response.setContentType("text/plain;charset=UTF-8");
-        response.setCharacterEncoding("UTF-8");
+        getResponse().setContentType("text/plain;charset=UTF-8");
+        getResponse().setCharacterEncoding("UTF-8");
 
         getOut().println(text);
     }
 
     protected void renderJson(Object respObject) {
 
-        response.setContentType("application/json;charset=UTF-8");
-        response.setCharacterEncoding("UTF-8");
+        getResponse().setContentType("application/json;charset=UTF-8");
+        getResponse().setCharacterEncoding("UTF-8");
 
         AjaxResponse ajaxResponse = AjaxResponse.OK;
 
@@ -55,17 +51,18 @@ public abstract class Page {
         }
     }
 
-    public Page(HttpServletRequest request,
-                HttpServletResponse response)
-    {
-        this.request = request;
-        this.response = response;
+    protected HttpServletResponse getResponse() {
+        return RequestContext.getCurrentInstance().getResponse();
+    }
+
+    protected HttpServletRequest getRequest() {
+        return RequestContext.getCurrentInstance().getRequest();
     }
 
     protected PrintWriter getOut() {
         if (out == null) {
             try {
-                out = response.getWriter();
+                out = getResponse().getWriter();
             }
             catch (IOException ioe) {
                 ErrorManager.instance().error(ioe);
@@ -83,7 +80,7 @@ public abstract class Page {
 
     public void handleDefaultArgs() {
         // handle default args like page number, etc...
-        String pageStr = request.getParameter("page");
+        String pageStr = getRequest().getParameter("page");
         if ( pageStr!=null ) {
             pageNum = Integer.valueOf(pageStr);
         }
@@ -99,7 +96,7 @@ public abstract class Page {
         }
         catch (VerifyException ve) {
             try {
-                response.sendRedirect("/files/error.html");
+                getResponse().sendRedirect("/files/error.html");
             }
             catch (IOException ioe) {
                 ErrorManager.instance().error(ioe);

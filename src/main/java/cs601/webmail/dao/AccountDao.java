@@ -9,10 +9,11 @@ import java.util.List;
  */
 public interface AccountDao {
 
-    Account findById(Long id);
+    Account findById(Long userid,Long aid);
 
-    List<String> listEmails();
+    List<String> listEmails(Long userid);
 
     void save(Account account);
+    void delete(Account account);
 
 }

@@ -51,7 +51,7 @@ public class UserDAOImpl extends BaseDao implements UserDao {
 
         return user;
     }
-    public void save(User user){
+    public boolean save(User user){
 
         Connection conn=getConnection();
         PreparedStatement statement=null;
@@ -68,8 +68,10 @@ public class UserDAOImpl extends BaseDao implements UserDao {
             int rows = statement.executeUpdate();
 
             if (rows != 1) {
-                throw new IllegalStateException("Save user failed.");
-            }
+                return false;
+                //throw new IllegalStateException("Save user failed.");
+
+            }else{return true;}
 
         } catch (SQLException e) {
             throw new DaoException(e);
@@ -77,6 +79,7 @@ public class UserDAOImpl extends BaseDao implements UserDao {
             closeStatementQuietly(statement);
             closeResultSetQuietly(rs);
         }
+
 
     }
 
@@ -95,6 +98,51 @@ public class UserDAOImpl extends BaseDao implements UserDao {
             if (n != 1) {
                 throw new IllegalStateException("update password failed.");
             }
+
+        } catch (SQLException e) {
+            throw new DaoException(e);
+        } finally {
+            closeStatementQuietly(statement);
+            closeResultSetQuietly(rs);
+        }
+
+    }
+    public boolean LoginIDExist(String LOGID){
+        Connection conn=getConnection();
+        PreparedStatement statement=null;
+        ResultSet rs=null;
+        try {
+            statement = conn.prepareStatement("SELECT * FROM USERS WHERE LOGIN=?");
+            statement.setString(1, LOGID);
+            rs = statement.executeQuery();
+            if(rs!=null){
+                return true;
+            }
+
+        } catch (SQLException e) {
+            throw new DaoException(e);
+        } finally {
+            closeStatementQuietly(statement);
+            closeResultSetQuietly(rs);
+        }
+        return false;
+    }
+
+    public String getPassword(String LOGID){
+        Connection conn=getConnection();
+        PreparedStatement statement=null;
+        ResultSet rs=null;
+        try {
+            statement = conn.prepareStatement("select pass from users where LOGID=?");
+
+            statement.setString(1, LOGID);
+
+            rs = statement.executeQuery();
+
+            if(rs==null){
+                return null;
+            }
+            else return rs.getString("PASS");
 
         } catch (SQLException e) {
             throw new DaoException(e);

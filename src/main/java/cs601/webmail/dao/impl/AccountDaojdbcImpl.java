@@ -17,15 +17,21 @@ import java.util.List;
  * Created by yuanyuan on 10/29/14.
  */
 public class AccountDaojdbcImpl extends BaseDao implements AccountDao{
-    public Account findById(Long aid){
+
+    public Account findById(Long userid,Long aid){
         Connection conn=getConnection();
         PreparedStatement statement=null;
         ResultSet rs= null;
 
         try{
-            statement=conn.prepareStatement("select * from emails where AID=?");
+            statement=conn.prepareStatement("select * from accounts where AID=? and USERID=?");
             statement.setLong(1,aid);
+            statement.setLong(1,userid);
             rs = statement.executeQuery();
+
+            Account account=new Account();
+            account=handleRowMapping(rs);
+            return account;
 
         }catch (SQLException e){
             throw new DaoException();
@@ -33,23 +39,24 @@ public class AccountDaojdbcImpl extends BaseDao implements AccountDao{
             closeStatementQuietly(statement);
             closeResultSetQuietly(rs);
         }
-        return null;
+
     }
 
-   public List<String> listEmails(){
+   public List<String> listEmails(Long userid){
        Connection conn=getConnection();
        PreparedStatement statement=null;
        ResultSet rs= null;
 
        try{
-           statement=conn.prepareStatement("select * from accounts");
+           statement=conn.prepareStatement("select EMAIL_ADDRESS from accounts where USERID=?");
+           statement.setLong(1,userid);
            rs=statement.executeQuery();
-           List<String> accounts=new ArrayList<String>();
+           List<String> emails=new ArrayList<String>();
            while (rs.next()){
-               Account account=handleRowMapping(rs);
-               accounts.add(account.getEmailUsername());
+               //Account account=handleRowMapping(rs);
+               emails.add(rs.getString("EMAIL_ADDRESS"));
            }
-          return accounts;
+          return emails;
        }catch (SQLException e){
            throw new DaoException();
        }finally {
@@ -97,5 +104,30 @@ public class AccountDaojdbcImpl extends BaseDao implements AccountDao{
             closeResultSetQuietly(rs);
         }
 
+    }
+    public void delete(Account account){
+        if(account==null){
+            throw new IllegalArgumentException();
+        }
+        Connection conn=getConnection();
+        PreparedStatement statement=null;
+        ResultSet rs= null;
+        try{
+            statement =conn.prepareStatement("DELETE FROM accounts WHERE AID=? and USERID=?");
+
+            statement.setLong(1, account.getId());
+            statement.setLong(2, account.getUserId());
+
+            int row=statement.executeUpdate();
+            if(row!=1){
+                throw new IllegalArgumentException("delete account failed");
+            }
+
+        }catch (SQLException e){
+            throw new DaoException();
+        }finally {
+            closeStatementQuietly(statement);
+            closeResultSetQuietly(rs);
+        }
     }
 }

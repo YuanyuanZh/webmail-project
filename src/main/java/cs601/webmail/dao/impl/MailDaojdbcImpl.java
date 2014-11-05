@@ -21,7 +21,7 @@ import java.util.List;
  */
 public class MailDaojdbcImpl extends BaseDao implements MailDao {
 
-    public Mail findByAId(Long msgid) {
+    public Mail findByUId(Long msgid) {
         Connection conn =getConnection();
         PreparedStatement statement =null;
         ResultSet rs =null;
@@ -30,22 +30,24 @@ public class MailDaojdbcImpl extends BaseDao implements MailDao {
             statement =conn.prepareStatement("select * from emails where MSGID=?");
             statement.setLong(1,msgid);
             rs =statement.executeQuery();
+            Mail mail=new Mail();
+            mail=handleRowMapping(rs);
+            return mail;
+
         }catch (SQLException e){
             throw new DaoException(e);
         }finally {
             closeStatementQuietly(statement);
             closeResultSetQuietly(rs);
         }
-
-        return  null;
     }
 
-    public List<Mail> findAll(){
+    public List<Mail> findAll(Long accountid,Long userid){
         Connection conn =getConnection();
         PreparedStatement statement=null;
         ResultSet rs =null;
         try{
-            statement =conn.prepareStatement("select * from emails");
+            statement =conn.prepareStatement("select * from emails where ACCOUNTID=? and USERSID=?");
             rs = statement.executeQuery();
 
             List<Mail> mails = new ArrayList<Mail>();

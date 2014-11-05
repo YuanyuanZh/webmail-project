@@ -3,6 +3,7 @@ package cs601.webmail.service.impl;
 import cs601.webmail.dao.AccountDao;
 import cs601.webmail.dao.UserDao;
 import cs601.webmail.entity.Account;
+import cs601.webmail.entity.User;
 import cs601.webmail.service.AccountService;
 
 import java.util.ArrayList;
@@ -32,8 +33,11 @@ public class AccountServiceImpl implements AccountService {
         accountDao.save(account);
     }
 
-    public List<String> emailAccount(){
+    public List<String> emailAccount(Account account){
 
-        return accountDao.listEmails();
+        return accountDao.listEmails(account.getUserId());
+    }
+    public  void deleteAccount(Account account){
+
     }
 }

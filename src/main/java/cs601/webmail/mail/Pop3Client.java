@@ -330,15 +330,12 @@ public class Pop3Client {
         return messageList;
     }
 
-    public static Pop3Client createInstance() throws IOException {
-        MailServerCredential credential = MailServerCredential.getDefault();
+    public static Pop3Client createInstance(String host,int port,boolean sslEnabled) throws IOException {
+        //MailServerCredential credential = MailServerCredential.getDefault();
 
-        Pop3Client client = new Pop3Client(credential.isSslEnabled());
-
+        Pop3Client client = new Pop3Client(sslEnabled);
         client.setDebug(false);
-        client.connect(credential.getPopServer(), Integer.parseInt(credential.getPopPort()));
-        client.login(credential.getEmail(), credential.getPassword());
-
+        client.connect(host,port);
         return client;
     }
 
@@ -362,12 +359,11 @@ public class Pop3Client {
 
         System.out.println(mms.length);
 
-
-//        List<Message> messages = client.getMessages(-10);
-//        for (int index = 0; index < messages.size(); index++) {
-//            System.out.println("--- Message num. " + index + " ---");
-//            System.out.println(messages.get(index).getBody());
-//        }
+        List<Pop3Message> messages = client.getMessages(-1);
+        for (int index = 0; index < messages.size(); index++) {
+            System.out.println("--- Message num. " + index + " ---");
+            System.out.println(messages.get(index).getBody());
+        }
 
         client.logout();
         client.disconnect();

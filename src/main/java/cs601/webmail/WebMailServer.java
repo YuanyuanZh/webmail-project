@@ -1,8 +1,8 @@
-package z;
+package cs601.webmail;
 
+import cs601.webmail.page.DispatchServlet;
 import cs601.webmail.util.PropertyExpander;
 import org.apache.log4j.BasicConfigurator;
-import z.Pages.DispatchServlet;
 import org.eclipse.jetty.server.NCSARequestLog;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.RequestLogHandler;
@@ -11,7 +11,7 @@ import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 
 /**
- * Created by yuanyuan on 10/22/14.
+ * Created by yuanyuan on 11/3/14.
  */
 public class WebMailServer {
 
@@ -21,14 +21,13 @@ public class WebMailServer {
 
         String classPath = WebMailServer.class.getResource("/").getPath();
 
-       /* if ( args.length<2 ) {
-            System.err.println("java cs601.webmail.Server static-files-dir log-dir");
-            System.exit(1);
-       }
-
-        String staticFilesDir = args[0];
-        String logDir = args[1];
-        Server server = new Server(8080);*/
+//        if ( args.length<2 ) {
+//            System.err.println("java cs601.webmail.Server static-files-dir log-dir");
+//            System.exit(1);
+//        }
+//
+//        String staticFilesDir = args[0];
+//        String logDir = args[1];
 
         String staticFilesDir = classPath + "static";
         String logDir = PropertyExpander.expandSystemProperties("${user.home}/logs");
@@ -88,4 +87,5 @@ public class WebMailServer {
         server.join();
     }
 }
+
 

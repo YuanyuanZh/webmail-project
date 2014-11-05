@@ -7,6 +7,8 @@ import cs601.webmail.entity.User;
  */
 public interface UserDao {
     User findByID(long id);
-    void save(User user);
+    boolean save(User user);
     void updatePass(long id,String password);
+    boolean LoginIDExist(String LOGID);
+    String getPassword(String LOGID);
 }

@@ -10,9 +10,9 @@ import java.util.List;
  */
 public interface MailDao {
 
-    Mail findByAId(Long id);
+    Mail findByUId(Long id);
 
-    List<Mail> findAll();
+    List<Mail> findAll(Long accountid,Long userid);
 
     Mail save(Mail mail);
     void removeByUID(String uid);
