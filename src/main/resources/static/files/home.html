@@ -59,7 +59,7 @@
 
     <div id="tbSystem" class="toolbar toolbar-bottom">
         <div class="btn-group" style="margin-left: 56px;">
-            <button class="btn btn-default btn-disabled" disabled="disabled"><i class="fa fa-power-off"></i></button>
+            <button class="btn btn-default logout-btn"><i class="fa fa-power-off"></i></button>
             <button class="btn btn-default settings-btn"><i class="fa fa-cog"></i></button>
         </div>
     </div>
@@ -600,6 +600,10 @@
 
         $('#tbSystem').on('click', '.settings-btn', function() {
             $('#dlgSetting').modal();
+        }).on('click', '.logout-btn', function(){
+            if (confirm('Do you really want to leave?')) {
+                location.href = '/logout';
+            }
         })
     })
 </script>

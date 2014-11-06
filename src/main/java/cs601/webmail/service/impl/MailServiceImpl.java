@@ -101,7 +101,7 @@ public class MailServiceImpl implements MailService {
         Pop3MessageInfo[] remoteMsgInfos = client.listUniqueIdentifiers();
         Collection<String> remoteUIDs = _getRemoteUIDs(remoteMsgInfos);
 
-        if (remoteMsgInfos.length == 0) {
+        if (remoteMsgInfos == null || remoteMsgInfos.length == 0) {
             return 0;
         }
 

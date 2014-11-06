@@ -1,5 +1,6 @@
 package cs601.webmail;
 
+import cs601.webmail.auth.AuthenticationCheckFilter;
 import cs601.webmail.page.DispatchServlet;
 import cs601.webmail.util.PropertyExpander;
 import org.apache.log4j.BasicConfigurator;
@@ -7,8 +8,12 @@ import org.eclipse.jetty.server.NCSARequestLog;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.RequestLogHandler;
 import org.eclipse.jetty.servlet.DefaultServlet;
+import org.eclipse.jetty.servlet.FilterHolder;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
+
+import javax.servlet.DispatcherType;
+import java.util.EnumSet;
 
 /**
  * Created by yuanyuan on 11/3/14.
@@ -44,6 +49,10 @@ public class WebMailServer {
                 ServletContextHandler(ServletContextHandler.SESSIONS);
         context.setContextPath("/");
         server.setHandler(context);
+
+        FilterHolder loginFilter = new FilterHolder(AuthenticationCheckFilter.class);
+        context.addFilter(loginFilter, "/*", EnumSet.of(DispatcherType.INCLUDE, DispatcherType.REQUEST));
+
 
         // add a simple Servlet at "/dynamic/*"
         ServletHolder holderDynamic = new ServletHolder("dynamic", DispatchServlet.class);

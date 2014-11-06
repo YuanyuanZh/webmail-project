@@ -344,12 +344,16 @@ public class Pop3Client {
 //        System.out.println(MimeUtils.decodeText("=?GB2312?B?tbG1sc34yKvBpsCp1cWw2bv1OsL6MTAw1rG89TIwIb32MTDM7A==?="));
 //        System.out.println(MimeUtils.decodeText("=?gb18030?B?eGlvbmd6ZF8xMTE4QDE2My5jb20=?="));
 
-        Pop3Client client = new Pop3Client(true);
-        client.setDebug(true);
-        client.connect("pop.gmail.com", 995);
-        client.login("yuanyuantest2014@gmail.com", "zyy638708");
+        //Pop3Client client = new Pop3Client(true);
+        //client.setDebug(true);
+        //client.connect("pop.gmail.com", 995);
+        //client.login("yuanyuantest2014@gmail.com", "zyy638708");
 
 //        Pop3Client client = Pop3Client.createInstance();
+        Pop3Client client = Pop3Client.createInstance("pop.163.com", 995, true);
+
+        client.login("", "");
+        client.listUniqueIdentifiers();
 
         System.out.println("Number of new emails: " + client.getNumberOfNewMessages());
 

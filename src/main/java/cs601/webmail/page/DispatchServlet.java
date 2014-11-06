@@ -33,13 +33,7 @@ public class DispatchServlet extends HttpServlet {
         mapping.put("/",HomePage.class);
         mapping.put("/inbox",InboxPage.class);
         mapping.put("/login",LoginPage.class);
-        mapping.put("/loginResponse",LoginResponse.class);
-        mapping.put("/register",LoginPage.class);
-        //mapping.put("/inbox",);
-        //mapping.put("/register",register.class");
-        //mapping.put("/edit_profile",edit_profile.class");
-        //mapping.put("/search",search.class");
-        //mapping.put("/register",register.class");
+        mapping.put("/logout", LogoutPage.class);
         mapping.put("/rest/mail/sync", SyncMailsPage.class);
     }
 
@@ -98,6 +92,11 @@ public class DispatchServlet extends HttpServlet {
             //releasePersistenceContext();
         }
      }
+    public void doPost(HttpServletRequest req,HttpServletResponse resp)throws ServletException, IOException
+    {
+        doGet(req, resp);
+    }
+
     public Page createPage(String uri)
     {
         Class pageClass = mapping.get(uri);

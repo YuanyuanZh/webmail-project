@@ -133,7 +133,7 @@ public class Configuration {
         String raw = get(configKey);
 
         if (raw != null && raw.length() > 0) {
-            return Boolean.getBoolean(raw);
+            return Boolean.parseBoolean(raw);
         }
 
         throw new ConfigurationException("Can't get boolean for " + configKey);
@@ -143,7 +143,7 @@ public class Configuration {
         String raw = getString(configurationItem);
 
         if (raw != null && raw.length() > 0) {
-            return Boolean.getBoolean(raw);
+            return Boolean.parseBoolean(raw);
         }
 
         throw new ConfigurationException("Can't get boolean for " + configurationItem.getKey());

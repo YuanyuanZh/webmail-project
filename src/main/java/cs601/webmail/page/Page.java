@@ -111,14 +111,14 @@ public abstract class Page {
     }
 
     public void header() {
-        out.println("<html>");
-        out.println("<body>");
+       // out.println("<html>");
+        //out.println("<body>");
     }
 
     public abstract void body() throws Exception;
 
     public void footer() {
-        out.println("</body>");
-        out.println("</html>");
+       // out.println("</body>");
+        //out.println("</html>");
     }
 }
