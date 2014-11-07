@@ -3,6 +3,7 @@ package cs601.webmail.dao.impl;
 import cs601.webmail.dao.AccountDao;
 import cs601.webmail.dao.BaseDao;
 import cs601.webmail.dao.DaoException;
+import cs601.webmail.db.QueryRunner;
 import cs601.webmail.entity.Account;
 
 import java.sql.Connection;
@@ -17,6 +18,45 @@ import java.util.List;
  * Created by yuanyuan on 10/29/14.
  */
 public class AccountDaojdbcImpl extends BaseDao implements AccountDao{
+
+   public void save(Account account){
+        if(account==null){
+            throw new IllegalArgumentException();
+        }
+       QueryRunner qr = getQueryRunner();
+       try {
+
+           int row = qr.update("insert into accounts(aid,userid,email_address,epass values(?,?,?,?)",
+                   new Object[]{account.getId(), account.getUserId(), account.getEmailUsername(), account.getEmailPassword()});
+
+           if (row != 1) {
+               //return false;
+               throw new IllegalStateException("Save account failed.");
+           }
+       } catch (SQLException e) {
+           throw new DaoException(e);
+       }
+   }
+
+    public void delete(Account account){
+        if(account==null){
+            throw new IllegalArgumentException();
+        }
+        QueryRunner qr = getQueryRunner();
+        try {
+
+            int row = qr.update("DELETE FROM accounts WHERE AID=? and USERID=?",
+                    new Object[]{account.getId(), account.getUserId()});
+
+            if (row != 1) {
+                //return false;
+                throw new IllegalStateException("delete account failed.");
+            }
+        } catch (SQLException e) {
+            throw new DaoException(e);
+        }
+
+    }
 
     public Account findById(Long userid,Long aid){
         Connection conn=getConnection();
@@ -42,27 +82,27 @@ public class AccountDaojdbcImpl extends BaseDao implements AccountDao{
 
     }
 
-   public List<String> listEmails(Long userid){
-       Connection conn=getConnection();
-       PreparedStatement statement=null;
-       ResultSet rs= null;
+    public List<String> listEmails(Long userid){
+        Connection conn=getConnection();
+        PreparedStatement statement=null;
+        ResultSet rs= null;
 
-       try{
-           statement=conn.prepareStatement("select EMAIL_ADDRESS from accounts where USERID=?");
-           statement.setLong(1,userid);
-           rs=statement.executeQuery();
-           List<String> emails=new ArrayList<String>();
-           while (rs.next()){
-               //Account account=handleRowMapping(rs);
-               emails.add(rs.getString("EMAIL_ADDRESS"));
-           }
-          return emails;
-       }catch (SQLException e){
-           throw new DaoException();
-       }finally {
-           closeStatementQuietly(statement);
-           closeResultSetQuietly(rs);
-       }
+        try{
+            statement=conn.prepareStatement("select EMAIL_ADDRESS from accounts where USERID=?");
+            statement.setLong(1,userid);
+            rs=statement.executeQuery();
+            List<String> emails=new ArrayList<String>();
+            while (rs.next()){
+                //Account account=handleRowMapping(rs);
+                emails.add(rs.getString("EMAIL_ADDRESS"));
+            }
+            return emails;
+        }catch (SQLException e){
+            throw new DaoException();
+        }finally {
+            closeStatementQuietly(statement);
+            closeResultSetQuietly(rs);
+        }
 
     }
 
@@ -75,59 +115,5 @@ public class AccountDaojdbcImpl extends BaseDao implements AccountDao{
         account.setEmailPassword(rs.getString("EPASS"));
 
         return account;
-    }
-
-    public void save(Account account){
-        if(account==null){
-            throw new IllegalArgumentException();
-        }
-        Connection conn=getConnection();
-        PreparedStatement statement=null;
-        ResultSet rs= null;
-
-        try{
-            statement =conn.prepareStatement("insert into accounts(aid,userid,email_address,epass values(?,?,?,?)");
-            statement.setLong(1,account.getId());
-            statement.setLong(2,account.getUserId());
-            statement.setString(3,account.getEmailUsername());
-            statement.setString(4,account.getEmailPassword());
-
-            int row=statement.executeUpdate();
-            if(row!=1){
-                throw new IllegalArgumentException("save account failed");
-            }
-
-        }catch (SQLException e){
-            throw new DaoException();
-        }finally {
-            closeStatementQuietly(statement);
-            closeResultSetQuietly(rs);
-        }
-
-    }
-    public void delete(Account account){
-        if(account==null){
-            throw new IllegalArgumentException();
-        }
-        Connection conn=getConnection();
-        PreparedStatement statement=null;
-        ResultSet rs= null;
-        try{
-            statement =conn.prepareStatement("DELETE FROM accounts WHERE AID=? and USERID=?");
-
-            statement.setLong(1, account.getId());
-            statement.setLong(2, account.getUserId());
-
-            int row=statement.executeUpdate();
-            if(row!=1){
-                throw new IllegalArgumentException("delete account failed");
-            }
-
-        }catch (SQLException e){
-            throw new DaoException();
-        }finally {
-            closeStatementQuietly(statement);
-            closeResultSetQuietly(rs);
-        }
     }
 }

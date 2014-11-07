@@ -4,6 +4,10 @@ import cs601.webmail.Constants;
 import cs601.webmail.MVC.RequestContext;
 import cs601.webmail.auth.AuthenticationCheckFilter;
 import cs601.webmail.entity.User;
+import cs601.webmail.service.MailService;
+import cs601.webmail.service.UserService;
+import cs601.webmail.service.impl.MailServiceImpl;
+import cs601.webmail.service.impl.UserServiceImpl;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -35,6 +39,7 @@ public class LoginPage extends Page{
         HttpServletRequest request=RequestContext.getCurrentInstance().getRequest();
         HttpServletResponse response=RequestContext.getCurrentInstance().getResponse();
 
+
         String method = request.getMethod();
         if("get".equalsIgnoreCase(method))
         {
@@ -45,14 +50,34 @@ public class LoginPage extends Page{
         }
     }
     public void doLogin(HttpServletRequest request,HttpServletResponse response)throws IOException{
+        UserService userService=new UserServiceImpl();
         HttpSession session = request.getSession(true);
 
         String username= request.getParameter("username");
         String password= request.getParameter("password");
         String rememberMe = request.getParameter("remember_me");
 
-        if (username.length()!=0 && "demo".equalsIgnoreCase(username)
+        if(userService.verifyUser(username,password)&&username.length()!=0 && username!=null
+                &&password.length()!=0 && password!=null){
+            User user=new User();
+            user.setId(999l);
+            user.setFirstName("Demo");
+            user.setLastName("omed");
+            session.setAttribute(AuthenticationCheckFilter.LOGIN_SESSION_FLAG,user);
+            if ("on".equals(rememberMe)) {
+                writeRememberMe(response, session, username);
+            }
+            response.sendRedirect(Constants.DEFAULT_HOME);
+
+        }
+        else {
+            response.sendRedirect("/login?error=101");
+        }
+
+
+        /*if (username.length()!=0 && "demo".equalsIgnoreCase(username)
                 &&password.length()!=0 && "demo".equalsIgnoreCase(password)){
+
             User user=new User();
             user.setId(999l);
             user.setFirstName("Demo");
@@ -66,7 +91,7 @@ public class LoginPage extends Page{
         }
         else {
             response.sendRedirect("/login?error=101");
-        }
+        }*/
     }
     private void writeRememberMe(HttpServletResponse response, HttpSession session, String username) {
         Cookie cookie = new Cookie(AuthenticationCheckFilter.LOGIN_COOKIE_FLAG, username);

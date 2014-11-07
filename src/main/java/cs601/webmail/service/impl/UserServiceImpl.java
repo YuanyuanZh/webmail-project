@@ -14,17 +14,14 @@ public class UserServiceImpl implements UserService {
 
     private static final Logger LOGGER = Logger.getLogger(MailServiceImpl.class);
 
-    public UserServiceImpl() {
-        userDao=new UserDAOImpl();
-        userService=new UserServiceImpl();
-    }
 
-     private UserDao userDao;
-     private UserService userService;
+
+     UserDao userDao= new UserDAOImpl();
+     //UserService userService= new UserServiceImpl();
 
 
     public boolean verifyUser(String loginid,String password){
-        if(userDao.LoginIDExist(loginid)&& userDao.getPassword(loginid)==password){
+        if(userDao.LoginIDExist(loginid)&& userDao.getPassword(loginid).equals(password)){
             return true;
         }
         return false;
@@ -34,13 +31,11 @@ public class UserServiceImpl implements UserService {
 
         return userDao.findByID(id);
     }
-    public boolean addUser(User user){
+    public void addUser(User user){
         if(user==null){
             throw new IllegalStateException("userDao missed");
         }
-        if(userDao.save(user)){
-            return true;
-        }else return false;
+        userDao.save(user);
 
     }
     public void updatePass(long id,String password){

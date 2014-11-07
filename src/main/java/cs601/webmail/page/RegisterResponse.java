@@ -31,9 +31,9 @@ public class RegisterResponse extends Page {
             user.setPassword(password);
             user.setFirstName(firstName);
             user.setLastName(lastName);
-            if(userService.addUser(user)){
-                getResponse().sendRedirect("");
-            }
+            userService.addUser(user);
+            getResponse().sendRedirect("");
+
 
         }catch (Exception e){
             e.printStackTrace();

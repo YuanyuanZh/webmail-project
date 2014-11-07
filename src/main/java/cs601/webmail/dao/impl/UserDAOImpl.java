@@ -2,10 +2,10 @@ package cs601.webmail.dao.impl;
 
 import cs601.webmail.dao.DaoException;
 import cs601.webmail.dao.UserDao;
+import cs601.webmail.db.QueryRunner;
+import cs601.webmail.db.ResultSetHandler;
 import cs601.webmail.entity.User;
 import cs601.webmail.dao.BaseDao;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -14,34 +14,26 @@ import java.sql.SQLException;
  */
 public class UserDAOImpl extends BaseDao implements UserDao {
 
-    public User findByID(long id){
+    public User findByID(long id) {
 
-        Connection conn=getConnection();
-        PreparedStatement statement=null;
-        ResultSet rs=null;
+        QueryRunner qr = getQueryRunner();
         try {
-            statement = conn.prepareStatement("select * from users where UID=?");
-
-            statement.setLong(1, id);
-
-            rs = statement.executeQuery();
-
-            if (rs.next()) {
-                return handleRowMapping(rs);
-            }
-
+            return qr.query("select * from users where UID=?", new ResultSetHandler<User>() {
+                @Override
+                public User handle(ResultSet resultSet) throws SQLException {
+                    if (resultSet.next()) {
+                        return handleRowMapping(resultSet);
+                    }
+                    return null;
+                }
+            }, new Object[]{id});
         } catch (SQLException e) {
             throw new DaoException(e);
-        } finally {
-            closeStatementQuietly(statement);
-            closeResultSetQuietly(rs);
         }
-
-        return null;
-
     }
+
     private User handleRowMapping(ResultSet rs) throws SQLException {
-        User user=new User();
+        User user = new User();
 
         user.setId(rs.getLong("UID"));
         user.setLoginId(rs.getString("LOGID"));
@@ -51,104 +43,80 @@ public class UserDAOImpl extends BaseDao implements UserDao {
 
         return user;
     }
-    public boolean save(User user){
 
-        Connection conn=getConnection();
-        PreparedStatement statement=null;
-        ResultSet rs=null;
+    public void save(User user) {
+
+        QueryRunner qr = getQueryRunner();
         try {
-            statement = conn.prepareStatement("insert into users(UID,LOGID,PASS,FIRSTNAME,LASTNAME) values(?,?,?,?");
 
-            statement.setLong(1, user.getId());
-            statement.setString(2,user.getLoginId());
-            statement.setString(3,user.getFirstName());
-            statement.setString(4,user.getLastName());
+            int row = qr.update("insert into users(UID,LOGID,PASS,FIRSTNAME,LASTNAME) values(?,?,?,?)",
+                    new Object[]{user.getId(), user.getLoginId(), user.getFirstName(), user.getLastName()});
 
-            rs = statement.executeQuery();
-            int rows = statement.executeUpdate();
-
-            if (rows != 1) {
-                return false;
-                //throw new IllegalStateException("Save user failed.");
-
-            }else{return true;}
-
+            if (row != 1) {
+                //return false;
+                throw new IllegalStateException("Save entity failed.");
+            }
         } catch (SQLException e) {
             throw new DaoException(e);
-        } finally {
-            closeStatementQuietly(statement);
-            closeResultSetQuietly(rs);
         }
-
 
     }
 
-    public void updatePass(long id,String password){
-        Connection conn=getConnection();
-        PreparedStatement statement=null;
-        ResultSet rs=null;
+    public void updatePass(long id, String password) {
+
+        QueryRunner qr = getQueryRunner();
         try {
-            statement = conn.prepareStatement("UPDATE USERS SET PASS = '?' WHERE ID = ?");
-            statement.setString(1, password);
-            statement.setLong(2, id);
 
-            rs = statement.executeQuery();
-            int n = statement.executeUpdate();
+            int row = qr.update("UPDATE USERS SET PASS = '?' WHERE ID = ?", new Object[]{id, password});
 
-            if (n != 1) {
+            if (row != 1) {
+                //return false;
                 throw new IllegalStateException("update password failed.");
             }
-
         } catch (SQLException e) {
             throw new DaoException(e);
-        } finally {
-            closeStatementQuietly(statement);
-            closeResultSetQuietly(rs);
         }
-
     }
-    public boolean LoginIDExist(String LOGID){
-        Connection conn=getConnection();
-        PreparedStatement statement=null;
-        ResultSet rs=null;
+
+    public boolean LoginIDExist(String LOGID) {
+
+        QueryRunner qr = getQueryRunner();
         try {
-            statement = conn.prepareStatement("SELECT * FROM USERS WHERE LOGIN=?");
-            statement.setString(1, LOGID);
-            rs = statement.executeQuery();
-            if(rs!=null){
+            int row = qr.query("SELECT Count(*) FROM USERS WHERE LOGID=?", new ResultSetHandler<Integer>() {
+                @Override
+                public Integer handle(ResultSet resultSet) throws SQLException {
+                    if (resultSet.next()) {
+                        return resultSet.getInt(1);
+                    }
+                    return -1;
+                }
+            }, new Object[]{LOGID});
+            if (row > 0) {
                 return true;
             }
-
+            return false;
         } catch (SQLException e) {
             throw new DaoException(e);
-        } finally {
-            closeStatementQuietly(statement);
-            closeResultSetQuietly(rs);
         }
-        return false;
     }
 
-    public String getPassword(String LOGID){
-        Connection conn=getConnection();
-        PreparedStatement statement=null;
-        ResultSet rs=null;
+    public String getPassword(String LOGID) {
+
+        QueryRunner qr = getQueryRunner();
+
         try {
-            statement = conn.prepareStatement("select pass from users where LOGID=?");
-
-            statement.setString(1, LOGID);
-
-            rs = statement.executeQuery();
-
-            if(rs==null){
-                return null;
-            }
-            else return rs.getString("PASS");
+            return qr.query("select pass from users where LOGID=?", new ResultSetHandler<String>() {
+                @Override
+                public String handle(ResultSet resultSet) throws SQLException {
+                    if (resultSet.next()) {
+                        return resultSet.getString("PASS");
+                    }
+                    return null;
+                }
+            }, new Object[]{LOGID});
 
         } catch (SQLException e) {
             throw new DaoException(e);
-        } finally {
-            closeStatementQuietly(statement);
-            closeResultSetQuietly(rs);
         }
 
     }
