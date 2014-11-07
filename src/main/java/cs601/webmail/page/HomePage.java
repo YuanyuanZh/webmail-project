@@ -3,9 +3,7 @@ package cs601.webmail.page;
 import cs601.webmail.MVC.RequestContext;
 
 
-/**
- * Created by Bill Xiong on 10/23/14.
- */
+
 public class HomePage extends Page {
 
     public void verify() {

@@ -1,4 +1,4 @@
-package cs601.webmail.db.annotation;
+package cs601.webmail.frameworks.db.annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -9,15 +9,9 @@ import java.lang.annotation.Target;
  * Created by yuanyuan on 10/27/14.
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target(value={ElementType.METHOD, ElementType.FIELD})
-public @interface Column {
+@Target(value={ElementType.TYPE})
+public @interface Table {
 
-    String columnName();
-
-    String propertyName();
-
-//    Class columnType();
-//
-//    Class propertyType();
+    String tableName();
 
 }

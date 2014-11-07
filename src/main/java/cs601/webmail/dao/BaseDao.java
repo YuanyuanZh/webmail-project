@@ -1,12 +1,9 @@
 package cs601.webmail.dao;
 
 
-import cs601.webmail.Constants;
-import cs601.webmail.db.DBUtils;
-import cs601.webmail.db.QueryRunner;
-import cs601.webmail.db.ResultSetHandler;
-import cs601.webmail.util.ResourceUtils;
-import cs601.webmail.application.Configuration;
+import cs601.webmail.frameworks.db.DBUtils;
+import cs601.webmail.frameworks.db.QueryRunner;
+import cs601.webmail.frameworks.db.ResultSetHandler;
 
 import java.sql.*;
 

@@ -2,8 +2,8 @@ package cs601.webmail.dao.impl;
 
 import cs601.webmail.dao.DaoException;
 import cs601.webmail.dao.UserDao;
-import cs601.webmail.db.QueryRunner;
-import cs601.webmail.db.ResultSetHandler;
+import cs601.webmail.frameworks.db.QueryRunner;
+import cs601.webmail.frameworks.db.ResultSetHandler;
 import cs601.webmail.entity.User;
 import cs601.webmail.dao.BaseDao;
 import java.sql.ResultSet;

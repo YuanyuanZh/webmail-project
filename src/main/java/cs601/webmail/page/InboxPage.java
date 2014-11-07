@@ -2,8 +2,8 @@ package cs601.webmail.page;
 
 import cs601.webmail.entity.Account;
 import cs601.webmail.entity.Mail;
-import cs601.webmail.db.PageRequest;
-import cs601.webmail.db.Order;
+import cs601.webmail.frameworks.db.PageRequest;
+import cs601.webmail.frameworks.db.Order;
 import cs601.webmail.MVC.RequestContext;
 import cs601.webmail.service.AccountService;
 import cs601.webmail.service.MailService;
@@ -64,7 +64,7 @@ public class InboxPage extends Page{
         pageRequest.page = curPage != null ? Integer.parseInt(curPage) : 1;
 
         try {
-            cs601.webmail.db.Page<Mail> pageResult
+            cs601.webmail.frameworks.db.Page<Mail> pageResult
                     = mailService.findByAccountAndPage(currentAccount, pageRequest);
 
             model.put("state", "ok");

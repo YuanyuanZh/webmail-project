@@ -1,14 +1,11 @@
 package cs601.webmail.dao.impl;
 
-import cs601.webmail.Constants;
 import cs601.webmail.dao.BaseDao;
 import cs601.webmail.dao.DaoException;
 import cs601.webmail.dao.MailDao;
-import cs601.webmail.db.*;
+import cs601.webmail.frameworks.db.*;
 import cs601.webmail.entity.Mail;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;

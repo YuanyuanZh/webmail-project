@@ -1,4 +1,4 @@
-package cs601.webmail.mail;
+package cs601.webmail.frameworks.mail;
 
 import cs601.webmail.entity.Mail;
 

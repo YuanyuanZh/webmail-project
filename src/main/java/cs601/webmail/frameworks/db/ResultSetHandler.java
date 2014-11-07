@@ -1,4 +1,4 @@
-package cs601.webmail.db;
+package cs601.webmail.frameworks.db;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

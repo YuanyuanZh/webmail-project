@@ -1,4 +1,4 @@
-package cs601.webmail.db;
+package cs601.webmail.frameworks.db;
 
 import cs601.webmail.Constants;
 import cs601.webmail.application.Configuration;

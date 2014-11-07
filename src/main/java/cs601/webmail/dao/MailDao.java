@@ -1,8 +1,8 @@
 package cs601.webmail.dao;
 
 import cs601.webmail.entity.Mail;
-import cs601.webmail.db.Page;
-import cs601.webmail.db.PageRequest;
+import cs601.webmail.frameworks.db.Page;
+import cs601.webmail.frameworks.db.PageRequest;
 import java.util.List;
 
 /**

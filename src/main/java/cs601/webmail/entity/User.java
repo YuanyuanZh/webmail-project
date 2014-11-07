@@ -1,8 +1,8 @@
 package cs601.webmail.entity;
 
-import cs601.webmail.db.annotation.Column;
-import cs601.webmail.db.annotation.Id;
-import cs601.webmail.db.annotation.Table;
+import cs601.webmail.frameworks.db.annotation.Column;
+import cs601.webmail.frameworks.db.annotation.Id;
+import cs601.webmail.frameworks.db.annotation.Table;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;

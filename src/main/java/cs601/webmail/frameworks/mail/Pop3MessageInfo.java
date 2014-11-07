@@ -1,4 +1,4 @@
-package cs601.webmail.mail;
+package cs601.webmail.frameworks.mail;
 
 /**
  * Created by yuanyuan on 10/28/14.

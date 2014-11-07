@@ -1,4 +1,4 @@
-package cs601.webmail.mail;
+package cs601.webmail.frameworks.mail;
 
 import java.io.Serializable;
 import java.util.Collections;

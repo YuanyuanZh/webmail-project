@@ -1,4 +1,4 @@
-package cs601.webmail.db.annotation;
+package cs601.webmail.frameworks.db.annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

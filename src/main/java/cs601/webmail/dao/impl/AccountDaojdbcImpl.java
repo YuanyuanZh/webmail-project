@@ -3,7 +3,7 @@ package cs601.webmail.dao.impl;
 import cs601.webmail.dao.AccountDao;
 import cs601.webmail.dao.BaseDao;
 import cs601.webmail.dao.DaoException;
-import cs601.webmail.db.QueryRunner;
+import cs601.webmail.frameworks.db.QueryRunner;
 import cs601.webmail.entity.Account;
 
 import java.sql.Connection;
