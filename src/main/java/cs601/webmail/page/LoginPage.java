@@ -1,12 +1,10 @@
 package cs601.webmail.page;
 
 import cs601.webmail.Constants;
-import cs601.webmail.MVC.RequestContext;
+import cs601.webmail.frameworks.web.RequestContext;
 import cs601.webmail.auth.AuthenticationCheckFilter;
 import cs601.webmail.entity.User;
-import cs601.webmail.service.MailService;
 import cs601.webmail.service.UserService;
-import cs601.webmail.service.impl.MailServiceImpl;
 import cs601.webmail.service.impl.UserServiceImpl;
 
 import javax.servlet.http.Cookie;

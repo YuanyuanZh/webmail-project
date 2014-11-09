@@ -3,8 +3,8 @@ package cs601.webmail.page;
 /**
  * Created by yuanyuan on 10/15/14.
  */
-import cs601.webmail.MVC.AjaxResponse;
-import cs601.webmail.MVC.RequestContext;
+import cs601.webmail.frameworks.web.AjaxResponse;
+import cs601.webmail.frameworks.web.RequestContext;
 import org.codehaus.jackson.map.ObjectMapper;
 import z.managers.ErrorManager;
 import z.misc.VerifyException;
@@ -13,7 +13,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.io.Writer;
 
 public abstract class Page {
 

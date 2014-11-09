@@ -1,12 +1,8 @@
 package cs601.webmail.page;
 
-import cs601.webmail.MVC.RequestContext;
 import cs601.webmail.entity.User;
 import cs601.webmail.service.UserService;
 import cs601.webmail.service.impl.UserServiceImpl;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 /**
  * Created by yuanyuan on 11/4/14.

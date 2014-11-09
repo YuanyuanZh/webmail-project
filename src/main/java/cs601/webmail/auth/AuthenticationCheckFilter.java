@@ -62,8 +62,7 @@ public class AuthenticationCheckFilter implements Filter {
         return null;
     }
 
-    private void checkLogin(HttpServletRequest req, HttpSession session) throws UnauthenticatedException {
-        Object sessionFlag = session.getAttribute(LOGIN_SESSION_FLAG);
+    private void checkLogin(HttpServletRequest req, HttpSession session) throws UnauthenticatedException {        Object sessionFlag = session.getAttribute(LOGIN_SESSION_FLAG);
 
         String uri = req.getRequestURI();
 

@@ -1,43 +1,29 @@
 package cs601.webmail.page;
 
+import cs601.webmail.frameworks.web.RequestContext;
 import cs601.webmail.entity.Account;
 import cs601.webmail.entity.Mail;
-import cs601.webmail.frameworks.db.PageRequest;
 import cs601.webmail.frameworks.db.Order;
-import cs601.webmail.frameworks.web.RequestContext;
+import cs601.webmail.frameworks.db.PageRequest;
+import cs601.webmail.frameworks.web.PageTemplate;
 import cs601.webmail.service.AccountService;
 import cs601.webmail.service.MailService;
 import cs601.webmail.service.impl.AccountServiceImpl;
 import cs601.webmail.service.impl.MailServiceImpl;
 import cs601.webmail.util.DateTimeUtils;
 
-import org.codehaus.jackson.map.ObjectMapper;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.UnsupportedEncodingException;
+import java.io.StringWriter;
 import java.text.ParseException;
 import java.util.*;
 
 /**
- * Created by yuanyuan on 10/20/14.
+ * Created by yuanyuan on 11/8/14.
  */
-@Deprecated
-public class InboxPage extends Page{
+public class MailListPage extends Page {
 
-    public void verify() {
-        // no-op
-    }
-
-    @Override
-    public void header() {
-        // no-op
-    }
-
-    @Override
-    public void footer() {
-        // no-op
-    }
+    public static final String EMPTY_STRING="";
 
     @Override
     public void body() throws Exception {
@@ -53,7 +39,7 @@ public class InboxPage extends Page{
         resp.setContentType("application/json;charset=UTF-8");
         resp.setCharacterEncoding("UTF-8");
 
-        Map model = new HashMap();
+        //Map model = new HashMap();
 
         // TODO just for demo
         Account currentAccount = accountService.findById(-1l);
@@ -68,13 +54,19 @@ public class InboxPage extends Page{
             cs601.webmail.frameworks.db.Page<Mail> pageResult
                     = mailService.findByAccountAndPage(currentAccount, pageRequest);
 
-            model.put("state", "ok");
+            //model.put("state", "ok");
 
-            if (pageResult != null) {
+            if (pageResult == null||!(pageResult.getPageList()!=null&&pageResult.getPageList().size()>0)) {
 
-                model.put("total", pageResult.getTotal());
-                model.put("position", pageResult.getPosition());
-                model.put("pageSize", pageResult.getPageSize());
+                //model.put("total", pageResult.getTotal());
+                //model.put("position", pageResult.getPosition());
+                //model.put("pageSize", pageResult.getPageSize());
+                resp.addHeader("x-state","ok");
+                resp.addHeader("x-total", "0");
+                resp.addHeader("x-position", "0");
+                resp.addHeader("x-page-size", pageResult.getPageSize() + EMPTY_STRING);
+                return;
+            }
 
                 List<Mail> mails = pageResult.getPageList();
 
@@ -82,16 +74,26 @@ public class InboxPage extends Page{
                     m.setDate(formatDate(m.getDate()));
                 }
 
-                model.put("messages", mails);
-            }
+                PageTemplate template=new PageTemplate("/velocity/mail_list.vm");
+                template.addParam("mails",mails);
+
+                StringWriter writer=new StringWriter();
+                template.merge(writer);
+
+                resp.addHeader("x-state", "ok");  // using HTTP headers instead of JSON to pass info.
+                resp.addHeader("x-total", pageResult.getTotal() + EMPTY_STRING);
+                resp.addHeader("x-position", pageResult.getPosition() + EMPTY_STRING);
+                resp.addHeader("x-page-size", pageResult.getPageSize() + EMPTY_STRING);
+
+                getOut().println(writer.toString());
+
+
         } catch (Exception e) {
 
-            model.put("state", "error");
-            model.put("msg", e.getMessage());
+            resp.addHeader("x-state", "error");
+            resp.addHeader("x-msg", e.getMessage());
         }
 
-        ObjectMapper om = new ObjectMapper();
-        om.writeValue(getOut(), model);
     }
 
     private String formatDate(String date) {
@@ -111,33 +113,5 @@ public class InboxPage extends Page{
         }
     }
 
-    private String getFromTo(String from) throws UnsupportedEncodingException {
-
-        if (from == null || from.length() == 0)
-            return from;
-
-        String[] ss = from.split(" ");
-
-        if (ss.length == 1)
-            return from;
-
-        String sender = ss[0];
-        boolean hasQuote = ss[0].startsWith("\"");
-
-        if (hasQuote) {
-            sender = "\"" + sender.replace("\"", "") + "\"";
-        } else {
-            sender = sender;
-        }
-
-        return sender + " " + ss[1];
-    }
-
-    private String getHeaderValue(List<String> headerValues) {
-        if (headerValues == null || headerValues.size() == 0)
-            return null;
-
-        return headerValues.get(0);
-    }
 
 }

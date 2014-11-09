@@ -1,6 +1,6 @@
 package cs601.webmail.page;
 
-import cs601.webmail.MVC.RequestContext;
+import cs601.webmail.frameworks.web.RequestContext;
 
 
 

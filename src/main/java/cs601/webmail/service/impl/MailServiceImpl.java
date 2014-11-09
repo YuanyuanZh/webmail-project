@@ -53,7 +53,7 @@ public class MailServiceImpl implements MailService {
     public void delete(Mail mail) {}
 
     @Override
-    public Mail findById(int id) { return null; }
+    public Mail findById(Long id) { return null; }
 
 
     @Override

@@ -1,15 +1,12 @@
 package cs601.webmail.page;
 
 import cs601.webmail.entity.Account;
-import cs601.webmail.MVC.RequestContext;
 import cs601.webmail.service.AccountService;
 import cs601.webmail.service.MailService;
 import cs601.webmail.service.impl.AccountServiceImpl;
 import cs601.webmail.service.impl.MailServiceImpl;
 import org.codehaus.jackson.map.ObjectMapper;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
 import java.util.Map;
 

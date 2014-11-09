@@ -1,4 +1,6 @@
-package cs601.webmail.MVC;
+package cs601.webmail.frameworks.web;
+
+import cs601.webmail.frameworks.web.RequestContext;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

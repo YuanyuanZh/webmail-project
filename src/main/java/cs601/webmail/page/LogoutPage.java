@@ -2,7 +2,7 @@ package cs601.webmail.page;
 
 import cs601.webmail.Constants;
 import cs601.webmail.auth.AuthenticationCheckFilter;
-import cs601.webmail.MVC.RequestContext;
+import cs601.webmail.frameworks.web.RequestContext;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

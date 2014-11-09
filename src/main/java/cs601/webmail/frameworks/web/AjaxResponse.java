@@ -1,7 +1,7 @@
-package cs601.webmail.MVC;
+package cs601.webmail.frameworks.web;
 
 /**
- * Created by yuanyuan on 11/3/14.
+ * Created by yuanyuan on 10/29/14.
  */
 public class AjaxResponse {
 
@@ -46,4 +46,3 @@ public class AjaxResponse {
         this.data = data;
     }
 }
-

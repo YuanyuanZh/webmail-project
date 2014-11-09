@@ -1,0 +1,17 @@
+#foreach( $item in $mails )
+    <dd data-messageIndex="" data-id="${item.id}" class="mail-list-item #if ($item.flagUnread > 0) unread #end" data-unread="$item.flagUnread">
+        <div class="action-controls">
+            <input type="checkbox" />
+            <div style="margin-top:8px;">
+                <i class="fa fa-star-o"></i>
+            </div>
+        </div>
+        <div class="writer">
+            <strong>$esc.html($item.from)</strong>
+            <span class="pull-right">$item.date</span>
+        </div>
+        <h4>$item.subject</h4>
+        <p>
+        </p>
+    </dd>
+#end

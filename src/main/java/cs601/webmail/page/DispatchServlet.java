@@ -13,8 +13,8 @@ import java.util.Map;
 import cs601.webmail.Constants;
 import cs601.webmail.application.Configuration;
 
-import cs601.webmail.MVC.RequestContext;
-import cs601.webmail.MVC.RequestContextFactory;
+import cs601.webmail.frameworks.web.RequestContext;
+import cs601.webmail.frameworks.web.RequestContextFactory;
 import org.apache.log4j.Logger;
 import z.managers.ErrorManager;
 
@@ -35,6 +35,7 @@ public class DispatchServlet extends HttpServlet {
         mapping.put("/login",LoginPage.class);
         mapping.put("/logout", LogoutPage.class);
         mapping.put("/rest/mail/sync", SyncMailsPage.class);
+        mapping.put("/rest/mail/list", MailListPage.class);
     }
 
     private Configuration configuration;
