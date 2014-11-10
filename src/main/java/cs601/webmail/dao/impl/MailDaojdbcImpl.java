@@ -6,6 +6,8 @@ import cs601.webmail.dao.MailDao;
 import cs601.webmail.frameworks.db.*;
 import cs601.webmail.entity.Mail;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -58,20 +60,20 @@ public class MailDaojdbcImpl extends BaseDao implements MailDao {
         }
     }
 
-    public List<Mail> findAll(Long accountid,Long userid){
+    public List<Mail> findAll(){
         QueryRunner qr=getQueryRunner();
         try{
-            return qr.query("select * from emails where ACCOUNTID=? and USERSID=?",new ResultSetHandler<List<Mail>>() {
+            return qr.query("select * from emails",new ResultSetHandler<List<Mail>>() {
                 @Override
                 public List<Mail> handle(ResultSet rs) throws SQLException {
                     List<Mail> mails=new ArrayList<Mail>();
-                    if(rs.next()){
+                    while(rs.next()){
                         Mail mail= handleRowMapping(rs);
                         mails.add(mail);
                     }
-                    return null;
+                    return mails;
                 }
-            },new Object[]{accountid,userid});
+            });
 
         }catch (SQLException e){
             throw new DaoException(e);
@@ -85,7 +87,7 @@ public class MailDaojdbcImpl extends BaseDao implements MailDao {
         mail.setSubject(rs.getString("SUBJECT"));
         mail.setFrom(rs.getString("MFROM"));
         mail.setTo(rs.getString("MTO"));
-        mail.setBody(rs.getString("CONTENT"));
+        mail.setContent(rs.getString("CONTENT"));
         mail.setDate(rs.getString("DATE"));
         mail.setUserId(rs.getLong("USERSID"));
         mail.setAccountId(rs.getLong("ACCOUNTID"));
@@ -168,23 +170,92 @@ public class MailDaojdbcImpl extends BaseDao implements MailDao {
         if(mail==null){
             throw new IllegalArgumentException();}
 
-        QueryRunner qr=getQueryRunner();
-        try{
-            int rows= qr.update("insert into emails" +
+        if(mail.getId()!=null){
+            return doUpdate(mail);
+        }else {
+            return doInsert(mail);
+        }
+    }
+
+    private Mail doUpdate(Mail mail) {
+
+        QueryRunner qr = new QueryRunner();
+
+        String sql = "update emails set SUBJECT=?,MFROM=?,MTO=?,CONTENT=?,DATE=?," +
+                "USERSID=?,ACCOUNTID=?,MESSAGE_ID=?,CONTENT_TYPE=?,UID=?," +
+                "FLAG_NEW=?,FLAG_UNREAD=?,FLAG_FAV=? where MSGID=" + mail.getId();
+
+        Object[] params = new Object[]{
+                mail.getSubject(),
+                mail.getFrom(),
+                mail.getTo(),
+                mail.getContent(),
+                mail.getDate(),
+
+                mail.getUserId(),
+                mail.getAccountId(),
+                mail.getMessageId(),
+                mail.getContentType(),
+                mail.getUid(),
+
+                mail.getFlagNew(),
+                mail.getFlagUnread(),
+                mail.getFlagFav()
+        };
+
+        try {
+            qr.update(sql, params);
+        } catch (SQLException e) {
+            throw new DaoException(e);
+        }
+
+        return mail;
+    }
+    private Mail doInsert(Mail mail) {
+        Connection conn = getConnection();
+        PreparedStatement statement = null;
+        ResultSet rs = null;
+
+        try {
+            statement = conn.prepareStatement("insert into emails" +
                     "(SUBJECT, MFROM, MTO, CONTENT, DATE" +
                     ", USERSID, ACCOUNTID, MESSAGE_ID, CONTENT_TYPE, UID" +
                     ", FLAG_NEW, FLAG_UNREAD, FLAG_FAV)" +
-                    " values (?, ?, ?, ?, ?,  ?, ?, ?, ?, ?,  ?, ?, ?)"
-                    ,new Object[]{mail.getSubject(),mail.getFrom(),mail.getTo(),mail.getBody(),mail.getDate(),mail.getUserId()
-                     ,mail.getAccountId(),mail.getMessageId(),mail.getContentType(),mail.getUid(),mail.getFlagNew(),mail.getFlagFav()});
+                    " values (?, ?, ?, ?, ?,  ?, ?, ?, ?, ?,  ?, ?, ?)");
+
+            statement.setString(1, mail.getSubject());
+            statement.setString(2, mail.getFrom());
+            statement.setString(3, mail.getTo());
+            statement.setString(4, mail.getContent());
+            statement.setString(5, mail.getDate());
+
+            statement.setLong(6, mail.getUserId());
+            statement.setLong(7, mail.getAccountId());
+            statement.setString(8, mail.getMessageId());
+            statement.setString(9, mail.getContentType());
+            statement.setString(10, mail.getUid());
+
+            statement.setInt(11, mail.getFlagNew());
+            statement.setInt(12, mail.getFlagUnread());
+            statement.setInt(13, mail.getFlagFav());
+
+            int rows = statement.executeUpdate();
+
             if (rows != 1) {
                 throw new IllegalStateException("Save entity failed.");
             }
-        }catch (SQLException e){
+        } catch (SQLException e) {
             throw new DaoException(e);
+        } finally {
+            closeStatementQuietly(statement);
+            closeResultSetQuietly(rs);
+            DBUtils.closeConnectionQuietly(conn);
         }
-      return mail;
+
+        return findByUID(mail.getUid());
     }
+
+
 
     // UID
     public List<String> findAllMailUIDs(){

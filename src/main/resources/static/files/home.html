@@ -281,7 +281,7 @@
 </aside>
 
 <!-- Mail content -->
-<aside class="right-side x-col hidden">
+<aside class="right-side x-col">
 
     <div class="column-header">
         <div class="pull-right">
@@ -290,7 +290,7 @@
                 <button type="button" class="btn btn-default btn-sm"><i class="fa fa-chevron-right"></i></button>
             </div>
         </div>
-        <h2 class="mail-title">Announcing Dedicated Node Services</h2>
+        <h2 class="mail-title"></h2>
     </div>
 
     <header class="toolbar">
@@ -465,7 +465,7 @@
 
 <script id="mailSummary" type="text/template">
     <% for (var i = 0; i < items.length; i++) { var item = items[i]; %>
-    <dd data-messageIndex="" class="mail-list-item <% if (item.flagUnread) { %>unread<%}%>">
+    <dd data-messageIndex="" data-id="<%=item.id%>" class="mail-list-item <% if (item.flagUnread) { %>unread<%}%>">
         <div class="action-controls">
             <input type="checkbox" />
             <div style="margin-top:8px;">
@@ -537,7 +537,7 @@
         var firstLoad = firstLoad || false;
 
         // http://127.0.0.1:8080/inbox
-        var ajax = $.getJSON("/inbox", function(data){
+        var ajax = $.getJSON("/inbox", function (data) {
             if (data && data.messages && data.messages.length) {
                 var t = _.template($('#mailSummary').html());
 
@@ -550,13 +550,34 @@
             if (firstLoad && data && !data.total) {
                 setMailListState(false);
             }
-        }).fail(function(xhr) {
+        }).fail(function (xhr) {
             if (xhr.statusText === 'abort') {
                 return; // just ignore
             }
             Noty.error("Load mail failed, please try it later.")
-        }).always(function() {
+        }).always(function () {
         });
+    }
+
+    function loadMails(firstInvoke) {
+        var xhr = $.get('/rest/mail/list', function(data, textStatus, response) {
+            if (textStatus == 'success' && response) {
+                var total = response.getResponseHeader('x-total');
+
+                if (total && total != '0') {
+                    $('#maillist .mail-list').empty().append(data);
+                    setMailListState(true);
+                } else {
+                    Noty.info("No more mails to load.")
+                }
+
+                if (!!firstInvoke && total == '0') {
+                    setMailListState(false);
+                }
+            }
+        }).fail(function() {
+            Noty.error("Load mail failed, please try it later.")
+        })
     }
 
     function syncMails() {
@@ -565,7 +586,7 @@
         var ajax = $.getJSON("/rest/mail/sync", function(data){
             if (data && data.state === 'ok') {
                 if (data.update) {
-                    loadMailList();
+                    loadMails();
                 } else {
                     Noty.info("No new messages received");
                 }
@@ -587,6 +608,23 @@
         })
     }
 
+    function openMail(id) {
+        $.get('/rest/mail/read', {'id': id}, function(data, textStatus, response) {
+            var state = response.getResponseHeader('x-state');
+
+            if (state == 'ok' && data) {
+                $('#mailViewport .mail-entry').html(data);
+                $('.mail-list-item[data-id=' + id +']').removeClass('unread');
+            }
+        }).fail(function() {
+            Noty.error("Open mail failed, please try it later.")
+        })
+    }
+
+    function initializeUI() {
+        $('#mailViewport .mail-entry').empty();
+    }
+
     $(window).resize(function(){
         adjustColumnsHeight();
     });
@@ -604,6 +642,19 @@
             if (confirm('Do you really want to leave?')) {
                 location.href = '/logout';
             }
+        })
+
+        $('.mail-list').on('click', '.mail-list-item', function(){
+
+            var id = $(this).data('id');
+
+            if (!id) {
+                return;
+            }
+
+            $(this).siblings().removeClass('active').end().addClass('active');
+
+            openMail(id);
         })
     })
 </script>

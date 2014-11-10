@@ -36,6 +36,7 @@ public class DispatchServlet extends HttpServlet {
         mapping.put("/logout", LogoutPage.class);
         mapping.put("/rest/mail/sync", SyncMailsPage.class);
         mapping.put("/rest/mail/list", MailListPage.class);
+        mapping.put("/rest/mail/read", ReadMailPage.class);
     }
 
     private Configuration configuration;
@@ -102,6 +103,10 @@ public class DispatchServlet extends HttpServlet {
     {
         Class pageClass = mapping.get(uri);
         try {
+
+            if (pageClass == null) {
+                return null;
+            }
 
             Constructor<Page> ctor = pageClass.getConstructor();
             return ctor.newInstance();

@@ -11,7 +11,7 @@ import java.util.List;
 public interface MailDao {
 
     Mail findById(Long id);
-    List<Mail> findAll(Long accountid,Long userid);
+    List<Mail> findAll();
     Mail findByUID(String uid);
     Mail save(Mail mail);
     void removeByUID(String uid);

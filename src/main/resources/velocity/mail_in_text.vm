@@ -1,0 +1,29 @@
+<div class="mail-info">
+    <h2>${mail.subject}</h2>
+    <div class="pull-right">
+        <strong>$mail.date</strong>
+    </div>
+    <h3></h3>
+    <p><span>$esc.html($mail.from)</span> to me</p>
+
+    <p>content-type: $mail.contentType</p>
+</div>
+
+<hr/>
+
+<div class="mail-body">
+
+
+${mail.content}
+
+
+</div><!-- end .mail-body -->
+##<hr/>
+##<div class="mail-attachments">
+##    <h5><i class="fa fa-paperclip"></i> Attachments <small>(3 files, 680kb)</small></h5>
+##    <div class="list-group">
+##        <a href="#" class="list-group-item"><i class="fa fa-file-o"></i> force.gif <small>(128kb)</small></a>
+##        <a href="#" class="list-group-item"><i class="fa fa-file-o"></i> lighsaber.png</a>
+##        <a href="#" class="list-group-item"><i class="fa fa-file-o"></i> hax.html</a>
+##    </div>
+##</div>

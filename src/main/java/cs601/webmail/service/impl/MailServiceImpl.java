@@ -44,16 +44,27 @@ public class MailServiceImpl implements MailService {
         if (mailDao == null) {
             throw new IllegalStateException("MailDao missed");
         }
+        mailDao.save(mail);
     }
 
     @Override
-    public void save(List<Mail> mails) {}
+    public void save(List<Mail> mails) {
+        if (mails != null && mails.size() > 0) {
+            for (Mail m : mails) {
+               save(m);
+            }
+        }
+    }
 
     @Override
-    public void delete(Mail mail) {}
+    public void delete(Mail mail) {
+        if (mail != null) {
+            mailDao.removeByUID(mail.getUid());
+        }
+    }
 
     @Override
-    public Mail findById(Long id) { return null; }
+    public Mail findById(Long id) { return mailDao.findById(id); }
 
 
     @Override

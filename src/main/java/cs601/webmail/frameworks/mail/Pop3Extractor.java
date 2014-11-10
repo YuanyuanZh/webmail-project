@@ -37,7 +37,7 @@ public class Pop3Extractor {
         mail.setMessageId(getHeader(message, MESSAGE_ID));
         mail.setContentType(getHeader(message, CONTENT_TYPE));
 
-        mail.setBody(message.getBody());
+        mail.setContent(message.getBody());
 
         return mail;
     }

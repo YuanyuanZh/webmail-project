@@ -1931,7 +1931,7 @@ var requirejs, require, define;
         return interactiveScript;
     }
 
-    //Look for a data-main script attribute, which could also adjust the baseUrl.
+    //Look for a data-main script name, which could also adjust the baseUrl.
     if (isBrowser && !cfg.skipDataMain) {
         //Figure out baseUrl. Get it from the script tag with require.js in it.
         eachReverse(scripts(), function (script) {
@@ -1941,7 +1941,7 @@ var requirejs, require, define;
                 head = script.parentNode;
             }
 
-            //Look for a data-main attribute to set main script for the page
+            //Look for a data-main name to set main script for the page
             //to load. If it is there, the path to data main becomes the
             //baseUrl, if it is not already set.
             dataMain = script.getAttribute('data-main');

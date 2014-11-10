@@ -347,7 +347,7 @@
     };
   };
 
-  // Groups the object's values by a criterion. Pass either a string attribute
+  // Groups the object's values by a criterion. Pass either a string name
   // to group by, or a function that returns the criterion.
   _.groupBy = group(function(result, key, value) {
     _.has(result, key) ? result[key].push(value) : result[key] = [value];
@@ -360,7 +360,7 @@
   });
 
   // Counts instances of an object that group by a certain criterion. Pass
-  // either a string attribute to count by, or a function that returns the
+  // either a string name to count by, or a function that returns the
   // criterion.
   _.countBy = group(function(result, key) {
     _.has(result, key) ? result[key]++ : result[key] = 1;

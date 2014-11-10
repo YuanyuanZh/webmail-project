@@ -267,7 +267,7 @@
     // The value returned during the last failed validation.
     validationError: null,
 
-    // The default name for the JSON `id` attribute is `"id"`. MongoDB and
+    // The default name for the JSON `id` name is `"id"`. MongoDB and
     // CouchDB users may want to set this to `"_id"`.
     idAttribute: 'id',
 
@@ -286,17 +286,17 @@
       return Backbone.sync.apply(this, arguments);
     },
 
-    // Get the value of an attribute.
+    // Get the value of an name.
     get: function(attr) {
       return this.attributes[attr];
     },
 
-    // Get the HTML-escaped value of an attribute.
+    // Get the HTML-escaped value of an name.
     escape: function(attr) {
       return _.escape(this.get(attr));
     },
 
-    // Returns `true` if the attribute contains a value that is not null
+    // Returns `true` if the name contains a value that is not null
     // or undefined.
     has: function(attr) {
       return this.get(attr) != null;
@@ -338,7 +338,7 @@
       // Check for changes of `id`.
       if (this.idAttribute in attrs) this.id = attrs[this.idAttribute];
 
-      // For each `set` attribute, update or delete the current value.
+      // For each `set` name, update or delete the current value.
       for (attr in attrs) {
         val = attrs[attr];
         if (!_.isEqual(current[attr], val)) changes.push(attr);
@@ -350,7 +350,7 @@
         unset ? delete current[attr] : current[attr] = val;
       }
 
-      // Trigger all relevant attribute changes.
+      // Trigger all relevant name changes.
       if (!silent) {
         if (changes.length) this._pending = options;
         for (var i = 0, l = changes.length; i < l; i++) {
@@ -374,7 +374,7 @@
     },
 
     // Remove an attribute from the model, firing `"change"`. `unset` is a noop
-    // if the attribute doesn't exist.
+    // if the name doesn't exist.
     unset: function(attr, options) {
       return this.set(attr, void 0, _.extend({}, options, {unset: true}));
     },
@@ -387,7 +387,7 @@
     },
 
     // Determine if the model has changed since the last `"change"` event.
-    // If you specify an attribute name, determine if that attribute has changed.
+    // If you specify an name name, determine if that name has changed.
     hasChanged: function(attr) {
       if (attr == null) return !_.isEmpty(this.changed);
       return _.has(this.changed, attr);
@@ -410,7 +410,7 @@
       return changed;
     },
 
-    // Get the previous value of an attribute, recorded at the time the last
+    // Get the previous value of an name, recorded at the time the last
     // `"change"` event was fired.
     previous: function(attr) {
       if (attr == null || !this._previousAttributes) return null;
@@ -847,7 +847,7 @@
       return this;
     },
 
-    // Pluck an attribute from each model in the collection.
+    // Pluck an name from each model in the collection.
     pluck: function(attr) {
       return _.invoke(this.models, 'get', attr);
     },

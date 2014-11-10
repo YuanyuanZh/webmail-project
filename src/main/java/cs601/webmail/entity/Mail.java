@@ -43,8 +43,8 @@ public class Mail implements Serializable {
     @Column(columnName = "DATE", propertyName = "date")
     private String date;
 
-    @Column(columnName = "CONTENT", propertyName = "body")
-    private String body;
+    @Column(columnName = "CONTENT", propertyName = "content")
+    private String content;
 
     @Column(columnName = "READ", propertyName = "read")
     private boolean read = false;
@@ -140,12 +140,12 @@ public class Mail implements Serializable {
         this.date = date;
     }
 
-    public String getBody() {
-        return body;
+    public String getContent() {
+        return content;
     }
 
-    public void setBody(String body) {
-        this.body = body;
+    public void setContent(String content) {
+        this.content = content;
     }
 
     public boolean isRead() {
