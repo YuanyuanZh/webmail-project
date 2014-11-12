@@ -17,7 +17,7 @@ public class Account implements Serializable {
     private long id;
 
     @Column(columnName = "USERID", propertyName = "userId")
-    private long userId;
+    private String userId;
 
     @Column(columnName = "EMAIL_ADDRESS", propertyName = "emailUsername")
     private String emailUsername;
@@ -41,11 +41,11 @@ public class Account implements Serializable {
         this.id = id;
     }
 
-    public long getUserId() {
+    public String getUserId() {
         return userId;
     }
 
-    public void setUserId(long userId) {
+    public void setUserId(String userId) {
         this.userId = userId;
     }
 

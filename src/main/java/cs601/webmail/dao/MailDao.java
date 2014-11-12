@@ -10,13 +10,13 @@ import java.util.List;
  */
 public interface MailDao {
 
-    Mail findById(Long id);
-    List<Mail> findAll();
-    Mail findByUID(String uid);
-    Mail save(Mail mail);
+    public Mail findById(Long id);
+    public List<Mail> findAll();
+    public Mail findByUID(String uid);
+    public Mail save(Mail mail);
     void removeByUID(String uid);
-    List<String> findAllMailUIDs();
-    Page<Mail> findByPage(PageRequest pageRequest, Long accountId, Long userId);
+    public List<String> findAllMailUIDs();
+    public Page<Mail> findByPage(PageRequest pageRequest, Long accountId, String userId);
 
     //void insertMail(String MSGID,String SUBJECT,String MFROM,String MTO,String CONTENT,String DATE,Integer uid,Integer aid);
 

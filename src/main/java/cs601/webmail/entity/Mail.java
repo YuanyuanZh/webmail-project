@@ -28,7 +28,7 @@ public class Mail implements Serializable {
     private Long accountId;
 
     @Column(columnName = "USERSID", propertyName = "userId")
-    private Long userId;
+    private String userId;
 
 
     @Column(columnName = "SUBJECT", propertyName = "subject")
@@ -68,11 +68,11 @@ public class Mail implements Serializable {
     private int flagFav = 0;
 
 
-    public Long getUserId() {
+    public String getUserId() {
         return userId;
     }
 
-    public void setUserId(Long userId) {
+    public void setUserId(String userId) {
         this.userId = userId;
     }
 

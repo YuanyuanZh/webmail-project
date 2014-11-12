@@ -17,7 +17,7 @@ public interface MailService {
 
     void delete(Mail mail);
 
-    Mail findById(Long id);
+    Mail findById(long id);
 
     List<Mail> findByFolder(String folder);
     int syncMails(Account account);

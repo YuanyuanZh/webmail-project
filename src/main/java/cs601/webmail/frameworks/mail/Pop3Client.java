@@ -83,8 +83,8 @@ public class Pop3Client {
         if (debug) {
             System.out.println("DEBUG [in] : " + response);
         }
-        if (response != null && response.startsWith("-ERR"))
-            throw new RuntimeException("Server has returned an error: " + response.replaceFirst("-ERR ", ""));
+        //if (response != null && response.startsWith("-ERR"))
+            //throw new RuntimeException("Server has returned an error: " + response.replaceFirst("-ERR ", ""));
         return response;
     }
 
@@ -97,13 +97,17 @@ public class Pop3Client {
         return readResponseLine();
     }
 
-    public void login(String username, String password) throws IOException {
+    public boolean login(String username, String password) throws IOException {
         sendCommand("USER " + username);
-        sendCommand("PASS " + password);
-
+        String answer=sendCommand("PASS " + password);
+        if(answer.startsWith("+OK")){
+        }else{
+            return false;
+        }
         if (debug) {
             System.out.println("[DEBUG] login with " + username);
         }
+        return true;
     }
 
     public void logout() throws IOException {
@@ -359,7 +363,7 @@ public class Pop3Client {
         List<Pop3Message> messages = client.getMessages(-1);
         for (int index = 0; index < messages.size(); index++) {
             System.out.println("--- Message num. " + index + " ---");
-            System.out.println(messages.get(index).getBody());
+            System.out.println(messages.get(index).getHeaders());
         }
 
         client.logout();

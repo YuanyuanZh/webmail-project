@@ -37,8 +37,6 @@ public class MailServiceImpl implements MailService {
     private MailDao mailDao;
 
 
-    private AccountService accountService;
-
     @Override
     public void save(Mail mail) {
         if (mailDao == null) {
@@ -64,7 +62,7 @@ public class MailServiceImpl implements MailService {
     }
 
     @Override
-    public Mail findById(Long id) { return mailDao.findById(id); }
+    public Mail findById(long id) { return mailDao.findById(id); }
 
 
     @Override
@@ -158,6 +156,10 @@ public class MailServiceImpl implements MailService {
                     LOGGER.debug("MAIL removed, UID=" + uid);
                 }
             }
+        }
+
+        if (client != null) {
+            client.close();
         }
 
         return updatedCount;

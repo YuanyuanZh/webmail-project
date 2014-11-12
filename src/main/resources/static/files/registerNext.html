@@ -111,12 +111,6 @@
 <body class="" >
 
 
-<div class="header">
-
-
-    <button class="btn btn-primary btn-sm pull-right" onclick="location.href='/login'">Login</button>
-</div>
-
 
 <div class="container row register">
     <div class="col-md-12">
@@ -132,7 +126,7 @@
               <h2><span>yet another choice to manage you emails</span></h2>
             </div>
         </div> -->
-        <form action="/register" method="post">
+        <form action="/registerNext" method="post">
             <div class="register-panel">
                 <!-- <div class="register-panel-header text-center" style="">
                   <img src="/resources/img/webmail-logo.png" style="left: 50%" alt="Logo" />
@@ -141,45 +135,48 @@
 
                 <div class="register-body">
                     <div id="msg" class="hidden alert alert-danger" role="alert"></div>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <label>Name</label>
-                            <input type="text" class="form-control" name="first"
-                                   placeholder="First"
-                                   autocomplete="off" />
-                        </div>
-                        <div class="col-md-6">
-                            <label>&nbsp;</label>
-                            <input type="text" class="form-control" name="last"
-                                   placeholder="Last" autocomplete="off" />
-                        </div>
-                    </div>
+
                     <div class="row">
                         <div class="col-md-12">
-                            <label>Choose your username</label>
-                            <input type="text" class="form-control" name="loginID"
+                            <label>Input your username</label>
+                            <input type="text" class="form-control" name="username"
+                                   placeholder="" autocomplete="off" />
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <label>Input your email account</label>
+                            <input type="text" class="form-control" name="emailAddress"
                                    placeholder="" autocomplete="off" />
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-md-12">
-                            <label>Create a password</label>
-                            <input type="text" class="form-control" name="password1"
+                            <label>Email account password</label>
+                            <input type="text" class="form-control" name="emailPassword"
                                    placeholder="" autocomplete="off" />
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-md-12">
-                            <label>Confirm your password</label>
-                            <input type="text" class="form-control" name="password2"
-                                   placeholder=""  autocomplete="off" />
+                            <label>Input PopServer</label>
+                            <input type="text" class="form-control" name="popServer"
+                                   placeholder="" autocomplete="off" />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <label>Input PopPort</label>
+                            <input type="text" class="form-control" name="popPort"
+                                   placeholder="" autocomplete="off" />
                         </div>
                     </div>
                 </div>
                 <div class="register-footer">
                     <div class="row">
                         <div class="control-group">
-                            <button class="btn btn-primary btn-block">Next</button>
+                            <button class="btn btn-primary btn-block">Register</button>
                         </div>
                     </div>
                 </div>

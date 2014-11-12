@@ -39,8 +39,6 @@ public class MailListPage extends Page {
         resp.setContentType("application/json;charset=UTF-8");
         resp.setCharacterEncoding("UTF-8");
 
-        //Map model = new HashMap();
-
         // TODO just for demo
         Account currentAccount = accountService.findById(-1l);
 
@@ -54,13 +52,8 @@ public class MailListPage extends Page {
             cs601.webmail.frameworks.db.Page<Mail> pageResult
                     = mailService.findByAccountAndPage(currentAccount, pageRequest);
 
-            //model.put("state", "ok");
-
             if (pageResult == null||!(pageResult.getPageList()!=null&&pageResult.getPageList().size()>0)) {
 
-                //model.put("total", pageResult.getTotal());
-                //model.put("position", pageResult.getPosition());
-                //model.put("pageSize", pageResult.getPageSize());
                 resp.addHeader("x-state","ok");
                 resp.addHeader("x-total", "0");
                 resp.addHeader("x-position", "0");

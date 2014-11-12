@@ -153,41 +153,17 @@
 </div>
 
 <script src="/resources/js/jquery-2.1.1.js"></script>
+<script src="/resources/js/webmail.js"></script>
 <script>
 
-    var XMail = {}
-    XMail.errors = {
-        '101': 'Username or password not correct.',
-        '102': 'Your account was locked. Please contact the administrator.'
-    }
-
-    XMail.parseQuery = function(query) {
-        var params = {};
-
-        if (query && query.length > 1) {
-
-            query = query.substr(1);
-
-            var pairs = query.split("&");
-
-            if (pairs.length) {
-                for (var i = 0, len = pairs.length; i < len; i++) {
-                    var kv = pairs[i].split("=");
-                    params[kv[0]] = kv[1];
-                }
-            }
-        }
-        return params;
-    }
-
     $(function() {
-        var params = XMail.parseQuery(location.search);
+        var params = Mail.parseQuery(location.search);
 
         if (params['error']) {
             var error = params['error'];
 
-            if (XMail.errors[error]) {
-                $('#msg').html(XMail.errors[error]).removeClass('hidden');
+            if (Mail.errors[error]) {
+                $('#msg').html(Mail.errors[error]).removeClass('hidden');
             }
         }
 

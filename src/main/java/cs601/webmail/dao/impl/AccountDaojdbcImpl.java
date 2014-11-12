@@ -26,8 +26,8 @@ public class AccountDaojdbcImpl extends BaseDao implements AccountDao{
        QueryRunner qr = getQueryRunner();
        try {
 
-           int row = qr.update("insert into accounts(aid,userid,email_address,epass values(?,?,?,?)",
-                   new Object[]{account.getId(), account.getUserId(), account.getEmailUsername(), account.getEmailPassword()});
+           int row = qr.update("insert into accounts(userid,email_address,epass) values(?,?,?)",
+                   new Object[]{account.getUserId(), account.getEmailUsername(), account.getEmailPassword()});
 
            if (row != 1) {
                //return false;
@@ -82,14 +82,14 @@ public class AccountDaojdbcImpl extends BaseDao implements AccountDao{
 
     }
 
-    public List<String> listEmails(Long userid){
+    public List<String> listEmails(String userid){
         Connection conn=getConnection();
         PreparedStatement statement=null;
         ResultSet rs= null;
 
         try{
             statement=conn.prepareStatement("select EMAIL_ADDRESS from accounts where USERID=?");
-            statement.setLong(1,userid);
+            statement.setString(1,userid);
             rs=statement.executeQuery();
             List<String> emails=new ArrayList<String>();
             while (rs.next()){
@@ -110,7 +110,7 @@ public class AccountDaojdbcImpl extends BaseDao implements AccountDao{
         Account account=new Account();
 
         account.setId(rs.getLong("AID"));
-        account.setUserId(rs.getLong("USERID"));
+        account.setUserId(rs.getString("USERID"));
         account.setEmailUsername(rs.getString("EMAIL_ADDRESS"));
         account.setEmailPassword(rs.getString("EPASS"));
 

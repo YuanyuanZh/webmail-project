@@ -6,6 +6,7 @@ import cs601.webmail.auth.AuthenticationCheckFilter;
 import cs601.webmail.entity.User;
 import cs601.webmail.service.UserService;
 import cs601.webmail.service.impl.UserServiceImpl;
+import cs601.webmail.util.DigestUtils;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -52,7 +53,7 @@ public class LoginPage extends Page{
         HttpSession session = request.getSession(true);
 
         String username= request.getParameter("username");
-        String password= request.getParameter("password");
+        String password= DigestUtils.digestToSHA(request.getParameter("password"));
         String rememberMe = request.getParameter("remember_me");
 
         if(userService.verifyUser(username,password)&&username.length()!=0 && username!=null

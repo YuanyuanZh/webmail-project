@@ -11,7 +11,7 @@ public interface AccountDao {
 
     Account findById(Long userid,Long aid);
 
-    List<String> listEmails(Long userid);
+    List<String> listEmails(String userid);
 
     void save(Account account);
     void delete(Account account);

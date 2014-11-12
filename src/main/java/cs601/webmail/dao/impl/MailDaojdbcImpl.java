@@ -19,6 +19,7 @@ import java.util.List;
  */
 public class MailDaojdbcImpl extends BaseDao implements MailDao {
 
+    @Override
     public Mail findById(Long id) {
 
         QueryRunner qr=getQueryRunner();
@@ -41,7 +42,7 @@ public class MailDaojdbcImpl extends BaseDao implements MailDao {
             throw new DaoException(e);
         }
     }
-
+    @Override
     public Mail findByUID(String uid){
         QueryRunner qr=getQueryRunner();
         try{
@@ -60,6 +61,7 @@ public class MailDaojdbcImpl extends BaseDao implements MailDao {
         }
     }
 
+    @Override
     public List<Mail> findAll(){
         QueryRunner qr=getQueryRunner();
         try{
@@ -89,7 +91,7 @@ public class MailDaojdbcImpl extends BaseDao implements MailDao {
         mail.setTo(rs.getString("MTO"));
         mail.setContent(rs.getString("CONTENT"));
         mail.setDate(rs.getString("DATE"));
-        mail.setUserId(rs.getLong("USERSID"));
+        mail.setUserId(rs.getString("USERSID"));
         mail.setAccountId(rs.getLong("ACCOUNTID"));
         mail.setMessageId(rs.getString("MESSAGE_ID"));
         mail.setContentType(rs.getString("CONTENT_TYPE"));
@@ -101,7 +103,7 @@ public class MailDaojdbcImpl extends BaseDao implements MailDao {
         return mail;
     }
     @Override
-    public Page<Mail> findByPage(PageRequest pageRequest, Long accountId, Long userId) {
+    public Page<Mail> findByPage(PageRequest pageRequest, Long accountId, String userId) {
 
         if (pageRequest == null) {
             throw new IllegalArgumentException("pageRequest missed");
@@ -165,7 +167,7 @@ public class MailDaojdbcImpl extends BaseDao implements MailDao {
 
 
     //Page<Mail> findByPage(PageRequest pageRequest, Long accountId, Long userId);
-
+    @Override
     public Mail save(Mail mail){
         if(mail==null){
             throw new IllegalArgumentException();}
@@ -229,7 +231,7 @@ public class MailDaojdbcImpl extends BaseDao implements MailDao {
             statement.setString(4, mail.getContent());
             statement.setString(5, mail.getDate());
 
-            statement.setLong(6, mail.getUserId());
+            statement.setString(6, mail.getUserId());
             statement.setLong(7, mail.getAccountId());
             statement.setString(8, mail.getMessageId());
             statement.setString(9, mail.getContentType());
@@ -257,7 +259,7 @@ public class MailDaojdbcImpl extends BaseDao implements MailDao {
 
 
 
-    // UID
+    @Override
     public List<String> findAllMailUIDs(){
         QueryRunner qr = getQueryRunner();
 

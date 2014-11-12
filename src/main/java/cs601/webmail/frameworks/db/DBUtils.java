@@ -3,6 +3,7 @@ package cs601.webmail.frameworks.db;
 import cs601.webmail.Constants;
 import cs601.webmail.application.Configuration;
 import cs601.webmail.util.ResourceUtils;
+import cs601.webmail.util.Strings;
 
 import java.sql.*;
 
@@ -14,7 +15,7 @@ public final class DBUtils {
         Configuration configuration= Configuration.getDefault();
         String dbFile=configuration.getString(Configuration.DB_PATH);
 
-        if(dbFile!=null && dbFile.length()!=0){
+        if(!Strings.haveLength(dbFile)){
             dbFile= ResourceUtils.getClassPath()+"webmail.db";
         }
         if(Constants.DEBUG_MODE){

@@ -49,13 +49,13 @@ public class UserDAOImpl extends BaseDao implements UserDao {
         QueryRunner qr = getQueryRunner();
         try {
 
-            int row = qr.update("insert into users(UID,LOGID,PASS,FIRSTNAME,LASTNAME) values(?,?,?,?)",
-                    new Object[]{user.getId(), user.getLoginId(), user.getFirstName(), user.getLastName()});
+            int row = qr.update("insert into users(LOGID,PASS,FIRSTNAME,LASTNAME) values(?,?,?,?)",
+                    new Object[]{ user.getLoginId(), user.getPassword(),user.getFirstName(), user.getLastName()});
 
             if (row != 1) {
                 //return false;
                 throw new IllegalStateException("Save entity failed.");
-            }
+            }else System.out.println("save user successfully");
         } catch (SQLException e) {
             throw new DaoException(e);
         }

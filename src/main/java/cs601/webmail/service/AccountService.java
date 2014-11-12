@@ -13,4 +13,5 @@ public interface AccountService {
     void addAccount(Account account);
     List<String> emailAccount(Account account);
     void deleteAccount(Account account);
+    boolean verifyAccount(String emailAddress, String pass,String popServer,int popPort);
 }
