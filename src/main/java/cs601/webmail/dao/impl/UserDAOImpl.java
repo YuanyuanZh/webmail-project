@@ -31,6 +31,22 @@ public class UserDAOImpl extends BaseDao implements UserDao {
             throw new DaoException(e);
         }
     }
+    private User findUserByLogId(String logId) {
+        QueryRunner qr = getQueryRunner();
+        try {
+            return qr.query("select * from users where LOGID=?", new ResultSetHandler<User>() {
+                @Override
+                public User handle(ResultSet resultSet) throws SQLException {
+                    if (resultSet.next()) {
+                        return handleRowMapping(resultSet);
+                    }
+                    return null;
+                }
+            }, new Object[]{logId});
+        } catch (SQLException e) {
+            throw new DaoException(e);
+        }
+    }
 
     private User handleRowMapping(ResultSet rs) throws SQLException {
         User user = new User();
@@ -55,7 +71,17 @@ public class UserDAOImpl extends BaseDao implements UserDao {
             if (row != 1) {
                 //return false;
                 throw new IllegalStateException("Save entity failed.");
-            }else System.out.println("save user successfully");
+            }else {
+
+                // update user object
+
+                User newUser = findUserByLogId(user.getLoginId());
+
+                if (newUser != null) {
+                    user.setId(newUser.getId());
+                }
+
+            }
         } catch (SQLException e) {
             throw new DaoException(e);
         }

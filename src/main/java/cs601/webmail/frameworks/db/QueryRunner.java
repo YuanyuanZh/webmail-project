@@ -40,6 +40,7 @@ public class QueryRunner {
         if(Constants.DEBUG_MODE)
             System.out.println("[DEBUG] execute sql > \" + sql");
         try{
+            connection.setAutoCommit(true);
             statement=connection.prepareStatement(sql);
             if(params.length>0){
                 for(int i=0,len=params.length;i<len;i++){
@@ -69,6 +70,7 @@ public class QueryRunner {
             System.out.println("[DEBUG] execute sql > " + sql);
 
         try {
+            connection.setAutoCommit(true);
             statement = connection.prepareStatement(sql);
 
             if (params.length > 0) {

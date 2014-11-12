@@ -3,6 +3,7 @@ var Mail = {};
 Mail.errors = {
     '101': 'Username or password not correct.',
     '102': 'Your account was locked. Please contact the administrator.',
+    '103': 'Fill out the basic information first please.',
     '201': 'passwords doesn\'t match',
     '202': 'username already exist',
     '301': 'username does not exist',

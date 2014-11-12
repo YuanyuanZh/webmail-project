@@ -17,6 +17,11 @@ import java.io.IOException;
  * Created by yuanyuan on 11/10/14.
  */
 public class RegisterPage extends Page {
+    public static final String REGISTERING_USER_ATTR = "user.registering";
+    public static final String REGISTER_STEP_ATTR = "user.register.step";
+    public static final String REGISTER_STEP_ONE = "1";
+    public static final String REGISTER_STEP_TWO = "2";
+
     @Override
     public void body() throws Exception {
 
@@ -51,10 +56,15 @@ public class RegisterPage extends Page {
                 user.setLoginId(username);
                 user.setPassword(DigestUtils.digestToSHA(password1));
                 userService.addUser(user);
+                HttpSession session = request.getSession(true);
+
+                session.setAttribute(REGISTER_STEP_ATTR, REGISTER_STEP_ONE); // mark as registration has been started
+                session.setAttribute(REGISTERING_USER_ATTR, user); // save user for next step
+
+                response.sendRedirect("/registerNext?logId=" + username);
 
                 response.sendRedirect("/registerNext");
 
-                System.out.println(user.getPassword());
             }else {
                 response.sendRedirect("/register?error=202");
             }

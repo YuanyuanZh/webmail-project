@@ -46,11 +46,10 @@
         position: relative;
         }
         .register-panel{
-        background-color: #f0f0f0;
         /*border: 1px solid #ccc;*/
         position: absolute;
         left: 50%;
-        top: 120px;
+        top: 100px;
         width: 340px;
         min-height: 200px;
         margin-left: -170px;
@@ -58,11 +57,14 @@
         }
         .register-body{
         /*background-color: #EAEAEA;*/
+        background-color: #f0f0f0;
         padding: 10px 20px;
         }
         .register-body > div{padding: 10px 0;}
         .register-panel-header{padding: 25px 0 20px;}
-        .register-footer{padding: 15px 20px 20px;}
+        .register-footer{
+        background-color: #f0f0f0;
+        padding: 15px 20px 20px;}
 
         .product{
         /*background-color: #0082bd;*/
@@ -105,8 +107,8 @@
         background-color: #eaeaea;
         padding: 15px;
         }
-
     </style>
+
 </head>
 <body class="" >
 
@@ -128,21 +130,18 @@
         </div> -->
         <form action="/registerNext" method="post">
             <div class="register-panel">
-                <!-- <div class="register-panel-header text-center" style="">
-                  <img src="/resources/img/webmail-logo.png" style="left: 50%" alt="Logo" />
-                </div> -->
-
+                <h4>Step 2: Mail server information</h4>
 
                 <div class="register-body">
                     <div id="msg" class="hidden alert alert-danger" role="alert"></div>
 
                     <div class="row">
                         <div class="col-md-12">
-                            <label>Input your username</label>
-                            <input type="text" class="form-control" name="username"
-                                   placeholder="" autocomplete="off" />
+                            <label>Welcome, </label>
+                            <span id="logId"></span>
                         </div>
                     </div>
+
 
                     <div class="row">
                         <div class="col-md-12">
@@ -154,7 +153,7 @@
                     <div class="row">
                         <div class="col-md-12">
                             <label>Email account password</label>
-                            <input type="text" class="form-control" name="emailPassword"
+                            <input type="password" class="form-control" name="emailPassword"
                                    placeholder="" autocomplete="off" />
                         </div>
                     </div>
@@ -215,6 +214,9 @@
             if (Mail.errors[error]) {
                 $('#msg').html(Mail.errors[error]).removeClass('hidden');
             }
+        }
+        if (params['logId']) {
+            $('#logId').text(params['logId']);
         }
 
     })
