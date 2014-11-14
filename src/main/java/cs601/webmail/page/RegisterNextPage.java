@@ -63,9 +63,12 @@ public class RegisterNextPage extends Page {
 
             if(accountService.verifyAccount(emailAccount,emailPassword,popServer,popPort)){
 
-                account.setUserId(registeringUser.getLoginId());
+                account.setUserId(registeringUser.getId());
                 account.setEmailUsername(emailAccount);
-                account.setEmailPassword(DigestUtils.digestToSHA(emailPassword));
+                account.setEmailPassword(emailPassword);
+                account.setPopServer(popServer);
+                account.setPopServerPort(popPort);
+                account.setEnableSsl(true);
                 accountService.addAccount(account);
 
                 HttpSession session = request.getSession(true);

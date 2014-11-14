@@ -1,10 +1,13 @@
 package cs601.webmail.page;
 
 import cs601.webmail.Constants;
+import cs601.webmail.entity.Account;
 import cs601.webmail.frameworks.web.RequestContext;
 import cs601.webmail.auth.AuthenticationCheckFilter;
 import cs601.webmail.entity.User;
+import cs601.webmail.service.AccountService;
 import cs601.webmail.service.UserService;
+import cs601.webmail.service.impl.AccountServiceImpl;
 import cs601.webmail.service.impl.UserServiceImpl;
 import cs601.webmail.util.DigestUtils;
 
@@ -50,6 +53,7 @@ public class LoginPage extends Page{
     }
     public void doLogin(HttpServletRequest request,HttpServletResponse response)throws IOException{
         UserService userService=new UserServiceImpl();
+        //AccountService accountService=new AccountServiceImpl();
         HttpSession session = request.getSession(true);
 
         String username= request.getParameter("username");
@@ -58,11 +62,11 @@ public class LoginPage extends Page{
 
         if(userService.verifyUser(username,password)&&username.length()!=0 && username!=null
                 &&password.length()!=0 && password!=null){
-            User user=new User();
-            user.setId(999l);
-            user.setFirstName("Demo");
-            user.setLastName("omed");
+
+            User user=userService.findUserByLogId(username);
+            //Account account= accountService.findById(user.getId());
             session.setAttribute(AuthenticationCheckFilter.LOGIN_SESSION_FLAG,user);
+            //session.setAttribute(AuthenticationCheckFilter.LOGIN_SESSION_FLAG,account);
             if ("on".equals(rememberMe)) {
                 writeRememberMe(response, session, username);
             }

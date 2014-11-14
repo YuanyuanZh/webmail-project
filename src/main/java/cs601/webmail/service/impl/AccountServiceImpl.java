@@ -1,16 +1,15 @@
 package cs601.webmail.service.impl;
 
+import cs601.webmail.Configuration;
 import cs601.webmail.dao.AccountDao;
 import cs601.webmail.dao.UserDao;
 import cs601.webmail.dao.impl.AccountDaojdbcImpl;
 import cs601.webmail.dao.impl.UserDAOImpl;
 import cs601.webmail.entity.Account;
-import cs601.webmail.entity.User;
-import cs601.webmail.frameworks.mail.Pop3Client;
+import cs601.webmail.frameworks.mail.pop3.Pop3Client;
 import cs601.webmail.service.AccountService;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 /**
  * Created by yuanyuan on 10/26/14.
@@ -20,13 +19,30 @@ public class AccountServiceImpl implements AccountService {
     private UserDao userDao=new UserDAOImpl();
 
 
-    public Account findById(Long id) {
+    /*public Account findById(Long id) {
         Account account = new Account();
 
         account.setId(3l);
-        account.setUserId("");
+        account.setUserId(1l);
 
         return account;
+    }*/
+    Account account = new Account();
+
+    public Account findById(Long id) {  //FIXME must to impl this method in production environment.
+        /*Account account = new Account();
+
+        account.setId(3l);
+        account.setUserId(2l);
+
+        account.setEmailUsername(Configuration.getDefault().get("email"));
+        account.setEmailPassword(Configuration.getDefault().get("password"));
+
+        account.setPopServer(Configuration.getDefault().get("pop"));
+        account.setPopServerPort(Configuration.getDefault().getInteger("pop.port"));
+        account.setEnableSsl(Configuration.getDefault().getBoolean("pop.ssl"));*/
+
+        return accountDao.findById(id);
     }
 
     public void addAccount(Account account){

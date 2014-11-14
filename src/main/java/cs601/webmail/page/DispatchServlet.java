@@ -11,7 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import cs601.webmail.Constants;
-import cs601.webmail.application.Configuration;
+import cs601.webmail.Configuration;
 
 import cs601.webmail.frameworks.web.RequestContext;
 import cs601.webmail.frameworks.web.RequestContextFactory;

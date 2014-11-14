@@ -11,4 +11,5 @@ public interface UserDao {
     void updatePass(long id,String password);
     boolean LoginIDExist(String LOGID);
     String getPassword(String LOGID);
+    User findUserByLogId(String logId);
 }

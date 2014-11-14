@@ -17,13 +17,47 @@ public class Account implements Serializable {
     private long id;
 
     @Column(columnName = "USERID", propertyName = "userId")
-    private String userId;
+    private Long userId;
 
     @Column(columnName = "EMAIL_ADDRESS", propertyName = "emailUsername")
     private String emailUsername;
 
     @Column(columnName = "EPASS", propertyName = "emailPassword")
     private String emailPassword;
+
+    @Column(columnName = "POP_SERVER", propertyName = "popServer")
+    private String popServer;
+
+    // Default 110, TLS 995
+    @Column(columnName = "POP_SERVER_PORT", propertyName = "popServerPort")
+    private int popServerPort;
+
+    @Column(columnName = "ENABLE_SSL", propertyName = "enableSsl")
+    private boolean enableSsl;
+
+    public boolean isEnableSsl() {
+        return enableSsl;
+    }
+
+    public void setEnableSsl(boolean enableSsl) {
+        this.enableSsl = enableSsl;
+    }
+
+    public int getPopServerPort() {
+        return popServerPort;
+    }
+
+    public void setPopServerPort(int popServerPort) {
+        this.popServerPort = popServerPort;
+    }
+
+    public String getPopServer() {
+        return popServer;
+    }
+
+    public void setPopServer(String popServer) {
+        this.popServer = popServer;
+    }
 
     public String getEmailPassword() {
         return emailPassword;
@@ -41,11 +75,11 @@ public class Account implements Serializable {
         this.id = id;
     }
 
-    public String getUserId() {
+    public Long getUserId() {
         return userId;
     }
 
-    public void setUserId(String userId) {
+    public void setUserId(Long userId) {
         this.userId = userId;
     }
 

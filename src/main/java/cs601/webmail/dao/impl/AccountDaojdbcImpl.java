@@ -1,10 +1,13 @@
 package cs601.webmail.dao.impl;
 
+import cs601.webmail.Configuration;
 import cs601.webmail.dao.AccountDao;
 import cs601.webmail.dao.BaseDao;
 import cs601.webmail.dao.DaoException;
+import cs601.webmail.entity.User;
 import cs601.webmail.frameworks.db.QueryRunner;
 import cs601.webmail.entity.Account;
+import cs601.webmail.frameworks.db.ResultSetHandler;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -26,8 +29,8 @@ public class AccountDaojdbcImpl extends BaseDao implements AccountDao{
        QueryRunner qr = getQueryRunner();
        try {
 
-           int row = qr.update("insert into accounts(userid,email_address,epass) values(?,?,?)",
-                   new Object[]{account.getUserId(), account.getEmailUsername(), account.getEmailPassword()});
+           int row = qr.update("insert into accounts(userid,email_address,epass,POP_SERVER,POP_SERVER_PORT,ENABLE_SSL) values(?,?,?,?,?,?)",
+                   new Object[]{account.getUserId(), account.getEmailUsername(), account.getEmailPassword(),account.getPopServer(),account.getPopServerPort(),account.isEnableSsl()});
 
            if (row != 1) {
                //return false;
@@ -58,38 +61,35 @@ public class AccountDaojdbcImpl extends BaseDao implements AccountDao{
 
     }
 
-    public Account findById(Long userid,Long aid){
-        Connection conn=getConnection();
-        PreparedStatement statement=null;
-        ResultSet rs= null;
-
-        try{
-            statement=conn.prepareStatement("select * from accounts where AID=? and USERID=?");
-            statement.setLong(1,aid);
-            statement.setLong(1,userid);
-            rs = statement.executeQuery();
-
-            Account account=new Account();
-            account=handleRowMapping(rs);
-            return account;
-
-        }catch (SQLException e){
-            throw new DaoException();
-        }finally {
-            closeStatementQuietly(statement);
-            closeResultSetQuietly(rs);
+    public Account findById(Long userid){
+        if(userid==null){
+            throw new IllegalArgumentException();
+        }
+        QueryRunner qr = getQueryRunner();
+        try {
+            return qr.query("select * from Accounts where USERID=?", new ResultSetHandler<Account>() {
+                @Override
+                public Account handle(ResultSet resultSet) throws SQLException {
+                    if (resultSet.next()) {
+                        return handleRowMapping(resultSet);
+                    }
+                    return null;
+                }
+            }, new Object[]{userid});
+        } catch (SQLException e) {
+            throw new DaoException(e);
         }
 
     }
 
-    public List<String> listEmails(String userid){
+    public List<String> listEmails(Long userid){
         Connection conn=getConnection();
         PreparedStatement statement=null;
         ResultSet rs= null;
 
         try{
             statement=conn.prepareStatement("select EMAIL_ADDRESS from accounts where USERID=?");
-            statement.setString(1,userid);
+            statement.setLong(1, userid);
             rs=statement.executeQuery();
             List<String> emails=new ArrayList<String>();
             while (rs.next()){
@@ -110,9 +110,12 @@ public class AccountDaojdbcImpl extends BaseDao implements AccountDao{
         Account account=new Account();
 
         account.setId(rs.getLong("AID"));
-        account.setUserId(rs.getString("USERID"));
+        account.setUserId(rs.getLong("USERID"));
         account.setEmailUsername(rs.getString("EMAIL_ADDRESS"));
         account.setEmailPassword(rs.getString("EPASS"));
+        account.setPopServer(rs.getString("POP_SERVER"));
+        account.setPopServerPort(rs.getInt("POP_SERVER_PORT"));
+        account.setEnableSsl(rs.getBoolean("ENABLE_SSL"));
 
         return account;
     }

@@ -1,6 +1,5 @@
 package cs601.webmail;
 
-import cs601.webmail.application.Configuration;
 import org.sqlite.SQLiteDataSource;
 
 import javax.sql.DataSource;

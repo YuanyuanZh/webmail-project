@@ -19,6 +19,7 @@
     <!--<link href="/resources/css/iCheck/minimal/blue.css" rel="stylesheet" type="text/css" />-->
     <!-- Theme style -->
     <link href="/resources/css/mail.css" rel="stylesheet" type="text/css" />
+    <link href="/resources/css/mail-resp.css" rel="stylesheet" type="text/css" />
 
     <!-- favicon from https://dribbble.com/shots/1297277-Adline-Social-icons-Retouched?list=searches&tag=mail_icon&offset=11 -->
     <link rel="shortcut icon" href="/resources/img/favicon.ico" type="image/x-icon">
@@ -36,29 +37,40 @@
 
 <div class="wrapper">
 <aside class="left-side x-col">
-    <div class="column-header">
+    <div class="profile column-header">
+        <img src="/resources/img/avatar/tom.png" height="40" width="40" class="profile-avatar img-circle img-thumbnail" alt="Avatar" />
+        <span class="profile-name">Tom Hanks</span>
+
+        <div class="profile-dropdown dropdown" >
+            <span class="glyphicon glyphicon-collapse-down dropdown-trigger" data-toggle="dropdown"></span>
+
+            <ul class="dropdown-menu" role="menu">
+                <li><a href="#">Foo</a></li>
+                <li><a href="#">Bar</a></li>
+            </ul>
+        </div>
     </div>
 
-    <div style="padding: 1em;">
+    <div style="padding: 1.4em 1em;">
         <button class="btn btn-primary btn-block compose-btn btn-disabled" disabled="disabled"><i class="fa fa-pencil-square-o"></i>&nbsp;&nbsp; Compose</button>
     </div>
 
     <div style="padding: 0;">
-        <ul is="mainMenu" class="nav nav-stacked mail-menu">
-            <li id="folderInbox" class="active"><a href="#"><i class="fa fa-inbox"></i> <span>Inbox</span>
+        <ul id="mainMenu" class="nav nav-stacked mail-menu">
+            <li id="folderInbox" class="active" data-name="inbox"><a href="#/mail/list/inbox"><i class="fa fa-inbox"></i> <span>Inbox</span>
                 <!--<small class="badge pull-right bg-green">192</small>-->
             </a></li>
             <!--<li><a href="#"><i class="fa fa-archive"></i> <span>Sent</span></a></li>-->
-            <!--<li><a href="#"><i class="fa fa-star-o"></i> <span>Favorites</span></a></li>-->
+            <li data-name="fav"><a href="#/mail/list/fav"><i class="fa fa-star-o"></i> <span>Favorites</span></a></li>
             <!--<li><a href="#"><i class="fa fa-file-o"></i> <span>Drafts</span></a></li>-->
-            <!--<li><a href="#"><i class="fa fa-trash"></i> <span>Trash</span></a></li>-->
+            <li data-name="trash"><a href="#"><i class="fa fa-trash"></i> <span>Trash</span></a></li>
         </ul>
 
         <!-- <h5 class="h5">TAGS</h5> -->
     </div>
 
     <div id="tbSystem" class="toolbar toolbar-bottom">
-        <div class="btn-group" style="margin-left: 56px;">
+        <div class="btn-group" style="position: absolute; bottom: 1.5em; left: 50%; margin-left: -34px;">
             <button class="btn btn-default logout-btn"><i class="fa fa-power-off"></i></button>
             <button class="btn btn-default settings-btn"><i class="fa fa-cog"></i></button>
         </div>
@@ -69,214 +81,255 @@
 <!-- Mail list -->
 <aside id="maillist" class="second-left-side x-col">
 
-    <div class="column-header">
-        <!--<div class="search-box pull-right">-->
-            <!--<input class="" placeholder="Search Mail..." type="text" />-->
-            <!--<span class="search-icon"><i class="fa fa-search"></i></span>-->
-        <!--</div>-->
+<div class="column-header">
+    <!--<div class="search-box pull-right">-->
+    <!--<input class="" placeholder="Search Mail..." type="text" />-->
+    <!--<span class="search-icon"><i class="fa fa-search"></i></span>-->
+    <!--</div>-->
 
-        <h2 class="folder-name">Inbox</h2>
+    <h2 id="lblFolderName" class="folder-name">Inbox</h2>
+</div>
+
+<header class="toolbar">
+
+    <div class="select-btn btn-group">
+        <button class="select-all-btn btn btn-default  btn-sm">
+            <i class="fa fa-square-o"></i>
+        </button>
+        <button type="button" class="btn btn-default  btn-sm dropdown-toggle" data-toggle="dropdown">
+            <span class="caret"></span>
+            <span class="sr-only">Toggle Dropdown</span>
+        </button>
+        <ul class="dropdown-menu" role="menu">
+            <li class="select-all-menu"><a href="#">All</a></li>
+            <li class="select-none-menu"><a href="#">None</a></li>
+            <li class="select-read-menu"><a href="#">Read</a></li>
+            <li class="select-unread-menu"><a href="#">Unread</a></li>
+            <li class="select-star-menu"><a href="#">Starred</a></li>
+            <li class="select-unstar-menu"><a href="#">Unstarred</a></li>
+        </ul>
     </div>
 
-    <header class="toolbar">
-        <div class="btn-group">
-            <!-- <button class="btn btn-default"><i class="fa fa-refresh"></i></button> -->
-            <button class="btn btn-default refresh-btn"><i class="fa fa-refresh"></i></button>
-        </div>
-        <div class="btn-group">
-            <!--<button type="button" class="btn btn-default"><i class="fa fa-archive"></i></button>-->
-            <!--<button type="button" class="btn btn-default"><i class="fa fa-info-circle"></i></button>-->
-            <button type="button" class="btn btn-default"><i class="fa fa-trash"></i></button>
-        </div>
+    <div class="btn-group">
+        <!-- <button class="btn btn-default"><i class="fa fa-refresh"></i></button> -->
+        <button class="btn btn-default refresh-btn  btn-sm"><i class="fa fa-refresh"></i></button>
+    </div>
+    <div class="btn-group">
+        <!--<button type="button" class="btn btn-default"><i class="fa fa-archive"></i></button>-->
+        <!--<button type="button" class="btn btn-default"><i class="fa fa-info-circle"></i></button>-->
+        <button type="button" class="btn btn-default delete-btn  btn-sm"><i class="fa fa-trash"></i></button>
+    </div>
 
-        <!--<div class="btn-group">-->
-            <!--<button type="button" class="btn btn-default" title="Move to"><i class="fa fa-folder"></i></button>-->
-            <!--<button type="button" class="btn btn-default" title="Tag"><i class="fa fa-tag"></i></button>-->
-        <!--</div>-->
+    <div class="moveto-btn btn-group">
+        <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown"
+                title="Move to">
+            <i class="fa fa-folder"></i>
+            <span class="caret"></span>
+            <span class="sr-only">Toggle Dropdown</span>
+        </button>
+        <!--<button type="button" class="btn btn-default" title="Tag"><i class="fa fa-tag"></i></button>-->
+        <ul class="dropdown-menu" role="menu">
+            <li class="moveto-inbox-menu"><a href="#">Move to Inbox</a></li>
+            <li class="moveto-trash-menu"><a href="#">Move to Trash</a></li>
+        </ul>
+    </div>
 
-        <div class="pull-right" style="display:inline-block; margin-left: 15px; vertical-align: top; text-align: center;">
-            <small>1-100 of 1024</small>
-            <br/>
-            <i class="fa fa-chevron-left"></i>&nbsp;&nbsp;&nbsp;
-            <i class="fa fa-chevron-right"></i>
+    <div class="more-btn btn-group">
+        <button type="button" class="btn btn-default  btn-sm dropdown-toggle" data-toggle="dropdown">
+            More
+            <span class="caret"></span>
+            <span class="sr-only">Toggle Dropdown</span>
+        </button>
+        <ul class="dropdown-menu" role="menu">
+            <li class="mark-allread-menu"><a href="#">Mark all as read</a></li>
+            <li class="mark-unread-menu"><a href="#">Mark as unread</a></li>
+            <li class="mark-read-menu"><a href="#">Mark as read</a></li>
+        </ul>
+    </div>
 
-            <!-- <div class="btn-group">
-              <button type="button" class="btn btn-default"><i class="fa fa-chevron-left"></i></button>
-              <button type="button" class="btn btn-default"><i class="fa fa-chevron-right"></i></button>
-            </div> -->
+    <div class="pull-right" style="display:inline-block; margin-left: 15px; vertical-align: top; text-align: right;">
+        <small class="mails-page-indicator">1-100 of 1024</small>
+        <br/>
+        <i class="prev-btn fa fa-chevron-left"></i>&nbsp;&nbsp;&nbsp;
+        <i class="next-btn fa fa-chevron-right"></i>
 
-        </div>
-    </header>
-
-    <div id="maillistWrapper" data-layout="fill-parent" style="height: 600px; overflow-y:auto; overflow-x: hidden; padding: 0 20px 20px;">
-        <!-- <div class="toolbar-placeholder"></div> -->
-
-        <div id="mailListState" class="hidden alert alert-info" role="alert">
-            Oops! No mail found. Try to sync it.
-        </div>
-
-        <dl class="mail-list">
-
-            <!--<dd class="mail-list-item unread">-->
-                <!--<div class="action-controls">-->
-                    <!--<input type="checkbox" />-->
-                    <!--<div style="margin-top:8px;">-->
-                        <!--<i class="fa fa-star-o"></i>-->
-                    <!--</div>-->
-                <!--</div>-->
-                <!--<div class="writer">-->
-                    <!--<strong>Facebook</strong>-->
-                    <!--<span class="pull-right">3:04 (1小时前)</span>-->
-                <!--</div>-->
-                <!--<h4>Do you know Tony Townsend, Boyu Wang and 8 others?</h4>-->
-            <!--</dd>-->
-
-
-            <!--<dd class="mail-list-item unread">-->
-                <!--<div class="action-controls">-->
-                    <!--<input type="checkbox" />-->
-                    <!--<div style="margin-top:8px;">-->
-                        <!--<i class="fa fa-star-o"></i>-->
-                    <!--</div>-->
-                <!--</div>-->
-                <!--<div class="writer">-->
-                    <!--<strong>Pinterest</strong>-->
-                    <!--<span class="pull-right">September 21</span>-->
-                <!--</div>-->
-                <!--<h4>Another thing you can do on Pinterest: Renovate your home!</h4>-->
-                <!--<p>Did you know you can also use Pinterest to plan out any improvements-->
-                    <!--you want to make to your home? So if you’re redecorating your living-->
-                    <!--room, just do a quick search to see what rugs,-->
-                    <!--couches and other great ideas people have discovered. </p>-->
-            <!--</dd>-->
-
-
-            <!--<dd class="mail-list-item active">-->
-                <!--<div class="action-controls">-->
-                    <!--<input type="checkbox" />-->
-                    <!--<div style="margin-top:8px;">-->
-                        <!--<i class="fa fa-star-o"></i>-->
-                    <!--</div>-->
-                <!--</div>-->
-                <!--<div class="writer">-->
-                    <!--<strong>OpenShift by Red Hat</strong>-->
-                    <!--<span class="pull-right">21:39 (4小时前)</span>-->
-                <!--</div>-->
-                <!--<h4>Announcing Dedicated Node Services</h4>-->
-                <!--<p>-->
-                    <!--Last week we announced Dedicated Node Services for OpenShift.-->
-                    <!--Dedicated Node gives Enterprise users more options and power than ever,-->
-                    <!--providing customized and dedicated-->
-                <!--</p>-->
-            <!--</dd>-->
-
-            <!--<dd class="mail-list-item">-->
-                <!--<div class="action-controls">-->
-                    <!--<input type="checkbox" />-->
-                    <!--<div style="margin-top:8px;">-->
-                        <!--<i class="fa fa-star-o"></i>-->
-                    <!--</div>-->
-                <!--</div>-->
-                <!--<div class="writer">-->
-                    <!--<strong>OpenShift by Red Hat</strong>-->
-                      <!--<span class="pull-right">-->
-                        <!--<i class="fa fa-paperclip"></i>-->
-                         <!--21:39 (4小时前)</span>-->
-                <!--</div>-->
-                <!--<h4>Work Inquire from Apple</h4>-->
-                <!--<p>-->
-                    <!--Last week we announced Dedicated Node Services for OpenShift.-->
-                    <!--Dedicated Node gives Enterprise users more options and power than ever,-->
-                    <!--providing customized and dedicated nodes to-->
-                <!--</p>-->
-            <!--</dd>-->
-
-            <!--<dd class="mail-list-item">-->
-                <!--<div class="action-controls">-->
-                    <!--<input type="checkbox" />-->
-                    <!--<div style="margin-top:8px;">-->
-                        <!--<i class="fa fa-star-o"></i>-->
-                    <!--</div>-->
-                <!--</div>-->
-                <!--<div class="writer">-->
-                    <!--<strong>OpenShift by Red Hat</strong>-->
-                    <!--<span class="pull-right">21:39 (4小时前)</span>-->
-                <!--</div>-->
-                <!--<h4>Work Inquire from Apple</h4>-->
-                <!--<p>-->
-                    <!--Last week we announced Dedicated Node Services for OpenShift.-->
-                    <!--Dedicated Node gives Enterprise users more options and power than ever,-->
-                    <!--providing customized and dedicated nodes to-->
-                <!--</p>-->
-            <!--</dd>-->
-
-            <!--<dd class="mail-list-item">-->
-                <!--<div class="action-controls">-->
-                    <!--<input type="checkbox" />-->
-                    <!--<div style="margin-top:8px;">-->
-                        <!--<i class="fa fa-star-o"></i>-->
-                    <!--</div>-->
-                <!--</div>-->
-                <!--<div class="writer">-->
-                    <!--<strong>OpenShift by Red Hat</strong>-->
-                    <!--<span class="pull-right">21:39 (4小时前)</span>-->
-                <!--</div>-->
-                <!--<h4>Work Inquire from Apple</h4>-->
-                <!--<p>-->
-                    <!--Last week we announced Dedicated Node Services for OpenShift.-->
-                    <!--Dedicated Node gives Enterprise users more options and power than ever,-->
-                    <!--providing customized and dedicated nodes to-->
-                <!--</p>-->
-            <!--</dd>-->
-
-            <!--<dd class="mail-list-item">-->
-                <!--<div class="action-controls">-->
-                    <!--<input type="checkbox" />-->
-                    <!--<div style="margin-top:8px;">-->
-                        <!--<i class="fa fa-star-o"></i>-->
-                    <!--</div>-->
-                <!--</div>-->
-                <!--<div class="writer">-->
-                    <!--<strong>OpenShift by Red Hat</strong>-->
-                    <!--<span class="pull-right">21:39 (4小时前)</span>-->
-                <!--</div>-->
-                <!--<h4>Work Inquire from Apple</h4>-->
-                <!--<p>-->
-                    <!--Last week we announced Dedicated Node Services for OpenShift.-->
-                    <!--Dedicated Node gives Enterprise users more options and power than ever,-->
-                    <!--providing customized and dedicated nodes to-->
-                <!--</p>-->
-            <!--</dd>-->
-
-            <!--<dd class="mail-list-item">-->
-                <!--<div class="action-controls">-->
-                    <!--<input type="checkbox" />-->
-                    <!--<div style="margin-top:8px;">-->
-                        <!--<i class="fa fa-star-o"></i>-->
-                    <!--</div>-->
-                <!--</div>-->
-                <!--<div class="writer">-->
-                    <!--<strong>OpenShift by Red Hat</strong>-->
-                    <!--<span class="pull-right">21:39 (4小时前)</span>-->
-                <!--</div>-->
-                <!--<h4>Announcing Dedicated Node Services</h4>-->
-                <!--<p>-->
-                    <!--Last week we announced Dedicated Node Services for OpenShift.-->
-                    <!--Dedicated Node gives Enterprise users more options and power than ever,-->
-                    <!--providing customized and dedicated nodes to-->
-                <!--</p>-->
-            <!--</dd>-->
-        </dl>
-
-        <div>
-            <div class="btn-group" style="margin: 0 auto;">
-                <button type="button" class="btn btn-default btn-sm"><i class="fa fa-chevron-left"></i></button>
-                <button type="button" class="btn btn-default btn-sm"><i class="fa fa-chevron-right"></i></button>
-            </div>
-            1-100 of 1024
-        </div>
+        <!-- <div class="btn-group">
+          <button type="button" class="btn btn-default"><i class="fa fa-chevron-left"></i></button>
+          <button type="button" class="btn btn-default"><i class="fa fa-chevron-right"></i></button>
+        </div> -->
 
     </div>
+</header>
+
+<div id="maillistWrapper" data-layout="fill-parent">
+    <!-- <div class="toolbar-placeholder"></div> -->
+
+    <div id="mailListState" class="hidden alert alert-info" role="alert">
+        Oops! No mail found. Try to sync it.
+    </div>
+
+    <dl class="mail-list">
+
+        <!--<dd class="mail-list-item unread">-->
+        <!--<div class="action-controls">-->
+        <!--<input type="checkbox" />-->
+        <!--<div style="margin-top:8px;">-->
+        <!--<i class="fav-btn fa fa-star-o"></i>-->
+        <!--</div>-->
+        <!--</div>-->
+        <!--<div class="writer">-->
+        <!--<strong>Facebook</strong>-->
+        <!--<span class="pull-right">3:04 (1小时前)</span>-->
+        <!--</div>-->
+        <!--<h4>Do you know Tony Townsend, Boyu Wang and 8 others?</h4>-->
+        <!--</dd>-->
+
+
+        <!--<dd class="mail-list-item unread">-->
+        <!--<div class="action-controls">-->
+        <!--<input type="checkbox" />-->
+        <!--<div style="margin-top:8px;">-->
+        <!--<i class="fa fa-star-o"></i>-->
+        <!--</div>-->
+        <!--</div>-->
+        <!--<div class="writer">-->
+        <!--<strong>Pinterest</strong>-->
+        <!--<span class="pull-right">September 21</span>-->
+        <!--</div>-->
+        <!--<h4>Another thing you can do on Pinterest: Renovate your home!</h4>-->
+        <!--<p>Did you know you can also use Pinterest to plan out any improvements-->
+        <!--you want to make to your home? So if you’re redecorating your living-->
+        <!--room, just do a quick search to see what rugs,-->
+        <!--couches and other great ideas people have discovered. </p>-->
+        <!--</dd>-->
+
+
+        <!--<dd class="mail-list-item active">-->
+        <!--<div class="action-controls">-->
+        <!--<input type="checkbox" />-->
+        <!--<div style="margin-top:8px;">-->
+        <!--<i class="fa fa-star-o"></i>-->
+        <!--</div>-->
+        <!--</div>-->
+        <!--<div class="writer">-->
+        <!--<strong>OpenShift by Red Hat</strong>-->
+        <!--<span class="pull-right">21:39 (4小时前)</span>-->
+        <!--</div>-->
+        <!--<h4>Announcing Dedicated Node Services</h4>-->
+        <!--<p>-->
+        <!--Last week we announced Dedicated Node Services for OpenShift.-->
+        <!--Dedicated Node gives Enterprise users more options and power than ever,-->
+        <!--providing customized and dedicated-->
+        <!--</p>-->
+        <!--</dd>-->
+
+        <!--<dd class="mail-list-item">-->
+        <!--<div class="action-controls">-->
+        <!--<input type="checkbox" />-->
+        <!--<div style="margin-top:8px;">-->
+        <!--<i class="fa fa-star-o"></i>-->
+        <!--</div>-->
+        <!--</div>-->
+        <!--<div class="writer">-->
+        <!--<strong>OpenShift by Red Hat</strong>-->
+        <!--<span class="pull-right">-->
+        <!--<i class="fa fa-paperclip"></i>-->
+        <!--21:39 (4小时前)</span>-->
+        <!--</div>-->
+        <!--<h4>Work Inquire from Apple</h4>-->
+        <!--<p>-->
+        <!--Last week we announced Dedicated Node Services for OpenShift.-->
+        <!--Dedicated Node gives Enterprise users more options and power than ever,-->
+        <!--providing customized and dedicated nodes to-->
+        <!--</p>-->
+        <!--</dd>-->
+
+        <!--<dd class="mail-list-item">-->
+        <!--<div class="action-controls">-->
+        <!--<input type="checkbox" />-->
+        <!--<div style="margin-top:8px;">-->
+        <!--<i class="fa fa-star-o"></i>-->
+        <!--</div>-->
+        <!--</div>-->
+        <!--<div class="writer">-->
+        <!--<strong>OpenShift by Red Hat</strong>-->
+        <!--<span class="pull-right">21:39 (4小时前)</span>-->
+        <!--</div>-->
+        <!--<h4>Work Inquire from Apple</h4>-->
+        <!--<p>-->
+        <!--Last week we announced Dedicated Node Services for OpenShift.-->
+        <!--Dedicated Node gives Enterprise users more options and power than ever,-->
+        <!--providing customized and dedicated nodes to-->
+        <!--</p>-->
+        <!--</dd>-->
+
+        <!--<dd class="mail-list-item">-->
+        <!--<div class="action-controls">-->
+        <!--<input type="checkbox" />-->
+        <!--<div style="margin-top:8px;">-->
+        <!--<i class="fa fa-star-o"></i>-->
+        <!--</div>-->
+        <!--</div>-->
+        <!--<div class="writer">-->
+        <!--<strong>OpenShift by Red Hat</strong>-->
+        <!--<span class="pull-right">21:39 (4小时前)</span>-->
+        <!--</div>-->
+        <!--<h4>Work Inquire from Apple</h4>-->
+        <!--<p>-->
+        <!--Last week we announced Dedicated Node Services for OpenShift.-->
+        <!--Dedicated Node gives Enterprise users more options and power than ever,-->
+        <!--providing customized and dedicated nodes to-->
+        <!--</p>-->
+        <!--</dd>-->
+
+        <!--<dd class="mail-list-item">-->
+        <!--<div class="action-controls">-->
+        <!--<input type="checkbox" />-->
+        <!--<div style="margin-top:8px;">-->
+        <!--<i class="fa fa-star-o"></i>-->
+        <!--</div>-->
+        <!--</div>-->
+        <!--<div class="writer">-->
+        <!--<strong>OpenShift by Red Hat</strong>-->
+        <!--<span class="pull-right">21:39 (4小时前)</span>-->
+        <!--</div>-->
+        <!--<h4>Work Inquire from Apple</h4>-->
+        <!--<p>-->
+        <!--Last week we announced Dedicated Node Services for OpenShift.-->
+        <!--Dedicated Node gives Enterprise users more options and power than ever,-->
+        <!--providing customized and dedicated nodes to-->
+        <!--</p>-->
+        <!--</dd>-->
+
+        <!--<dd class="mail-list-item">-->
+        <!--<div class="action-controls">-->
+        <!--<input type="checkbox" />-->
+        <!--<div style="margin-top:8px;">-->
+        <!--<i class="fa fa-star-o"></i>-->
+        <!--</div>-->
+        <!--</div>-->
+        <!--<div class="writer">-->
+        <!--<strong>OpenShift by Red Hat</strong>-->
+        <!--<span class="pull-right">21:39 (4小时前)</span>-->
+        <!--</div>-->
+        <!--<h4>Announcing Dedicated Node Services</h4>-->
+        <!--<p>-->
+        <!--Last week we announced Dedicated Node Services for OpenShift.-->
+        <!--Dedicated Node gives Enterprise users more options and power than ever,-->
+        <!--providing customized and dedicated nodes to-->
+        <!--</p>-->
+        <!--</dd>-->
+    </dl>
+
+    <div>
+        <div class="btn-group" style="margin: 0 auto;">
+            <button type="button" class="prev-btn btn btn-default btn-sm"><i class="fa fa-chevron-left"></i></button>
+            <button type="button" class="next-btn btn btn-default btn-sm"><i class="fa fa-chevron-right"></i></button>
+        </div>
+        <span class="mails-page-indicator">1-100 of 1024</span>
+    </div>
+
+</div>
 
 </aside>
 
@@ -295,14 +348,14 @@
 
     <header class="toolbar">
         <div class="btn-group">
-            <button type="button" class="btn btn-default"><i class="fa fa-archive"></i></button>
-            <button type="button" class="btn btn-default"><i class="fa fa-info-circle"></i></button>
-            <button type="button" class="btn btn-default"><i class="fa fa-trash"></i></button>
+            <button type="button" class="btn btn-default btn-sm"><i class="fa fa-archive"></i></button>
+            <button type="button" class="btn btn-default btn-sm"><i class="fa fa-info-circle"></i></button>
+            <button type="button" class="btn btn-default btn-sm"><i class="fa fa-trash"></i></button>
         </div>
 
         <div class="btn-group">
-            <button type="button" class="btn btn-default"><i class="fa fa-folder"></i></button>
-            <button type="button" class="btn btn-default"><i class="fa fa-tag"></i></button>
+            <button type="button" class="btn btn-default btn-sm"><i class="fa fa-folder"></i></button>
+            <button type="button" class="btn btn-default btn-sm"><i class="fa fa-tag"></i></button>
         </div>
 
     </header>
@@ -357,10 +410,10 @@
 
         </article>
 
-        <hr/>
-        <div class="mail-reply">
-            <textarea cols="100" rows="5" placeholder="Click to Reply or Forward"></textarea>
-        </div>
+        <!--<hr/>-->
+        <!--<div class="mail-reply">-->
+        <!--<textarea cols="100" rows="5" placeholder="Click to Reply or Forward"></textarea>-->
+        <!--</div>-->
 
     </div>
 </aside>
@@ -431,25 +484,25 @@
                     <div class="form-group">
                         <div class="col-sm-offset-4 col-sm-8">
                             <div class="checkbox">
-                            <label>
-                                <input id="chkSSL" type="checkbox"> Use SSL
-                            </label>
+                                <label>
+                                    <input id="chkSSL" type="checkbox"> Use SSL
+                                </label>
                             </div>
                         </div>
                     </div>
                     <!--<div class="form-group">-->
-                        <!--<div class="col-sm-offset-3 col-sm-9">-->
-                            <!--<div class="checkbox">-->
-                                <!--<label>-->
-                                    <!--<input type="checkbox"> Remember me-->
-                                <!--</label>-->
-                            <!--</div>-->
-                        <!--</div>-->
+                    <!--<div class="col-sm-offset-3 col-sm-9">-->
+                    <!--<div class="checkbox">-->
+                    <!--<label>-->
+                    <!--<input type="checkbox"> Remember me-->
+                    <!--</label>-->
+                    <!--</div>-->
+                    <!--</div>-->
                     <!--</div>-->
                     <!--<div class="form-group">-->
-                        <!--<div class="col-sm-offset-3 col-sm-9">-->
-                            <!--<button type="submit" class="btn btn-default">Sign in</button>-->
-                        <!--</div>-->
+                    <!--<div class="col-sm-offset-3 col-sm-9">-->
+                    <!--<button type="submit" class="btn btn-default">Sign in</button>-->
+                    <!--</div>-->
                     <!--</div>-->
 
                 </form>
@@ -504,6 +557,68 @@
         }
     };
 
+    var Pagination = function() {
+        this._page = 1;
+        this._pages = 1;
+        this._prev = 1;
+        this._next = 1;
+    }
+
+    /**
+     * @param page (int) current page number.
+     * @param pageSize (int) Numbers of record each page.
+     * @param total (int) Total count of records.
+     */
+    Pagination.prototype.update = function(page, pageSize, total) {
+        if (total <= pageSize) {
+            this._page = 1;
+        } else {
+            this._page = page;
+            var pages = Math.ceil(total / pageSize);  // ceil(5 / 2) = 3
+            this._pages = pages;
+
+            this._prev = (page <= 1) ? 1 : (page - 1);
+            this._next = page >= pages ? pages : (page + 1);
+        }
+
+        var startPos = (page - 1) * pageSize + 1;
+        var endPos = Math.min(page * pageSize, total);
+
+        // update page indicator
+        $('.mails-page-indicator').text(startPos + "-" + endPos + " of " + total);
+    }
+
+    Pagination.prototype.next = function() {
+        return this._next;
+    }
+
+    Pagination.prototype.prev = function() {
+        return this._prev;
+    }
+
+    Pagination.prototype.page = function() {
+        return this._page;
+    }
+
+    Pagination.prototype.hasPrev = function() {
+        return this._page > 1;
+    }
+
+    Pagination.prototype.hasNext = function() {
+        return this._page < this._pages;
+    }
+
+    Pagination.prototype.reset = function() {
+        this._page = 1;
+        this._pages = 1;
+        this._prev = 1;
+        this._next = 1;
+    }
+
+
+    var currentFolder = 'inbox';
+    var pagination = new Pagination();
+
     function adjustColumnsHeight() {
         var col_h = $('.left-side').height();
 
@@ -527,51 +642,40 @@
             state.addClass('hidden');
         } else {
             state.removeClass('hidden');
-//            setTimeout(function(){
-//                state.addClass("hidden");
-//            }, 1000);
         }
     }
 
-    function loadMailList(firstLoad) {
-        var firstLoad = firstLoad || false;
+    function loadMails(folder, page, firstInvoke) {
 
-        // http://127.0.0.1:8080/inbox
-        var ajax = $.getJSON("/inbox", function (data) {
-            if (data && data.messages && data.messages.length) {
-                var t = _.template($('#mailSummary').html());
+        folder = folder || currentFolder || 'inbox';
+        page = page || pagination.page() || '1'; // page 1 as default
 
-                var html = t({items: data.messages});
+        // clean container firstly
+        var listContainer = $('#maillist .mail-list').empty();
 
-                $('#maillist .mail-list').empty().append(html);
 
-                setMailListState(true);
-            }
-            if (firstLoad && data && !data.total) {
-                setMailListState(false);
-            }
-        }).fail(function (xhr) {
-            if (xhr.statusText === 'abort') {
-                return; // just ignore
-            }
-            Noty.error("Load mail failed, please try it later.")
-        }).always(function () {
-        });
-    }
+        var xhr = $.get('/rest/mail/list',
+                {'folder': folder, 'page': page},
+                function(data, textStatus, response) {
 
-    function loadMails(firstInvoke) {
-        var xhr = $.get('/rest/mail/list', function(data, textStatus, response) {
             if (textStatus == 'success' && response) {
-                var total = response.getResponseHeader('x-total');
+                var total = parseInt(response.getResponseHeader('x-total'));
+                var page = parseInt(response.getResponseHeader('x-page'));
+                var pageSize = parseInt(response.getResponseHeader('x-page-size'));
+                var position = parseInt(response.getResponseHeader('x-position'));
 
-                if (total && total != '0') {
-                    $('#maillist .mail-list').empty().append(data);
+                if (total && total > 0) {
+                    listContainer.append(data);
+
+                    pagination.update(page, pageSize, total);
+
                     setMailListState(true);
+                    updateUI();
                 } else {
                     Noty.info("No more mails to load.")
                 }
 
-                if (!!firstInvoke && total == '0') {
+                if (!!firstInvoke && total <= 0) {
                     setMailListState(false);
                 }
             }
@@ -608,43 +712,228 @@
         })
     }
 
-    function openMail(id) {
-        $.get('/rest/mail/read', {'id': id}, function(data, textStatus, response) {
+    function openMail(id, callback) {
+
+        var data = {'id' : id};
+
+        callback = callback || function(){};
+
+        $.get('/rest/mail/read', data, function(data, textStatus, response) {
             var state = response.getResponseHeader('x-state');
+            var msg = response.getResponseHeader('x-exception') || response.getResponseHeader('x-msg') || '';
 
             if (state == 'ok' && data) {
                 $('#mailViewport .mail-entry').html(data);
                 $('.mail-list-item[data-id=' + id +']').removeClass('unread');
+
+                try {
+                    callback();
+                } catch (e) {}
+            } else {
+                Noty.error("Open mail failed. " + msg)
             }
         }).fail(function() {
             Noty.error("Open mail failed, please try it later.")
         })
     }
 
-    function initializeUI() {
-        $('#mailViewport .mail-entry').empty();
+    /**
+     * Actions for mail or mails.
+     * @param ctrlType (string) could be delete | trash | star | unstar
+     */
+    function ctrlMail(id, ctrlType, callback) {
+
+        // don't disturb trashing but deleting
+        if (ctrlType == 'delete' && !confirm('Are you sure to delete?')) {
+            return;
+        }
+
+        callback = callback || function(){};
+
+        var params = {};
+        params.id = id;
+        params.action = ctrlType;
+
+        $.get('/rest/mail/control', params, function(data, textStatus, response) {
+
+            var state = response.getResponseHeader('x-state');
+            var msg = response.getResponseHeader('x-exception') || response.getResponseHeader('x-msg') || '';
+
+            if (state == 'ok') {
+                try {
+                    callback();
+                } catch (e) {}
+            } else {
+                Noty.error(ctrlType + " mail failed. " + msg)
+            }
+        }).fail(function(){
+        })
     }
 
-    $(window).resize(function(){
-        adjustColumnsHeight();
-    });
-
-    $(function(){
+    function initializeUI() {
         adjustColumnsHeight();
 
-        loadMailList(true);
+        // reset mail reading area
+        $('#mailViewport .mail-entry').empty();
 
-        $('#maillist').on('click', '.refresh-btn', syncMails);
+        // update page indicator
+        $('.mails-page-indicator').text('0 of 0');
 
-        $('#tbSystem').on('click', '.settings-btn', function() {
-            $('#dlgSetting').modal();
-        }).on('click', '.logout-btn', function(){
-            if (confirm('Do you really want to leave?')) {
-                location.href = '/logout';
+        // hide delete btn
+        $('#maillist .toolbar button:has(.fa-trash)').addClass('hidden');
+
+        // load mails when page loaded
+        loadMails('inbox', 1, true);
+    }
+
+    /**
+     * Update buttons and indicators
+     */
+    function updateUI() {
+
+        // ------------------------- mail list toolbar
+
+        var refreshButton = $('#maillist .toolbar .refresh-btn');
+        var removeButton = $('#maillist .toolbar .delete-btn');
+        var movetoButton = $('#maillist .toolbar .moveto-btn');
+
+        var haveSelection = $('.mail-list-item.selected').size() > 0;
+
+        refreshButton.toggleClass('hidden', haveSelection);
+        removeButton.toggleClass('hidden', !haveSelection);
+        movetoButton.toggleClass('hidden', !haveSelection);
+
+
+        // update the tip of delete button
+        if (currentFolder == 'inbox' || currentFolder == 'fav') {
+            removeButton.attr('title', 'Move to trash');
+        }
+        else {
+            removeButton.attr('title', 'Delete forever');
+        }
+
+        // update 'select-all' button icon
+        var updateSelectAllButton = function(allSelected) {
+
+            var toggleIt = function(btn, toggle) {
+                $(btn).find('i.fa').
+                        toggleClass('fa-check-square-o', toggle).
+                        toggleClass('fa-square-o', !toggle);
+            };
+
+            if (arguments.length > 0) {
+                toggleIt(this, allSelected);
             }
-        })
+            else {
+                var itemsAll = $('#maillist .mail-list-item');
+                var selected = itemsAll.filter('.selected');
+                var btn = $('#maillist').find('.select-btn button.select-all-btn')[0];
+                toggleIt(btn, itemsAll.size() == selected.size());
+            }
+        };
+        updateSelectAllButton();
 
-        $('.mail-list').on('click', '.mail-list-item', function(){
+        // ------------------------- pagination buttons
+        if (!pagination.hasPrev()) {
+            $('#maillistWrapper .prev-btn').attr('disabled', 'disabled');
+            $('#maillist .toolbar .prev-btn').attr('disabled', 'disabled');
+        } else {
+            $('#maillistWrapper .prev-btn').removeAttr('disabled');
+            $('#maillist .toolbar .prev-btn').removeAttr('disabled');
+        }
+        if (!pagination.hasNext()) {
+            $('#maillistWrapper .next-btn').attr('disabled', 'disabled');
+            $('#maillist .toolbar .next-btn').attr('disabled', 'disabled');
+        } else {
+            $('#maillistWrapper .next-btn').removeAttr('disabled');
+            $('#maillist .toolbar .next-btn').removeAttr('disabled');
+        }
+
+    }
+
+    // actions include favorite and trash and delete
+    function bindMailActions() {
+
+        // star or unstar
+        $('#maillist').on('click', '.mail-list-item .action-controls .fav-btn', function(e){
+            if (e.stopPropagation) {
+                e.stopPropagation()
+            }
+
+            var self = this;
+            var listItem = $(this).parents('.mail-list-item:first');
+            var id = listItem.data('id');
+            var was_favorite = $(this).hasClass('fa-star');
+
+            var ctrl = was_favorite ? 'unstar' : 'star';
+
+            ctrlMail(id, ctrl, function() {
+                if (was_favorite) {
+                    $(self).removeClass('fa-star').addClass('fa-star-o');
+                    Noty.success('You un-star it!');
+                } else {
+                    $(self).removeClass('fa-star-o').addClass('fa-star');
+                    Noty.success('You star it!');
+                }
+            });
+
+            updateUI();
+        });
+
+        // delete permanently
+        $('#maillist').on('click', '.mail-list-item .action-controls .del-btn', function(e){
+            if (e.stopPropagation) {
+                e.stopPropagation()
+            }
+
+            if (!confirm('Are you sure to delete?')) {
+                return;
+            }
+
+            var listItem = $(this).parents('.mail-list-item:first');
+            var id = listItem.data('id');
+
+            ctrlMail(id, 'delete', function() {
+                listItem.fadeOut(function(){
+                    $(this).remove()
+                });
+                Noty.success('Mail has been deleted forever!');
+            });
+
+            updateUI();
+        });
+
+        // selection
+        $('#maillist').on('click', '.mail-list-item .action-controls :checkbox', function(e){
+            if (e.stopPropagation) {
+                e.stopPropagation()
+            }
+
+            $(this).parents('.mail-list-item:first').trigger(
+                    $(this).is(':checked') ? 'select' : 'unselect')
+
+            updateUI();
+        })
+    }
+
+
+    /**
+     * Open a mail in the right side.
+     */
+    function bindMailOpen() {
+        $('.mail-list').on('click', '.mail-list-item', function(e){
+            // if event source was a checkbox or favorite button
+            // or action control panel, ignore it.
+            if ($(e.target).is(':checkbox,.fav-btn,.action-controls')) {
+                return;
+            }
+
+            var offsetX = e.offsetX || e.offsetLeft;
+
+            // skip controls area.
+            if (offsetX < 30) {
+                return;
+            }
 
             var id = $(this).data('id');
 
@@ -652,10 +941,318 @@
                 return;
             }
 
-            $(this).siblings().removeClass('active').end().addClass('active');
+            var self = this;
 
-            openMail(id);
+            openMail(id, function(){
+                // change list item state indicator
+                $(self).siblings().removeClass('active').end().addClass('active');
+                // change url hash
+                location.hash = '#/mail/read/' + id;
+            });
         })
+    }
+
+
+    function bindMailListMenu() {
+
+        // customize event 'select' and 'unselect', and delegate to #maillist
+        $('#maillist').on('select', '.mail-list-item', function() {
+            $(this).addClass('selected').find('.action-controls :checkbox').prop('checked', 'checked');
+        }).on('unselect', '.mail-list-item', function() {
+            $(this).removeClass('selected').find('.action-controls :checkbox:checked').removeAttr('checked');
+        });
+
+        //Delete mail or mails async.
+        $('#maillist').on('click', '.delete-btn', function(e) {
+
+            var chks = $('.mail-list-item [name=chkSelected]:checked');
+
+            if (chks.size() == 0) {
+                return;
+            }
+
+            var ids = [];
+
+            chks.each(function() {
+                ids[ids.length] = $(this).val();
+            })
+
+            var ctrl = currentFolder == 'trash' ? 'delete' : 'trash';
+
+            ctrlMail(ids.join(','), ctrl, function() {
+                chks.parents('.mail-list-item').fadeOut(function(){
+                    $(this).remove()
+                });
+            });
+        });
+
+        var filterMails = function(filter) {
+            var items = [];
+            var itemsAll = $('#maillist .mail-list-item');
+
+            // nothing in mail list
+            if (itemsAll.size() == 0) {
+                return;
+            }
+
+            filter = filter || function() {return false};
+
+            itemsAll.each(function() {
+                var accept = filter(this);
+                if (accept) {
+                    items[items.length] = this;
+                }
+            })
+
+            return items;
+        }
+
+        var toggleMailSelection = function(isSelect, filter) {
+            var items = filterMails(filter);
+
+            if (items.length == 0) {
+                return;
+            }
+
+            if (!isSelect) {
+                $(items).trigger('unselect')
+            } else {
+                $(items).trigger('select')
+            }
+
+            updateUI();
+        }
+
+        // select or un-select all directly
+        $('#maillist').on('click', '.select-btn button.select-all-btn', function() {
+            var isSelectAll = $(this).find('.fa-square-o').size() > 0;
+            toggleMailSelection(isSelectAll, function(mail) {
+                return true; // bingo, that means ALL are accepted
+            });
+        });
+
+        // --------------------- menus
+        //select-all-menu
+        $('#maillist').on('click', '.select-btn .select-all-menu', function(e){
+            toggleMailSelection(true, function(mail) {
+                return true;
+            });
+        });
+        //select-none-menu
+        $('#maillist').on('click', '.select-btn .select-none-menu', function(e){
+            toggleMailSelection(false, function(mail) {
+                return true;
+            });
+        });
+        //select-star-menu
+        $('#maillist').on('click', '.select-btn .select-star-menu', function(e){
+            toggleMailSelection(true, function(mail) {
+                return $(mail).find('i.fa-star').size() > 0;
+            });
+        });
+        //select-unstar-menu
+        $('#maillist').on('click', '.select-btn .select-unstar-menu', function(e){
+            toggleMailSelection(true, function(mail) {
+                return $(mail).find('i.fa-star-o').size() > 0;
+            });
+        });
+        $('#maillist').on('click', '.select-btn .select-read-menu', function(e){
+            toggleMailSelection(true, function(mail) {
+                return !$(mail).hasClass('unread');
+            });
+        });
+        $('#maillist').on('click', '.select-btn .select-unread-menu', function(e){
+            toggleMailSelection(true, function(mail) {
+                return $(mail).hasClass('unread');
+            });
+        })
+
+
+        // --------------------- move-to button
+
+        var MoveSelectedTo = function(folder) {
+            if (currentFolder == folder) {
+                return;
+            }
+
+            var foldersMap = {
+                'inbox' : 'untrash',
+                'trash' : 'trash'
+            }
+
+            var ctrl = foldersMap[folder];
+
+            if (!ctrl) { // incorrect folder, only support these two
+                return;
+            }
+
+            // get all selected
+            var items = filterMails(function(mail){
+                return $(mail).hasClass('selected');
+            });
+
+            if (items.length == 0) {
+                return;
+            }
+
+            var ids = $(items).map(function(){
+                return $(this).data('id')
+            }).toArray();
+
+            ctrlMail(ids.join(','), ctrl, function() {
+                loadMails();
+            });
+        };
+
+        // move selected mail or mails to <b>INBOX</b> folder.
+        $('#maillist').on('click', '.moveto-btn .moveto-inbox-menu', function() {
+            MoveSelectedTo('inbox');
+        });
+
+        // move selected mail or mails to <b>TRASH</b> folder.
+        $('#maillist').on('click', '.moveto-btn .moveto-trash-menu', function() {
+            MoveSelectedTo('trash');
+        });
+
+
+        // --------------------- more button
+
+        // mark all that all unread mails in current page as read
+        $('#maillist').on('click', '.more-btn .mark-allread-menu', function() {
+            // get all unread
+            var items = filterMails(function(mail){
+                return $(mail).hasClass('unread');
+            });
+
+            if (items.length == 0) {
+                return;
+            }
+
+            var ids = $(items).map(function(){
+                return $(this).data('id')
+            }).toArray();
+
+            ctrlMail(ids.join(','), 'read', function() {
+                $(items).removeClass('unread');
+            });
+        });
+
+        // mark all that selected mails in current page as read
+        $('#maillist').on('click', '.more-btn .mark-read-menu', function() {
+            // get all selected
+            var items = filterMails(function(mail){
+                return $(mail).hasClass('selected');
+            });
+
+            if (items.length == 0) {
+                return;
+            }
+
+            var ids = $(items).map(function(){
+                return $(this).data('id')
+            }).toArray();
+
+            ctrlMail(ids.join(','), 'read', function() {
+                $(items).toggleClass('unread', false);
+            });
+        });
+
+        // mark all that selected mails in current page as unread
+        $('#maillist').on('click', '.more-btn .mark-unread-menu', function() {
+            // get all selected
+            var items = filterMails(function(mail){
+                return $(mail).hasClass('selected');
+            });
+
+            if (items.length == 0) {
+                return;
+            }
+
+            var ids = $(items).map(function(){
+                return $(this).data('id')
+            }).toArray();
+
+            ctrlMail(ids.join(','), 'unread', function() {
+                $(items).toggleClass('unread', true);
+            });
+        });
+
+
+        // --------------------- pagination handler
+
+        $('#maillistWrapper').on('click', '.prev-btn', function() {
+            loadMails(currentFolder, pagination.prev());
+        });
+        $('#maillistWrapper').on('click', '.next-btn', function() {
+            loadMails(currentFolder, pagination.next());
+        });
+        $('#maillist').on('click', '.toolbar .prev-btn', function() {
+            loadMails(currentFolder, pagination.prev());
+        });
+        $('#maillist').on('click', '.toolbar .next-btn', function() {
+            loadMails(currentFolder, pagination.next());
+        });
+    }
+
+    // To switch mail folder
+    function bindFolderSwitch() {
+        $('#mainMenu > li').on('click', function(e) {
+
+            var self = this;
+
+            if ($(self).is('.active')) {
+                return;
+            }
+
+            var folder = $(this).data('name');
+
+            currentFolder = folder;
+
+            $(this).siblings().removeClass('active')
+                    .end().addClass('active');
+
+            $('#lblFolderName').text($(self).text());
+
+            pagination.reset();
+
+            loadMails(folder);
+        })
+    }
+
+    $(window).resize(function(){
+        adjustColumnsHeight();
+    });
+
+
+    // when this page got loaded
+    $(function(){
+
+        initializeUI();
+
+        // Synchronize mails
+        $('#maillist').on('click', '.refresh-btn', syncMails);
+
+        // Show settings dialog
+        $('#tbSystem').on('click', '.settings-btn', function() {
+            $('#dlgSetting').modal();
+        });
+
+        // Logout the system
+        $('#tbSystem').on('click', '.logout-btn', function(){
+            if (confirm('Do you really want to leave?')) {
+                location.href = '/logout';
+            }
+        });
+
+        bindFolderSwitch();
+
+        bindMailOpen();
+
+        bindMailListMenu();
+
+        bindMailActions();
+
+        updateUI();
     })
 </script>
 

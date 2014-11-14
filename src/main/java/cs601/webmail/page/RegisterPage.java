@@ -58,8 +58,10 @@ public class RegisterPage extends Page {
                 userService.addUser(user);
                 HttpSession session = request.getSession(true);
 
+                User registerUser=userService.findUserByLogId(username);
+
                 session.setAttribute(REGISTER_STEP_ATTR, REGISTER_STEP_ONE); // mark as registration has been started
-                session.setAttribute(REGISTERING_USER_ATTR, user); // save user for next step
+                session.setAttribute(REGISTERING_USER_ATTR, registerUser); // save user for next step
 
                 response.sendRedirect("/registerNext?logId=" + username);
 

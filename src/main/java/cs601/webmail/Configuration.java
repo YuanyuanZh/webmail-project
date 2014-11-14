@@ -1,7 +1,6 @@
-package cs601.webmail.application;
+package cs601.webmail;
 import cs601.webmail.exception.ConfigurationException;
 
-import cs601.webmail.Constants;
 import cs601.webmail.util.PropertyExpander;
 
 import java.io.File;
@@ -20,6 +19,7 @@ public class Configuration {
     public static final ConfigurationItem DB_PATH = new ConfigurationItem("db.path", "webmail.db");
 
     public static final ConfigurationItem SCAN_PACKAGE = new ConfigurationItem("scan.package", "cs601.webmail") ;
+    public static final ConfigurationItem WORK_DIR = new ConfigurationItem("work.dir", "${user.home}/webmail") ;
 
     public static Configuration getDefault() {
 

@@ -31,7 +31,7 @@ public class UserDAOImpl extends BaseDao implements UserDao {
             throw new DaoException(e);
         }
     }
-    private User findUserByLogId(String logId) {
+    public User findUserByLogId(String logId) {
         QueryRunner qr = getQueryRunner();
         try {
             return qr.query("select * from users where LOGID=?", new ResultSetHandler<User>() {

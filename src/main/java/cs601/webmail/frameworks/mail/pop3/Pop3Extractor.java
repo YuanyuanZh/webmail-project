@@ -1,4 +1,4 @@
-package cs601.webmail.frameworks.mail;
+package cs601.webmail.frameworks.mail.pop3;
 
 import cs601.webmail.entity.Mail;
 

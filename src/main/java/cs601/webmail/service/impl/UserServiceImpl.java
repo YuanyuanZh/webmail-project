@@ -26,6 +26,9 @@ public class UserServiceImpl implements UserService {
         }
         return false;
     }
+    public User findUserByLogId(String logId){
+        return userDao.findUserByLogId(logId);
+    }
 
     public User findByID(long id){
 

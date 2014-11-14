@@ -4,23 +4,81 @@
 html, body{overflow: hidden!important;}
 /*h5, .h5{font-size: 10px; border-bottom: 1px solid #AEAEAE; color: #A0A0A0; padding: .3em;}*/
 
+h1,.h1,h2,.h2, h3,.h3,h4,.h4,h5,.h5{font-weight: normal;color:#555;}
+
+
+.header{
+  background-color: #eaeaea;
+  padding: 15px;
+}
+
 .wrapper{min-height: 380px;}
 .left-side{
     position: absolute;
-    width: 220px;
+    width: 190px;
 }
 .right-side{
     background-color: #ffffff;
-    margin-left: 620px;
+    margin-left: 540px;
 }
 .second-left-side{
     position: absolute;
-    width: 400px;
-    left: 220px;
+    width: 350px;
+    left: 190px;
 }
 .right-side, .left-side, .second-left-side {
     min-height: 100%;
     display: block;
+}
+
+.column-header{
+    background-color: #517189;
+    /*background-color: #219753;*/
+    min-height: 60px;
+    padding: 15px 20px;
+}
+
+.column-header > h2{margin: 0; font-size: 22px; color: #fff;}
+
+.action-controls .fa-star{color: #ff9f12;}
+
+.profile{
+  position: relative;
+  padding: 10px 15px;
+}
+.profile-avatar{
+    padding: 1px;
+}
+.profile-name{
+    color: #fff;
+    font-size: 12px;
+}
+.profile-dropdown{
+  position: absolute;
+  top: 10px;
+  right: 5px;
+  padding: 10px;
+}
+.profile-dropdown > .glyphicon{
+  color: rgba(255, 255, 255, .7);
+  cursor: pointer;
+}
+.profile-dropdown:hover > .glyphicon{
+  color: #fff;
+}
+
+#maillistWrapper{
+  height: 600px; overflow-y:auto; overflow-x: hidden; padding: 0 15px 20px;
+}
+
+
+.block-screen{
+  background-color: rgba(172,172, 172, 0.6);
+  position: absolute;
+  display: block;
+  height: 100%;
+  width: 100%;
+  z-index: 50;
 }
 
 .mail-list-item{
@@ -39,6 +97,7 @@ html, body{overflow: hidden!important;}
 .mail-list-item > h4{font-size: 14px;}
 .mail-list-item .action-controls{
     color: #999;
+    cursor: pointer;
 }
 .mail-list-item > h4,
 .mail-list-item .writer > strong{
@@ -54,8 +113,11 @@ html, body{overflow: hidden!important;}
 .mail-list-item:nth-child(2n-1){
     background-color: #f5f5f5;
 }
+.mail-list-item.selected{
+    background-color: #fafba6;
+}
 .mail-list-item.active{
-    background-color: #52728a;
+    background-color: #b7bcc7;
     color: #fff;
 }
 .mail-list-item.active > p{color: #fff;}
@@ -64,22 +126,19 @@ html, body{overflow: hidden!important;}
     padding: 20px;
 }
 
-.toolbar{padding: 20px;}
+.toolbar{position: relative;padding: 20px 15px;}
 .toolbar-fixed{position: absolute; width: 100%; z-index: 2;}
 .toolbar-placeholder{height: 100px;}
 .toolbar-bottom{position: absolute; bottom: 0; width: 100%;}
+.toolbar-right{
+  position: absolute;
+  display:block;
+  right: 1em;
+  top: 1em;
+  text-align: center;}
+
 
 .second-left-side{overflow-y: auto;}
-
-
-.column-header{
-    background-color: #517189;
-    /*background-color: #219753;*/
-    min-height: 60px;
-    padding: 15px 20px;
-}
-
-.column-header > h2{margin: 0; font-size: 22px; color: #fff;}
 
 .search-box{position: relative;}
 .search-box input{color: #444; padding: 2px 22px 2px 3px;}
@@ -135,6 +194,8 @@ html, body{overflow: hidden!important;}
 .compose-btn.btn{
     background-color: #e9565a;
     border-color: #cc4b4c;
-    padding-top: 10px;
-    padding-bottom: 10px;
+    padding-top: 6px;
+    padding-bottom: 6px;
+    font-weight: normal;
+    font-family: 'ProximaNovaReg', helvetica, arial, sans-serif;
 }

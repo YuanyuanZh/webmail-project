@@ -5,16 +5,15 @@
     </div>
     <h3></h3>
     <p><span>$esc.html($mail.from)</span> to me</p>
-
-    <p>content-type: $mail.contentType</p>
 </div>
 
 <hr/>
 
 <div class="mail-body">
 
-
+<pre>
 ${mail.content}
+</pre>
 
 
 </div><!-- end .mail-body -->

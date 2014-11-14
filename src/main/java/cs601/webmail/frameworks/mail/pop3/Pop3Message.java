@@ -1,4 +1,4 @@
-package cs601.webmail.frameworks.mail;
+package cs601.webmail.frameworks.mail.pop3;
 
 import java.io.Serializable;
 import java.util.Collections;

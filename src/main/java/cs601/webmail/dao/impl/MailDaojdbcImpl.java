@@ -91,7 +91,7 @@ public class MailDaojdbcImpl extends BaseDao implements MailDao {
         mail.setTo(rs.getString("MTO"));
         mail.setContent(rs.getString("CONTENT"));
         mail.setDate(rs.getString("DATE"));
-        mail.setUserId(rs.getString("USERSID"));
+        mail.setUserId(rs.getLong("USERSID"));
         mail.setAccountId(rs.getLong("ACCOUNTID"));
         mail.setMessageId(rs.getString("MESSAGE_ID"));
         mail.setContentType(rs.getString("CONTENT_TYPE"));
@@ -103,7 +103,7 @@ public class MailDaojdbcImpl extends BaseDao implements MailDao {
         return mail;
     }
     @Override
-    public Page<Mail> findByPage(PageRequest pageRequest, Long accountId, String userId) {
+    public Page<Mail> findByPage(PageRequest pageRequest, Long accountId, Long userId) {
 
         if (pageRequest == null) {
             throw new IllegalArgumentException("pageRequest missed");
@@ -231,7 +231,7 @@ public class MailDaojdbcImpl extends BaseDao implements MailDao {
             statement.setString(4, mail.getContent());
             statement.setString(5, mail.getDate());
 
-            statement.setString(6, mail.getUserId());
+            statement.setLong(6, mail.getUserId());
             statement.setLong(7, mail.getAccountId());
             statement.setString(8, mail.getMessageId());
             statement.setString(9, mail.getContentType());

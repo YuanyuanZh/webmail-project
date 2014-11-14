@@ -1,4 +1,4 @@
-package cs601.webmail.frameworks.mail;
+package cs601.webmail.frameworks.mail.pop3;
 
 import org.apache.log4j.Logger;
 
@@ -83,8 +83,11 @@ public class Pop3Client {
         if (debug) {
             System.out.println("DEBUG [in] : " + response);
         }
-        //if (response != null && response.startsWith("-ERR"))
-            //throw new RuntimeException("Server has returned an error: " + response.replaceFirst("-ERR ", ""));
+
+        fireEvent(ClientListener.Event.LineReceived, response);
+
+        if (response != null && response.startsWith("-ERR"))
+            throw new RuntimeException("Server has returned an error: " + response.replaceFirst("-ERR ", ""));
         return response;
     }
 
@@ -342,6 +345,27 @@ public class Pop3Client {
         client.setDebug(false);
         client.connect(host,port);
         return client;
+    }
+
+    private List<ClientListener> listeners = new ArrayList<ClientListener>();
+
+    public synchronized void addListener(ClientListener listener) {
+        listeners.add(listener);
+    }
+
+    public synchronized void removeListener(ClientListener listener) {
+        listeners.remove(listener);
+    }
+
+    protected synchronized void fireEvent(ClientListener.Event event, Object eventData) {
+        if (listeners != null && listeners.size() > 0) {
+            for (int i = 0, l = listeners.size(); i < l; i++) {
+                ClientListener listener = listeners.get(i);
+                if (event == ClientListener.Event.LineReceived) {
+                    listener.onLineReceived(eventData.toString());
+                }
+            }
+        }
     }
 
     public static void main(String[] args) throws IOException {

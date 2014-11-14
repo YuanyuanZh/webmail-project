@@ -1,7 +1,7 @@
 package cs601.webmail.frameworks.db;
 
 import cs601.webmail.Constants;
-import cs601.webmail.application.Configuration;
+import cs601.webmail.Configuration;
 import cs601.webmail.util.ResourceUtils;
 import cs601.webmail.util.Strings;
 

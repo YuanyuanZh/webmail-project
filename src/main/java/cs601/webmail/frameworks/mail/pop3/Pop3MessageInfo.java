@@ -1,4 +1,4 @@
-package cs601.webmail.frameworks.mail;
+package cs601.webmail.frameworks.mail.pop3;
 
 /**
  * Created by yuanyuan on 10/28/14.

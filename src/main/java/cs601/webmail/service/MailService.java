@@ -20,6 +20,8 @@ public interface MailService {
     Mail findById(long id);
 
     List<Mail> findByFolder(String folder);
+
+    // pull remote mails, and delete locals if necessary
     int syncMails(Account account);
 
     Page<Mail> findByAccountAndPage(Account account, PageRequest pageRequest);

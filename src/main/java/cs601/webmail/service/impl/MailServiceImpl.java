@@ -1,25 +1,23 @@
 package cs601.webmail.service.impl;
 
 import cs601.webmail.Constants;
-import cs601.webmail.application.Configuration;
 import cs601.webmail.dao.MailDao;
-import cs601.webmail.dao.impl.MailDaojdbcImpl;
+import cs601.webmail.dao.impl.MailDaoImpl;
 import cs601.webmail.entity.Account;
 import cs601.webmail.entity.Mail;
-import cs601.webmail.frameworks.mail.Pop3Client;
-import cs601.webmail.frameworks.mail.Pop3Extractor;
-import cs601.webmail.frameworks.mail.Pop3Message;
-import cs601.webmail.frameworks.mail.Pop3MessageInfo;
-import cs601.webmail.service.AccountService;
+import cs601.webmail.frameworks.mail.pop3.*;
 import cs601.webmail.service.MailService;
 import cs601.webmail.service.ServiceException;
 import cs601.webmail.frameworks.db.Page;
 import cs601.webmail.frameworks.db.PageRequest;
+import cs601.webmail.util.DigestUtils;
+import cs601.webmail.util.ResourceUtils;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 
 
-
+import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
@@ -27,15 +25,14 @@ import java.util.*;
  * Created by yuanyuan on 10/25/14.
  */
 public class MailServiceImpl implements MailService {
+
     private static final Logger LOGGER = Logger.getLogger(MailServiceImpl.class);
 
     public MailServiceImpl() {
-        mailDao=new MailDaojdbcImpl();
+        mailDao = new MailDaoImpl();
     }
 
-
     private MailDao mailDao;
-
 
     @Override
     public void save(Mail mail) {
@@ -49,7 +46,7 @@ public class MailServiceImpl implements MailService {
     public void save(List<Mail> mails) {
         if (mails != null && mails.size() > 0) {
             for (Mail m : mails) {
-               save(m);
+                save(m);
             }
         }
     }
@@ -62,8 +59,9 @@ public class MailServiceImpl implements MailService {
     }
 
     @Override
-    public Mail findById(long id) { return mailDao.findById(id); }
-
+    public Mail findById(long id) {
+        return mailDao.findById(id);
+    }
 
     @Override
     public Page<Mail> findByAccountAndPage(Account account, PageRequest pageRequest) {
@@ -72,7 +70,7 @@ public class MailServiceImpl implements MailService {
 
     @Override
     public List<Mail> findByFolder(String folder) {
-        return null;
+        throw new IllegalStateException("Not impl yet");
     }
 
     /**
@@ -93,16 +91,20 @@ public class MailServiceImpl implements MailService {
     }
 
     private int doSyncMails(Account account) throws IOException {
-        String popServer= Configuration.getDefault().get("pop");
-        int popPort=Configuration.getDefault().getInteger("pop.port");
-        boolean sslEnable=Configuration.getDefault().getBoolean("pop.ssl");
-        String username=Configuration.getDefault().get("email");
-        String password=Configuration.getDefault().get("password");
 
-        Pop3Client client = Pop3Client.createInstance(popServer,popPort,sslEnable);
+        String popServer = account.getPopServer();
+        int popPort = account.getPopServerPort();
+        boolean sslEnable = account.isEnableSsl();
+
+        String username = account.getEmailUsername();
+        // FIXME The password here needs to be decrypt from the encrypted HEX string in production environment
+        String password = account.getEmailPassword();
+
+        Pop3Client client = Pop3Client.createInstance(popServer, popPort, sslEnable);
+
+        client.login(username, password);
 
         List<String> currentUIDs = mailDao.findAllMailUIDs();
-        client.login(username, password);
 
         Map<String, Long> localUIDMap = _parseLocalUIDMap(currentUIDs);
         Collection<String> localUIDs = localUIDMap.keySet();
@@ -126,8 +128,17 @@ public class MailServiceImpl implements MailService {
                 continue;
             }
 
-            // save remote
+            // attach a listener to get whole mail datagram content.
+            MailContentListener listener = new MailContentListener();
+            client.addListener(listener);
+
+            // fetch it
             Pop3Message message = client.getMessage(msgInfo.number);
+
+            // ok, remove it.
+            client.removeListener(listener);
+
+
 
             Mail mail = _parseMail(message);
             mail.setUid(rmtUID);
@@ -139,7 +150,13 @@ public class MailServiceImpl implements MailService {
             mail.setFlagUnread(Mail.FLAG_YES);
 
             LOGGER.debug("save mail to DB: " + mail);
-            mailDao.save(mail);
+            mail = mailDao.save(mail);
+
+            // save raw content to {WorkDir}/raw/SHA-1(mailAddress)/uid.dat
+            // for example: /Users/foobar/webmail/raw/5897fe8711774cde9fae5af5bd39b1a4a42d6828/cDebdfdafd0122.dat
+            String rawPath = ResourceUtils.getRawMailStorePath(username);
+            File rawFile = new File(rawPath + File.separator + DigestUtils.digestToSHA(rmtUID) + ".txt");
+            FileUtils.writeByteArrayToFile(rawFile, listener.getByteContent());
 
             updatedCount++;
         }
@@ -199,4 +216,27 @@ public class MailServiceImpl implements MailService {
         return ret;
     }
 
+
+    static class MailContentListener implements ClientListener {
+
+        private StringBuilder buf;
+
+        private static final String CR = "\r\n";
+
+        MailContentListener() {
+            this.buf = new StringBuilder();
+        }
+
+        @Override
+        public void onLineReceived(String line) {
+            buf.append(line).append(CR);
+        }
+
+        public byte[] getByteContent() {
+            if (buf.length() == 0)
+                return null;
+
+            return buf.toString().getBytes();
+        }
+    }
 }

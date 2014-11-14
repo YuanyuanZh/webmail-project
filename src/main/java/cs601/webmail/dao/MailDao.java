@@ -16,7 +16,7 @@ public interface MailDao {
     public Mail save(Mail mail);
     void removeByUID(String uid);
     public List<String> findAllMailUIDs();
-    public Page<Mail> findByPage(PageRequest pageRequest, Long accountId, String userId);
+    public Page<Mail> findByPage(PageRequest pageRequest, Long accountId, Long userId);
 
     //void insertMail(String MSGID,String SUBJECT,String MFROM,String MTO,String CONTENT,String DATE,Integer uid,Integer aid);
 

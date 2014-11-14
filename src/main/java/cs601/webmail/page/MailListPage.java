@@ -1,5 +1,7 @@
 package cs601.webmail.page;
 
+import cs601.webmail.auth.AuthenticationCheckFilter;
+import cs601.webmail.entity.User;
 import cs601.webmail.frameworks.web.RequestContext;
 import cs601.webmail.entity.Account;
 import cs601.webmail.entity.Mail;
@@ -14,6 +16,7 @@ import cs601.webmail.util.DateTimeUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.StringWriter;
 import java.text.ParseException;
 import java.util.*;
@@ -28,6 +31,8 @@ public class MailListPage extends Page {
     @Override
     public void body() throws Exception {
 
+
+
         RequestContext context = RequestContext.getCurrentInstance();
 
         MailService mailService = new MailServiceImpl();
@@ -39,8 +44,12 @@ public class MailListPage extends Page {
         resp.setContentType("application/json;charset=UTF-8");
         resp.setCharacterEncoding("UTF-8");
 
-        // TODO just for demo
-        Account currentAccount = accountService.findById(-1l);
+        HttpSession session = req.getSession();
+
+        User user=(User)session.getAttribute(AuthenticationCheckFilter.LOGIN_SESSION_FLAG);
+
+
+        Account currentAccount = accountService.findById(user.getId());
 
         String curPage = req.getParameter("page");
 

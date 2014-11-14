@@ -7,6 +7,7 @@ import cs601.webmail.entity.User;
  */
 public interface UserService {
     User findByID(long id);
+    User findUserByLogId(String logId);
     boolean verifyUser(String loginid,String password);
     void addUser(User user);
     void updatePass(long id,String password);
