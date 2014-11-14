@@ -104,7 +104,8 @@ public class MailServiceImpl implements MailService {
 
         client.login(username, password);
 
-        List<String> currentUIDs = mailDao.findAllMailUIDs();
+        //List<String> currentUIDs = mailDao.findAllMailUIDs();
+        List<String> currentUIDs = mailDao.findMailUIDs(account.getId());
 
         Map<String, Long> localUIDMap = _parseLocalUIDMap(currentUIDs);
         Collection<String> localUIDs = localUIDMap.keySet();

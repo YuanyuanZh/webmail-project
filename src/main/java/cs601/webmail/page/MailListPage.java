@@ -13,7 +13,7 @@ import cs601.webmail.service.MailService;
 import cs601.webmail.service.impl.AccountServiceImpl;
 import cs601.webmail.service.impl.MailServiceImpl;
 import cs601.webmail.util.DateTimeUtils;
-
+import cs601.webmail.util.DigestUtils;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -41,15 +41,36 @@ public class MailListPage extends Page {
         HttpServletRequest req = context.getRequest();
         HttpServletResponse resp = context.getResponse();
 
-        resp.setContentType("application/json;charset=UTF-8");
+        resp.setContentType("text/html; charset=UTF-8");
         resp.setCharacterEncoding("UTF-8");
 
         HttpSession session = req.getSession();
 
         User user=(User)session.getAttribute(AuthenticationCheckFilter.LOGIN_SESSION_FLAG);
+        if (user == null) {
+            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            resp.addHeader("x-state", "error");
+            resp.addHeader("x-msg", "Illegal request without user in session.");
+            return;
+        }
 
 
         Account currentAccount = accountService.findById(user.getId());
+        if (currentAccount == null) {
+            resp.setStatus(HttpServletResponse.SC_OK);
+            resp.addHeader("x-state", "error");
+            resp.addHeader("x-msg", "Current user don't have any account.");
+            return;
+        }
+
+        doListMails(req, resp, mailService, currentAccount);
+
+    }
+
+    private void doListMails(HttpServletRequest req,
+                             HttpServletResponse resp,
+                             MailService mailService,
+                             Account currentAccount) {
 
         String curPage = req.getParameter("page");
 
@@ -74,6 +95,7 @@ public class MailListPage extends Page {
 
                 for (Mail m : mails) {
                     m.setDate(formatDate(m.getDate()));
+                    m.setUid(DigestUtils.digestToSHA(m.getUid()));
                 }
 
                 PageTemplate template=new PageTemplate("/velocity/mail_list.vm");
@@ -93,7 +115,7 @@ public class MailListPage extends Page {
         } catch (Exception e) {
 
             resp.addHeader("x-state", "error");
-            resp.addHeader("x-msg", e.getMessage());
+            resp.addHeader("x-exception", e.getMessage());
         }
 
     }

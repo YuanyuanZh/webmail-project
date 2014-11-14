@@ -1,7 +1,7 @@
 package cs601.webmail.service.impl;
 
 import cs601.webmail.dao.UserDao;
-import cs601.webmail.dao.impl.MailDaojdbcImpl;
+import cs601.webmail.dao.impl.MailDaoImpl;
 import cs601.webmail.dao.impl.UserDAOImpl;
 import cs601.webmail.entity.User;
 import cs601.webmail.service.UserService;

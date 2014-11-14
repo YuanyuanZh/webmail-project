@@ -5,6 +5,7 @@ import cs601.webmail.dao.DaoException;
 import cs601.webmail.dao.MailDao;
 import cs601.webmail.frameworks.db.*;
 import cs601.webmail.entity.Mail;
+import cs601.webmail.util.Strings;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -81,6 +82,29 @@ public class MailDaoImpl extends BaseDao implements MailDao {
             throw new DaoException(e);
         }
 
+    }
+    @Override
+    public List<String> findMailUIDs(Long accountId) {
+        QueryRunner qr = getQueryRunner();
+
+        String sql = String.format("select MSGID,UID from emails where ACCOUNTID = %d", accountId);
+
+        try {
+            return qr.query(sql, new ResultSetHandler<List<String>>() {
+                @Override
+                public List<String> handle(ResultSet rs) throws SQLException {
+                    List<String> lines = new ArrayList<String>();
+
+                    while (rs.next()) {
+                        lines.add(String.format("%d %s", rs.getLong("MSGID"), rs.getString("UID")));
+                    }
+
+                    return lines;
+                }
+            });
+        } catch (SQLException e) {
+            throw new DaoException(e);
+        }
     }
     private Mail handleRowMapping(ResultSet rs) throws SQLException {
         Mail mail = new Mail();
@@ -282,6 +306,8 @@ public class MailDaoImpl extends BaseDao implements MailDao {
 
     };
 
+
+
 //    void insertMail(String MSGID,String SUBJECT,String MFROM,String MTO,String CONTENT,String DATE,Integer uid,Integer aid);
 
     public void removeByUID(String uid){
@@ -294,6 +320,73 @@ public class MailDaoImpl extends BaseDao implements MailDao {
             if (rows == 0) {
                 throw new IllegalStateException("Operation failed.");
             }
+        } catch (SQLException e) {
+            throw new DaoException(e);
+        }
+    }
+    @Override
+    public Page<Mail> findPageByConditions(PageRequest pageRequest, String condition) {
+
+        if (pageRequest == null) {
+            throw new IllegalArgumentException("pageRequest missed");
+        }
+
+        int position = (pageRequest.page - 1) * pageRequest.pageSize;
+        int step = pageRequest.pageSize;
+
+        QueryRunner qr = getQueryRunner();
+
+        try {
+
+            StringBuilder sb = new StringBuilder("select * from emails");
+
+            // append conditions
+            if (Strings.haveLength(condition)) {
+                sb.append(" where ").append(condition);
+            }
+
+            if (pageRequest.orders != null && pageRequest.orders.size() > 0) {
+
+                sb.append(" order by ");
+
+                for (Iterator<Order> itr = pageRequest.orders.iterator(); itr.hasNext();) {
+
+                    sb.append(itr.next());
+
+                    if (itr.hasNext()) {
+                        sb.append(",");
+                    }
+                }
+            }
+
+            sb.append(String.format(" limit %d,%d", position, step));
+
+            List<Mail> mails = qr.query(sb.toString(), new ResultSetHandler<List<Mail>>() {
+                @Override
+                public List<Mail> handle(ResultSet rs) throws SQLException {
+
+                    List<Mail> mails = new ArrayList<Mail>();
+
+                    while (rs.next()) {
+                        Mail mail = handleRowMapping(rs);
+                        mails.add(mail);
+                    }
+
+                    return mails;
+                }
+            });
+
+            Page<Mail> pageResult = new Page<Mail>();
+
+            int rows = count("emails", condition);
+
+            pageResult.setPosition(position);
+            pageResult.setPageSize(step);
+            pageResult.setPageList(mails);
+            pageResult.setTotal(rows);
+
+            return pageResult;
+
         } catch (SQLException e) {
             throw new DaoException(e);
         }
