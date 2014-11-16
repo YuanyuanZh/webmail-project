@@ -73,14 +73,24 @@ public class MailListPage extends Page {
                              Account currentAccount) {
 
         String curPage = req.getParameter("page");
+        String folder = req.getParameter("folder");
+
+        // incorrect folder name
+        // use 'inbox' as default
+        if (!"inbox".equals(folder) && !"fav".equals(folder)
+                && !"trash".equals(folder)) {
+            folder = "inbox";
+        }
 
         PageRequest pageRequest = new PageRequest(Order.desc("MSGID"));
-        pageRequest.pageSize = PageRequest.DEFAULT_PAGE_SIZE;
+        pageRequest.pageSize = 15;
         pageRequest.page = curPage != null ? Integer.parseInt(curPage) : 1;
 
         try {
-            cs601.webmail.frameworks.db.Page<Mail> pageResult
-                    = mailService.findByAccountAndPage(currentAccount, pageRequest);
+            cs601.webmail.frameworks.db.Page<Mail> pageResult =
+                    mailService.findPage(folder, currentAccount, pageRequest);
+            /*cs601.webmail.frameworks.db.Page<Mail> pageResult
+                    = mailService.findByAccountAndPage(currentAccount, pageRequest);*/
 
             if (pageResult == null||!(pageResult.getPageList()!=null&&pageResult.getPageList().size()>0)) {
 
@@ -88,6 +98,8 @@ public class MailListPage extends Page {
                 resp.addHeader("x-total", "0");
                 resp.addHeader("x-position", "0");
                 resp.addHeader("x-page-size", pageResult.getPageSize() + EMPTY_STRING);
+                resp.addHeader("x-page-size", pageResult.getPageSize() + EMPTY_STRING);
+                resp.addHeader("x-folder", folder);
                 return;
             }
 
@@ -100,6 +112,8 @@ public class MailListPage extends Page {
 
                 PageTemplate template=new PageTemplate("/velocity/mail_list.vm");
                 template.addParam("mails",mails);
+                template.addParam("folder", folder);
+
 
                 StringWriter writer=new StringWriter();
                 template.merge(writer);
@@ -107,7 +121,9 @@ public class MailListPage extends Page {
                 resp.addHeader("x-state", "ok");  // using HTTP headers instead of JSON to pass info.
                 resp.addHeader("x-total", pageResult.getTotal() + EMPTY_STRING);
                 resp.addHeader("x-position", pageResult.getPosition() + EMPTY_STRING);
+                resp.addHeader("x-page", pageRequest.page + EMPTY_STRING);
                 resp.addHeader("x-page-size", pageResult.getPageSize() + EMPTY_STRING);
+                resp.addHeader("x-folder", folder);
 
                 getOut().println(writer.toString());
 

@@ -11,13 +11,7 @@
     <link href="/resources/css/bootstrap.progress-auto.css" rel="stylesheet" type="text/css" />
     <!-- font Awesome -->
     <link href="/resources/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
-    <!-- Ionicons -->
-    <!--<link href="/resources/css/ionicons.min.css" rel="stylesheet" type="text/css" />-->
-    <!-- bootstrap wysihtml5 - text editor -->
-    <!--<link href="/resources/css/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css" rel="stylesheet" type="text/css" />-->
-    <!-- iCheck for checkboxes and radio inputs -->
-    <!--<link href="/resources/css/iCheck/minimal/blue.css" rel="stylesheet" type="text/css" />-->
-    <!-- Theme style -->
+
     <link href="/resources/css/mail.css" rel="stylesheet" type="text/css" />
     <link href="/resources/css/mail-resp.css" rel="stylesheet" type="text/css" />
 
@@ -38,7 +32,7 @@
 <div class="wrapper">
 <aside class="left-side x-col">
     <div class="profile column-header">
-        <span class="profile-name">Welcome,Yuanyuan</span>
+        <span class="profile-name">Welcome,</span>
 
         <div class="profile-dropdown dropdown" >
             <span class="glyphicon glyphicon-collapse-down dropdown-trigger" data-toggle="dropdown"></span>
@@ -515,26 +509,6 @@
 </div>
 
 
-<script id="mailSummary" type="text/template">
-    <% for (var i = 0; i < items.length; i++) { var item = items[i]; %>
-    <dd data-messageIndex="" data-id="<%=item.id%>" class="mail-list-item <% if (item.flagUnread) { %>unread<%}%>">
-        <div class="action-controls">
-            <input type="checkbox" />
-            <div style="margin-top:8px;">
-                <i class="fa fa-star-o"></i>
-            </div>
-        </div>
-        <div class="writer">
-            <strong><%= item.from %></strong>
-            <span class="pull-right"><%=item.date%></span>
-        </div>
-        <h4><%= item.subject %></h4>
-        <p>
-        </p>
-    </dd>
-    <%}%>
-</script>
-
 <script src="/resources/js/jquery-2.1.1.js"></script>
 <script src="/resources/js/bootstrap.js"></script>
 <script src="/resources/js/underscore-min.js"></script>
@@ -642,6 +616,18 @@
         } else {
             state.removeClass('hidden');
         }
+    }
+    function loadProfile() {
+        var xhr = $.get('/rest/user/profile', function(data, textStatus, response) {
+
+            var state = response.getResponseHeader('x-state');
+
+            if (textStatus == 'success' && state == 'ok') {
+                $('#profile').html(data);
+            }
+        }).fail(function() {
+            Noty.error("Load profile failed.")
+        })
     }
 
     function loadMails(folder, page, firstInvoke) {
@@ -1250,6 +1236,12 @@
         bindMailListMenu();
 
         bindMailActions();
+
+        // load profile fragment
+        loadProfile();
+
+        // load mails when page loaded
+        loadMails('inbox', 1, true);
 
         updateUI();
     })

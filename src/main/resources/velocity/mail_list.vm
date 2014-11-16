@@ -2,9 +2,13 @@
     <dd data-messageIndex="" data-id="${item.id}" data-uid="$esc.url($item.uid)"
        class="mail-list-item #if ($item.flagUnread > 0) unread #end" data-unread="$item.flagUnread">
         <div class="action-controls">
-            <input type="checkbox" />
+            <input type="checkbox" name="chkSelected" value="${item.id}" />
             <div style="margin-top:8px;">
-                <i class="fa fa-star-o"></i>
+                #if ($folder == 'trash')
+                    <i title="Delete this forever" class="del-btn fa fa-trash"></i>
+                #else
+                    <i title="Favorite this mail" class="fav-btn fa #if ($item.flagFav == 0) fa-star-o #else fa-star #end"></i>
+                #end
             </div>
         </div>
         <div class="writer">

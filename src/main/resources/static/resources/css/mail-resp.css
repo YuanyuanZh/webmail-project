@@ -1,0 +1,29 @@
+.toggle-slider-btn{display: none;}
+
+@media screen  and (max-width:1280px){
+  #maillistWrapper{padding: 0 6px 20px;}
+  #maillist{width: 320px; left: 160px;}
+  .left-side{width: 160px;}
+  .right-side{margin-left: 480px;}
+  .toolbar-right{right: 6px;}
+  #maillist .toolbar{padding: 20px 6px;}
+}
+
+@media screen and (max-width:960px){
+  .right-side{display: none;}
+}
+
+/* mobile */
+@media screen and (max-width:640px){
+  .left-side{display: none;}
+  #maillist{left: 0px; width: 100%;}
+
+  .slider-out .left-side{
+    display: block;
+  }
+  .slider-out #maillist{
+    left: 180px;
+  }
+  .toggle-slider-btn{display: inline;}
+  /*.search-box > input{width: 100px;}*/
+}

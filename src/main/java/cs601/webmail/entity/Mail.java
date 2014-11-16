@@ -12,13 +12,16 @@ import java.io.Serializable;
 @Table(tableName = "emails")
 public class Mail implements Serializable {
 
-    public static final int NO_FLAG =0;
-    public static final int FLAG_NEW =1;
-    public static final int FLAG_UNREAD=2;
-    public static final int FLAG_REMOVED=4;
+    public static final int NO_FLAG         = 0;
 
-    public static final int FLAG_YES=1;
-    public static final int FLAG_NO=0;
+    public static final int FLAG_NEW        = 1;
+    public static final int FLAG_UNREAD     = 2;
+
+    public static final int FLAG_TRASH      = 4;
+    public static final int FLAG_DELETE     = 8;
+
+    public static final int FLAG_YES = 1;
+    public static final int FLAG_NO = 0;
 
     @Id
     @Column(columnName = "MSGID", propertyName = "id")
@@ -66,6 +69,17 @@ public class Mail implements Serializable {
 
     @Column(columnName = "FLAG_FAV", propertyName = "flagFav")
     private int flagFav = 0;
+
+    @Column(columnName = "FLAG_DEL", propertyName = "flagDel")
+    private int flagDel = 0;
+
+    public int getFlagDel() {
+        return flagDel;
+    }
+
+    public void setFlagDel(int flagDel) {
+        this.flagDel = flagDel;
+    }
 
 
     public Long getUserId() {

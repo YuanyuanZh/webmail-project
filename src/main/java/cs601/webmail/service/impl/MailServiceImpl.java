@@ -51,10 +51,27 @@ public class MailServiceImpl implements MailService {
         }
     }
 
+    /**
+     * Set FLAG_TRASH, NOT delete it physically  from DB.
+     * @param mail
+     */
+    public void trash(Mail mail) {
+        if (mail != null) {
+            mail.setFlagDel(Mail.FLAG_TRASH);
+            mailDao.save(mail);
+        }
+    }
+
+    /**
+     * Set FLAG_DEL only, NOT delete physically from DB
+     */
     @Override
     public void delete(Mail mail) {
         if (mail != null) {
-            mailDao.removeByUID(mail.getUid());
+
+            mail.setFlagDel(Mail.FLAG_DELETE);
+
+            mailDao.save(mail);
         }
     }
 
@@ -66,6 +83,38 @@ public class MailServiceImpl implements MailService {
     @Override
     public Page<Mail> findByAccountAndPage(Account account, PageRequest pageRequest) {
         return mailDao.findByPage(pageRequest, account.getId(), account.getUserId());
+    }
+
+    @Override
+    public Page<Mail> findPage(String folder, Account account, PageRequest pageRequest){
+        if("fav".equals(folder)){
+            // return all fav flag mail but FLAG_DEL = FLAG_DELETE
+            String condition = String.format("ACCOUNTID = %d and USERSID = %d and FLAG_FAV > 0 and FLAG_DEL <> %d",
+                    account.getId(),
+                    account.getUserId(),
+                    Mail.FLAG_DELETE);
+
+            return mailDao.findPageByConditions(pageRequest, condition);
+        }
+        else if ("trash".equals(folder)) {
+
+            String condition = String.format("ACCOUNTID = %d and USERSID = %d and FLAG_DEL = %d",
+                    account.getId(),
+                    account.getUserId(),
+                    Mail.FLAG_TRASH);
+
+            return mailDao.findPageByConditions(pageRequest, condition);
+        }
+        // 'inbox' as default.
+        // of course, excluded those who's FLAG_DEL not equals FLAG_NO
+        else {
+            String condition = String.format("ACCOUNTID = %d and USERSID = %d and FLAG_DEL = %d",
+                    account.getId(),
+                    account.getUserId(),
+                    Mail.FLAG_NO);
+
+            return mailDao.findPageByConditions(pageRequest, condition);
+        }
     }
 
     @Override

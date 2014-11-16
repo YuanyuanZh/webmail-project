@@ -209,7 +209,7 @@ public class MailDaoImpl extends BaseDao implements MailDao {
 
         String sql = "update emails set SUBJECT=?,MFROM=?,MTO=?,CONTENT=?,DATE=?," +
                 "USERSID=?,ACCOUNTID=?,MESSAGE_ID=?,CONTENT_TYPE=?,UID=?," +
-                "FLAG_NEW=?,FLAG_UNREAD=?,FLAG_FAV=? where MSGID=" + mail.getId();
+                "FLAG_NEW=?,FLAG_UNREAD=?,FLAG_FAV=?,FLAG_DEL=? where MSGID=" + mail.getId();
 
         Object[] params = new Object[]{
                 mail.getSubject(),
@@ -226,7 +226,8 @@ public class MailDaoImpl extends BaseDao implements MailDao {
 
                 mail.getFlagNew(),
                 mail.getFlagUnread(),
-                mail.getFlagFav()
+                mail.getFlagFav(),
+                mail.getFlagDel()
         };
 
         try {
@@ -246,8 +247,8 @@ public class MailDaoImpl extends BaseDao implements MailDao {
             statement = conn.prepareStatement("insert into emails" +
                     "(SUBJECT, MFROM, MTO, CONTENT, DATE" +
                     ", USERSID, ACCOUNTID, MESSAGE_ID, CONTENT_TYPE, UID" +
-                    ", FLAG_NEW, FLAG_UNREAD, FLAG_FAV)" +
-                    " values (?, ?, ?, ?, ?,  ?, ?, ?, ?, ?,  ?, ?, ?)");
+                    ", FLAG_NEW, FLAG_UNREAD, FLAG_FAV, FLAG_DEL)" +
+                    " values (?, ?, ?, ?, ?,  ?, ?, ?, ?, ?,  ?, ?, ?, ?)");
 
             statement.setString(1, mail.getSubject());
             statement.setString(2, mail.getFrom());
@@ -264,6 +265,7 @@ public class MailDaoImpl extends BaseDao implements MailDao {
             statement.setInt(11, mail.getFlagNew());
             statement.setInt(12, mail.getFlagUnread());
             statement.setInt(13, mail.getFlagFav());
+            statement.setInt(14, mail.getFlagDel());
 
             int rows = statement.executeUpdate();
 

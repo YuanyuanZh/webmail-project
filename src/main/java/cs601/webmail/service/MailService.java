@@ -25,4 +25,5 @@ public interface MailService {
     int syncMails(Account account);
 
     Page<Mail> findByAccountAndPage(Account account, PageRequest pageRequest);
+    Page<Mail> findPage(String folder, Account currentAccount, PageRequest pageRequest);
 }
