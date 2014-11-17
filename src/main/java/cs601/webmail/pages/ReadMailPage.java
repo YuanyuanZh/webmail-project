@@ -1,4 +1,4 @@
-package cs601.webmail.page;
+package cs601.webmail.pages;
 
 import cs601.webmail.auth.AuthenticationCheckFilter;
 import cs601.webmail.entity.Account;
@@ -29,7 +29,7 @@ import java.io.StringWriter;
 /**
  * Created by yuanyuan on 11/8/14.
  */
-public class ReadMailPage extends Page{
+public class ReadMailPage extends Page {
 
     public void body()throws Exception{
         HttpServletRequest request= RequestContext.getCurrentInstance().getRequest();

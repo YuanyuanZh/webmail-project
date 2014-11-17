@@ -1,7 +1,6 @@
-package cs601.webmail.page;
+package cs601.webmail.pages;
 
 import cs601.webmail.util.DigestUtils;
-import cs601.webmail.auth.AuthenticationCheckFilter;
 import cs601.webmail.entity.User;
 import cs601.webmail.frameworks.web.RequestContext;
 import cs601.webmail.service.UserService;

@@ -1,4 +1,4 @@
-package cs601.webmail.page;
+package cs601.webmail.pages;
 
 
 import cs601.webmail.entity.Account;
@@ -9,7 +9,6 @@ import cs601.webmail.service.AccountService;
 import cs601.webmail.service.UserService;
 import cs601.webmail.service.impl.AccountServiceImpl;
 import cs601.webmail.service.impl.UserServiceImpl;
-import cs601.webmail.util.DigestUtils;
 import cs601.webmail.entity.User;
 import javax.servlet.http.HttpSession;
 

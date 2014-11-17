@@ -1,4 +1,4 @@
-package cs601.webmail.page;
+package cs601.webmail.pages;
 
 import cs601.webmail.auth.AuthenticationCheckFilter;
 import cs601.webmail.entity.User;
@@ -17,7 +17,7 @@ import java.io.StringWriter;
 /**
  * Created by yuanyuan on 11/15/14.
  */
-public class ProfilePage extends Page{
+public class ProfilePage extends Page {
 
     @Override
     public void body()throws Exception{

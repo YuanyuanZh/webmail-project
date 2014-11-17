@@ -1,4 +1,4 @@
-package cs601.webmail.page;
+package cs601.webmail.pages;
 
 /**
  * Created by yuanyuan on 10/15/14.

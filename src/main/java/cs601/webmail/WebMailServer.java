@@ -1,9 +1,9 @@
 package cs601.webmail;
 
 import cs601.webmail.auth.AuthenticationCheckFilter;
-import cs601.webmail.page.DispatchServlet;
 import cs601.webmail.util.PropertyExpander;
 import org.apache.log4j.BasicConfigurator;
+import cs601.webmail.pages.DispatchServlet;
 import org.eclipse.jetty.server.NCSARequestLog;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.RequestLogHandler;
@@ -16,7 +16,7 @@ import javax.servlet.DispatcherType;
 import java.util.EnumSet;
 
 /**
- * Created by yuanyuan on 11/3/14.
+ * Created by yuan on 10/22/14.
  */
 public class WebMailServer {
 
@@ -52,7 +52,6 @@ public class WebMailServer {
 
         FilterHolder loginFilter = new FilterHolder(AuthenticationCheckFilter.class);
         context.addFilter(loginFilter, "/*", EnumSet.of(DispatcherType.INCLUDE, DispatcherType.REQUEST));
-
 
         // add a simple Servlet at "/dynamic/*"
         ServletHolder holderDynamic = new ServletHolder("dynamic", DispatchServlet.class);
@@ -96,5 +95,4 @@ public class WebMailServer {
         server.join();
     }
 }
-
 

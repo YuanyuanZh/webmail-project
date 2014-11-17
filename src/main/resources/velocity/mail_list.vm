@@ -1,6 +1,6 @@
 #foreach( $item in $mails )
     <dd data-messageIndex="" data-id="${item.id}" data-uid="$esc.url($item.uid)"
-       class="mail-list-item #if ($item.flagUnread > 0) unread #end" data-unread="$item.flagUnread">
+        class="mail-list-item #if ($item.flagUnread > 0) unread #end" data-unread="$item.flagUnread">
         <div class="action-controls">
             <input type="checkbox" name="chkSelected" value="${item.id}" />
             <div style="margin-top:8px;">

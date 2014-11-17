@@ -1,13 +1,11 @@
-package cs601.webmail.page;
+package cs601.webmail.pages;
 
 import cs601.webmail.Constants;
-import cs601.webmail.entity.Account;
 import cs601.webmail.frameworks.web.RequestContext;
 import cs601.webmail.auth.AuthenticationCheckFilter;
 import cs601.webmail.entity.User;
-import cs601.webmail.service.AccountService;
+import cs601.webmail.pages.Page;
 import cs601.webmail.service.UserService;
-import cs601.webmail.service.impl.AccountServiceImpl;
 import cs601.webmail.service.impl.UserServiceImpl;
 import cs601.webmail.util.DigestUtils;
 
@@ -20,7 +18,7 @@ import java.io.IOException;
 /**
  * Created by yuanyuan on 10/22/14.
  */
-public class LoginPage extends Page{
+public class LoginPage extends Page {
     public void verify() {
         // no-op
     }

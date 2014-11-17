@@ -20,26 +20,26 @@ import java.util.List;
 /**
  * Created by yuanyuan on 10/29/14.
  */
-public class AccountDaojdbcImpl extends BaseDao implements AccountDao{
+public class AccountDaoImpl extends BaseDao implements AccountDao{
 
-   public void save(Account account){
+    public void save(Account account){
         if(account==null){
             throw new IllegalArgumentException();
         }
-       QueryRunner qr = getQueryRunner();
-       try {
+        QueryRunner qr = getQueryRunner();
+        try {
 
-           int row = qr.update("insert into accounts(userid,email_address,epass,POP_SERVER,POP_SERVER_PORT,ENABLE_SSL) values(?,?,?,?,?,?)",
-                   new Object[]{account.getUserId(), account.getEmailUsername(), account.getEmailPassword(),account.getPopServer(),account.getPopServerPort(),account.isEnableSsl()});
+            int row = qr.update("insert into accounts(userid,email_address,epass,POP_SERVER,POP_SERVER_PORT,ENABLE_SSL) values(?,?,?,?,?,?)",
+                    new Object[]{account.getUserId(), account.getEmailUsername(), account.getEmailPassword(),account.getPopServer(),account.getPopServerPort(),account.isEnableSsl()});
 
-           if (row != 1) {
-               //return false;
-               throw new IllegalStateException("Save account failed.");
-           }
-       } catch (SQLException e) {
-           throw new DaoException(e);
-       }
-   }
+            if (row != 1) {
+                //return false;
+                throw new IllegalStateException("Save account failed.");
+            }
+        } catch (SQLException e) {
+            throw new DaoException(e);
+        }
+    }
 
     public void delete(Account account){
         if(account==null){
@@ -59,6 +59,21 @@ public class AccountDaojdbcImpl extends BaseDao implements AccountDao{
             throw new DaoException(e);
         }
 
+    }
+
+    public List<Account> listAll() {
+        QueryRunner qr = getQueryRunner();
+
+        try {
+            return qr.query("select * from ACCOUNTS", new ResultSetHandler<List<Account> >() {
+                @Override
+                public List<Account>  handle(ResultSet resultSet) throws SQLException {
+                    return handleRowsMapping(resultSet);
+                }
+            });
+        } catch (SQLException e) {
+            throw new DaoException(e);
+        }
     }
 
     public Account findById(Long userid){
@@ -118,5 +133,14 @@ public class AccountDaojdbcImpl extends BaseDao implements AccountDao{
         account.setEnableSsl(rs.getBoolean("ENABLE_SSL"));
 
         return account;
+    }
+    private List<Account> handleRowsMapping(ResultSet rs) throws SQLException {
+        List<Account> accounts = new ArrayList<Account>();
+
+        while (rs.next()) {
+            accounts.add(handleRowMapping(rs));
+        }
+
+        return accounts;
     }
 }

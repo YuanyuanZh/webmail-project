@@ -11,7 +11,13 @@
     <link href="/resources/css/bootstrap.progress-auto.css" rel="stylesheet" type="text/css" />
     <!-- font Awesome -->
     <link href="/resources/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
-
+    <!-- Ionicons -->
+    <!--<link href="/resources/css/ionicons.min.css" rel="stylesheet" type="text/css" />-->
+    <!-- bootstrap wysihtml5 - text editor -->
+    <!--<link href="/resources/css/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css" rel="stylesheet" type="text/css" />-->
+    <!-- iCheck for checkboxes and radio inputs -->
+    <!--<link href="/resources/css/iCheck/minimal/blue.css" rel="stylesheet" type="text/css" />-->
+    <!-- Theme style -->
     <link href="/resources/css/mail.css" rel="stylesheet" type="text/css" />
     <link href="/resources/css/mail-resp.css" rel="stylesheet" type="text/css" />
 
@@ -31,8 +37,9 @@
 
 <div class="wrapper">
 <aside class="left-side x-col">
-    <div class="profile column-header">
-        <span class="profile-name">Welcome,</span>
+    <div id="profile" class="profile column-header">
+        <img src="/resources/img/avatar/avatar_2x.png" height="40" width="40" class="profile-avatar img-circle img-thumbnail" alt="Avatar" />
+        <span class="profile-name">Hello,</span>
 
         <div class="profile-dropdown dropdown" >
             <span class="glyphicon glyphicon-collapse-down dropdown-trigger" data-toggle="dropdown"></span>
@@ -74,255 +81,255 @@
 <!-- Mail list -->
 <aside id="maillist" class="second-left-side x-col">
 
-<div class="column-header">
-    <!--<div class="search-box pull-right">-->
-    <!--<input class="" placeholder="Search Mail..." type="text" />-->
-    <!--<span class="search-icon"><i class="fa fa-search"></i></span>-->
-    <!--</div>-->
+    <div class="column-header">
+        <!--<div class="search-box pull-right">-->
+            <!--<input class="" placeholder="Search Mail..." type="text" />-->
+            <!--<span class="search-icon"><i class="fa fa-search"></i></span>-->
+        <!--</div>-->
 
-    <h2 id="lblFolderName" class="folder-name">Inbox</h2>
-</div>
-
-<header class="toolbar">
-
-    <div class="select-btn btn-group">
-        <button class="select-all-btn btn btn-default  btn-sm">
-            <i class="fa fa-square-o"></i>
-        </button>
-        <button type="button" class="btn btn-default  btn-sm dropdown-toggle" data-toggle="dropdown">
-            <span class="caret"></span>
-            <span class="sr-only">Toggle Dropdown</span>
-        </button>
-        <ul class="dropdown-menu" role="menu">
-            <li class="select-all-menu"><a href="#">All</a></li>
-            <li class="select-none-menu"><a href="#">None</a></li>
-            <li class="select-read-menu"><a href="#">Read</a></li>
-            <li class="select-unread-menu"><a href="#">Unread</a></li>
-            <li class="select-star-menu"><a href="#">Starred</a></li>
-            <li class="select-unstar-menu"><a href="#">Unstarred</a></li>
-        </ul>
+        <h2 id="lblFolderName" class="folder-name">Inbox</h2>
     </div>
 
-    <div class="btn-group">
-        <!-- <button class="btn btn-default"><i class="fa fa-refresh"></i></button> -->
-        <button class="btn btn-default refresh-btn  btn-sm"><i class="fa fa-refresh"></i></button>
-    </div>
-    <div class="btn-group">
-        <!--<button type="button" class="btn btn-default"><i class="fa fa-archive"></i></button>-->
-        <!--<button type="button" class="btn btn-default"><i class="fa fa-info-circle"></i></button>-->
-        <button type="button" class="btn btn-default delete-btn  btn-sm"><i class="fa fa-trash"></i></button>
-    </div>
+    <header class="toolbar">
 
-    <div class="moveto-btn btn-group">
-        <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown"
-                title="Move to">
-            <i class="fa fa-folder"></i>
-            <span class="caret"></span>
-            <span class="sr-only">Toggle Dropdown</span>
-        </button>
-        <!--<button type="button" class="btn btn-default" title="Tag"><i class="fa fa-tag"></i></button>-->
-        <ul class="dropdown-menu" role="menu">
-            <li class="moveto-inbox-menu"><a href="#">Move to Inbox</a></li>
-            <li class="moveto-trash-menu"><a href="#">Move to Trash</a></li>
-        </ul>
-    </div>
-
-    <div class="more-btn btn-group">
-        <button type="button" class="btn btn-default  btn-sm dropdown-toggle" data-toggle="dropdown">
-            More
-            <span class="caret"></span>
-            <span class="sr-only">Toggle Dropdown</span>
-        </button>
-        <ul class="dropdown-menu" role="menu">
-            <li class="mark-allread-menu"><a href="#">Mark all as read</a></li>
-            <li class="mark-unread-menu"><a href="#">Mark as unread</a></li>
-            <li class="mark-read-menu"><a href="#">Mark as read</a></li>
-        </ul>
-    </div>
-
-    <div class="pull-right" style="display:inline-block; margin-left: 15px; vertical-align: top; text-align: right;">
-        <small class="mails-page-indicator">1-100 of 1024</small>
-        <br/>
-        <i class="prev-btn fa fa-chevron-left"></i>&nbsp;&nbsp;&nbsp;
-        <i class="next-btn fa fa-chevron-right"></i>
-
-        <!-- <div class="btn-group">
-          <button type="button" class="btn btn-default"><i class="fa fa-chevron-left"></i></button>
-          <button type="button" class="btn btn-default"><i class="fa fa-chevron-right"></i></button>
-        </div> -->
-
-    </div>
-</header>
-
-<div id="maillistWrapper" data-layout="fill-parent">
-    <!-- <div class="toolbar-placeholder"></div> -->
-
-    <div id="mailListState" class="hidden alert alert-info" role="alert">
-        Oops! No mail found. Try to sync it.
-    </div>
-
-    <dl class="mail-list">
-
-        <!--<dd class="mail-list-item unread">-->
-        <!--<div class="action-controls">-->
-        <!--<input type="checkbox" />-->
-        <!--<div style="margin-top:8px;">-->
-        <!--<i class="fav-btn fa fa-star-o"></i>-->
-        <!--</div>-->
-        <!--</div>-->
-        <!--<div class="writer">-->
-        <!--<strong>Facebook</strong>-->
-        <!--<span class="pull-right">3:04 (1小时前)</span>-->
-        <!--</div>-->
-        <!--<h4>Do you know Tony Townsend, Boyu Wang and 8 others?</h4>-->
-        <!--</dd>-->
-
-
-        <!--<dd class="mail-list-item unread">-->
-        <!--<div class="action-controls">-->
-        <!--<input type="checkbox" />-->
-        <!--<div style="margin-top:8px;">-->
-        <!--<i class="fa fa-star-o"></i>-->
-        <!--</div>-->
-        <!--</div>-->
-        <!--<div class="writer">-->
-        <!--<strong>Pinterest</strong>-->
-        <!--<span class="pull-right">September 21</span>-->
-        <!--</div>-->
-        <!--<h4>Another thing you can do on Pinterest: Renovate your home!</h4>-->
-        <!--<p>Did you know you can also use Pinterest to plan out any improvements-->
-        <!--you want to make to your home? So if you’re redecorating your living-->
-        <!--room, just do a quick search to see what rugs,-->
-        <!--couches and other great ideas people have discovered. </p>-->
-        <!--</dd>-->
-
-
-        <!--<dd class="mail-list-item active">-->
-        <!--<div class="action-controls">-->
-        <!--<input type="checkbox" />-->
-        <!--<div style="margin-top:8px;">-->
-        <!--<i class="fa fa-star-o"></i>-->
-        <!--</div>-->
-        <!--</div>-->
-        <!--<div class="writer">-->
-        <!--<strong>OpenShift by Red Hat</strong>-->
-        <!--<span class="pull-right">21:39 (4小时前)</span>-->
-        <!--</div>-->
-        <!--<h4>Announcing Dedicated Node Services</h4>-->
-        <!--<p>-->
-        <!--Last week we announced Dedicated Node Services for OpenShift.-->
-        <!--Dedicated Node gives Enterprise users more options and power than ever,-->
-        <!--providing customized and dedicated-->
-        <!--</p>-->
-        <!--</dd>-->
-
-        <!--<dd class="mail-list-item">-->
-        <!--<div class="action-controls">-->
-        <!--<input type="checkbox" />-->
-        <!--<div style="margin-top:8px;">-->
-        <!--<i class="fa fa-star-o"></i>-->
-        <!--</div>-->
-        <!--</div>-->
-        <!--<div class="writer">-->
-        <!--<strong>OpenShift by Red Hat</strong>-->
-        <!--<span class="pull-right">-->
-        <!--<i class="fa fa-paperclip"></i>-->
-        <!--21:39 (4小时前)</span>-->
-        <!--</div>-->
-        <!--<h4>Work Inquire from Apple</h4>-->
-        <!--<p>-->
-        <!--Last week we announced Dedicated Node Services for OpenShift.-->
-        <!--Dedicated Node gives Enterprise users more options and power than ever,-->
-        <!--providing customized and dedicated nodes to-->
-        <!--</p>-->
-        <!--</dd>-->
-
-        <!--<dd class="mail-list-item">-->
-        <!--<div class="action-controls">-->
-        <!--<input type="checkbox" />-->
-        <!--<div style="margin-top:8px;">-->
-        <!--<i class="fa fa-star-o"></i>-->
-        <!--</div>-->
-        <!--</div>-->
-        <!--<div class="writer">-->
-        <!--<strong>OpenShift by Red Hat</strong>-->
-        <!--<span class="pull-right">21:39 (4小时前)</span>-->
-        <!--</div>-->
-        <!--<h4>Work Inquire from Apple</h4>-->
-        <!--<p>-->
-        <!--Last week we announced Dedicated Node Services for OpenShift.-->
-        <!--Dedicated Node gives Enterprise users more options and power than ever,-->
-        <!--providing customized and dedicated nodes to-->
-        <!--</p>-->
-        <!--</dd>-->
-
-        <!--<dd class="mail-list-item">-->
-        <!--<div class="action-controls">-->
-        <!--<input type="checkbox" />-->
-        <!--<div style="margin-top:8px;">-->
-        <!--<i class="fa fa-star-o"></i>-->
-        <!--</div>-->
-        <!--</div>-->
-        <!--<div class="writer">-->
-        <!--<strong>OpenShift by Red Hat</strong>-->
-        <!--<span class="pull-right">21:39 (4小时前)</span>-->
-        <!--</div>-->
-        <!--<h4>Work Inquire from Apple</h4>-->
-        <!--<p>-->
-        <!--Last week we announced Dedicated Node Services for OpenShift.-->
-        <!--Dedicated Node gives Enterprise users more options and power than ever,-->
-        <!--providing customized and dedicated nodes to-->
-        <!--</p>-->
-        <!--</dd>-->
-
-        <!--<dd class="mail-list-item">-->
-        <!--<div class="action-controls">-->
-        <!--<input type="checkbox" />-->
-        <!--<div style="margin-top:8px;">-->
-        <!--<i class="fa fa-star-o"></i>-->
-        <!--</div>-->
-        <!--</div>-->
-        <!--<div class="writer">-->
-        <!--<strong>OpenShift by Red Hat</strong>-->
-        <!--<span class="pull-right">21:39 (4小时前)</span>-->
-        <!--</div>-->
-        <!--<h4>Work Inquire from Apple</h4>-->
-        <!--<p>-->
-        <!--Last week we announced Dedicated Node Services for OpenShift.-->
-        <!--Dedicated Node gives Enterprise users more options and power than ever,-->
-        <!--providing customized and dedicated nodes to-->
-        <!--</p>-->
-        <!--</dd>-->
-
-        <!--<dd class="mail-list-item">-->
-        <!--<div class="action-controls">-->
-        <!--<input type="checkbox" />-->
-        <!--<div style="margin-top:8px;">-->
-        <!--<i class="fa fa-star-o"></i>-->
-        <!--</div>-->
-        <!--</div>-->
-        <!--<div class="writer">-->
-        <!--<strong>OpenShift by Red Hat</strong>-->
-        <!--<span class="pull-right">21:39 (4小时前)</span>-->
-        <!--</div>-->
-        <!--<h4>Announcing Dedicated Node Services</h4>-->
-        <!--<p>-->
-        <!--Last week we announced Dedicated Node Services for OpenShift.-->
-        <!--Dedicated Node gives Enterprise users more options and power than ever,-->
-        <!--providing customized and dedicated nodes to-->
-        <!--</p>-->
-        <!--</dd>-->
-    </dl>
-
-    <div>
-        <div class="btn-group" style="margin: 0 auto;">
-            <button type="button" class="prev-btn btn btn-default btn-sm"><i class="fa fa-chevron-left"></i></button>
-            <button type="button" class="next-btn btn btn-default btn-sm"><i class="fa fa-chevron-right"></i></button>
+        <div class="select-btn btn-group">
+            <button class="select-all-btn btn btn-default  btn-sm">
+                <i class="fa fa-square-o"></i>
+            </button>
+            <button type="button" class="btn btn-default  btn-sm dropdown-toggle" data-toggle="dropdown">
+                <span class="caret"></span>
+                <span class="sr-only">Toggle Dropdown</span>
+            </button>
+            <ul class="dropdown-menu" role="menu">
+                <li class="select-all-menu"><a href="#">All</a></li>
+                <li class="select-none-menu"><a href="#">None</a></li>
+                <li class="select-read-menu"><a href="#">Read</a></li>
+                <li class="select-unread-menu"><a href="#">Unread</a></li>
+                <li class="select-star-menu"><a href="#">Starred</a></li>
+                <li class="select-unstar-menu"><a href="#">Unstarred</a></li>
+            </ul>
         </div>
-        <span class="mails-page-indicator">1-100 of 1024</span>
-    </div>
 
-</div>
+        <div class="btn-group">
+            <!-- <button class="btn btn-default"><i class="fa fa-refresh"></i></button> -->
+            <button class="btn btn-default refresh-btn  btn-sm"><i class="fa fa-refresh"></i></button>
+        </div>
+        <div class="btn-group">
+            <!--<button type="button" class="btn btn-default"><i class="fa fa-archive"></i></button>-->
+            <!--<button type="button" class="btn btn-default"><i class="fa fa-info-circle"></i></button>-->
+            <button type="button" class="btn btn-default delete-btn  btn-sm"><i class="fa fa-trash"></i></button>
+        </div>
+
+        <div class="moveto-btn btn-group">
+            <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown"
+                    title="Move to">
+                <i class="fa fa-folder"></i>
+                <span class="caret"></span>
+                <span class="sr-only">Toggle Dropdown</span>
+            </button>
+            <!--<button type="button" class="btn btn-default" title="Tag"><i class="fa fa-tag"></i></button>-->
+            <ul class="dropdown-menu" role="menu">
+                <li class="moveto-inbox-menu"><a href="#">Move to Inbox</a></li>
+                <li class="moveto-trash-menu"><a href="#">Move to Trash</a></li>
+            </ul>
+        </div>
+
+        <div class="more-btn btn-group">
+            <button type="button" class="btn btn-default  btn-sm dropdown-toggle" data-toggle="dropdown">
+                More
+                <span class="caret"></span>
+                <span class="sr-only">Toggle Dropdown</span>
+            </button>
+            <ul class="dropdown-menu" role="menu">
+                <li class="mark-allread-menu"><a href="#">Mark all as read</a></li>
+                <li class="mark-unread-menu"><a href="#">Mark as unread</a></li>
+                <li class="mark-read-menu"><a href="#">Mark as read</a></li>
+            </ul>
+        </div>
+
+        <div class="pull-right" style="display:inline-block; margin-left: 15px; vertical-align: top; text-align: right;">
+            <small class="mails-page-indicator">1-100 of 1024</small>
+            <br/>
+            <i class="prev-btn fa fa-chevron-left"></i>&nbsp;&nbsp;&nbsp;
+            <i class="next-btn fa fa-chevron-right"></i>
+
+            <!-- <div class="btn-group">
+              <button type="button" class="btn btn-default"><i class="fa fa-chevron-left"></i></button>
+              <button type="button" class="btn btn-default"><i class="fa fa-chevron-right"></i></button>
+            </div> -->
+
+        </div>
+    </header>
+
+    <div id="maillistWrapper" data-layout="fill-parent">
+        <!-- <div class="toolbar-placeholder"></div> -->
+
+        <div id="mailListState" class="hidden alert alert-info" role="alert">
+            Oops! No mail found. Try to sync it.
+        </div>
+
+        <dl class="mail-list">
+
+            <!--<dd class="mail-list-item unread">-->
+                <!--<div class="action-controls">-->
+                    <!--<input type="checkbox" />-->
+                    <!--<div style="margin-top:8px;">-->
+                        <!--<i class="fav-btn fa fa-star-o"></i>-->
+                    <!--</div>-->
+                <!--</div>-->
+                <!--<div class="writer">-->
+                    <!--<strong>Facebook</strong>-->
+                    <!--<span class="pull-right">3:04 (1小时前)</span>-->
+                <!--</div>-->
+                <!--<h4>Do you know Tony Townsend, Boyu Wang and 8 others?</h4>-->
+            <!--</dd>-->
+
+
+            <!--<dd class="mail-list-item unread">-->
+                <!--<div class="action-controls">-->
+                    <!--<input type="checkbox" />-->
+                    <!--<div style="margin-top:8px;">-->
+                        <!--<i class="fa fa-star-o"></i>-->
+                    <!--</div>-->
+                <!--</div>-->
+                <!--<div class="writer">-->
+                    <!--<strong>Pinterest</strong>-->
+                    <!--<span class="pull-right">September 21</span>-->
+                <!--</div>-->
+                <!--<h4>Another thing you can do on Pinterest: Renovate your home!</h4>-->
+                <!--<p>Did you know you can also use Pinterest to plan out any improvements-->
+                    <!--you want to make to your home? So if you’re redecorating your living-->
+                    <!--room, just do a quick search to see what rugs,-->
+                    <!--couches and other great ideas people have discovered. </p>-->
+            <!--</dd>-->
+
+
+            <!--<dd class="mail-list-item active">-->
+                <!--<div class="action-controls">-->
+                    <!--<input type="checkbox" />-->
+                    <!--<div style="margin-top:8px;">-->
+                        <!--<i class="fa fa-star-o"></i>-->
+                    <!--</div>-->
+                <!--</div>-->
+                <!--<div class="writer">-->
+                    <!--<strong>OpenShift by Red Hat</strong>-->
+                    <!--<span class="pull-right">21:39 (4小时前)</span>-->
+                <!--</div>-->
+                <!--<h4>Announcing Dedicated Node Services</h4>-->
+                <!--<p>-->
+                    <!--Last week we announced Dedicated Node Services for OpenShift.-->
+                    <!--Dedicated Node gives Enterprise users more options and power than ever,-->
+                    <!--providing customized and dedicated-->
+                <!--</p>-->
+            <!--</dd>-->
+
+            <!--<dd class="mail-list-item">-->
+                <!--<div class="action-controls">-->
+                    <!--<input type="checkbox" />-->
+                    <!--<div style="margin-top:8px;">-->
+                        <!--<i class="fa fa-star-o"></i>-->
+                    <!--</div>-->
+                <!--</div>-->
+                <!--<div class="writer">-->
+                    <!--<strong>OpenShift by Red Hat</strong>-->
+                      <!--<span class="pull-right">-->
+                        <!--<i class="fa fa-paperclip"></i>-->
+                         <!--21:39 (4小时前)</span>-->
+                <!--</div>-->
+                <!--<h4>Work Inquire from Apple</h4>-->
+                <!--<p>-->
+                    <!--Last week we announced Dedicated Node Services for OpenShift.-->
+                    <!--Dedicated Node gives Enterprise users more options and power than ever,-->
+                    <!--providing customized and dedicated nodes to-->
+                <!--</p>-->
+            <!--</dd>-->
+
+            <!--<dd class="mail-list-item">-->
+                <!--<div class="action-controls">-->
+                    <!--<input type="checkbox" />-->
+                    <!--<div style="margin-top:8px;">-->
+                        <!--<i class="fa fa-star-o"></i>-->
+                    <!--</div>-->
+                <!--</div>-->
+                <!--<div class="writer">-->
+                    <!--<strong>OpenShift by Red Hat</strong>-->
+                    <!--<span class="pull-right">21:39 (4小时前)</span>-->
+                <!--</div>-->
+                <!--<h4>Work Inquire from Apple</h4>-->
+                <!--<p>-->
+                    <!--Last week we announced Dedicated Node Services for OpenShift.-->
+                    <!--Dedicated Node gives Enterprise users more options and power than ever,-->
+                    <!--providing customized and dedicated nodes to-->
+                <!--</p>-->
+            <!--</dd>-->
+
+            <!--<dd class="mail-list-item">-->
+                <!--<div class="action-controls">-->
+                    <!--<input type="checkbox" />-->
+                    <!--<div style="margin-top:8px;">-->
+                        <!--<i class="fa fa-star-o"></i>-->
+                    <!--</div>-->
+                <!--</div>-->
+                <!--<div class="writer">-->
+                    <!--<strong>OpenShift by Red Hat</strong>-->
+                    <!--<span class="pull-right">21:39 (4小时前)</span>-->
+                <!--</div>-->
+                <!--<h4>Work Inquire from Apple</h4>-->
+                <!--<p>-->
+                    <!--Last week we announced Dedicated Node Services for OpenShift.-->
+                    <!--Dedicated Node gives Enterprise users more options and power than ever,-->
+                    <!--providing customized and dedicated nodes to-->
+                <!--</p>-->
+            <!--</dd>-->
+
+            <!--<dd class="mail-list-item">-->
+                <!--<div class="action-controls">-->
+                    <!--<input type="checkbox" />-->
+                    <!--<div style="margin-top:8px;">-->
+                        <!--<i class="fa fa-star-o"></i>-->
+                    <!--</div>-->
+                <!--</div>-->
+                <!--<div class="writer">-->
+                    <!--<strong>OpenShift by Red Hat</strong>-->
+                    <!--<span class="pull-right">21:39 (4小时前)</span>-->
+                <!--</div>-->
+                <!--<h4>Work Inquire from Apple</h4>-->
+                <!--<p>-->
+                    <!--Last week we announced Dedicated Node Services for OpenShift.-->
+                    <!--Dedicated Node gives Enterprise users more options and power than ever,-->
+                    <!--providing customized and dedicated nodes to-->
+                <!--</p>-->
+            <!--</dd>-->
+
+            <!--<dd class="mail-list-item">-->
+                <!--<div class="action-controls">-->
+                    <!--<input type="checkbox" />-->
+                    <!--<div style="margin-top:8px;">-->
+                        <!--<i class="fa fa-star-o"></i>-->
+                    <!--</div>-->
+                <!--</div>-->
+                <!--<div class="writer">-->
+                    <!--<strong>OpenShift by Red Hat</strong>-->
+                    <!--<span class="pull-right">21:39 (4小时前)</span>-->
+                <!--</div>-->
+                <!--<h4>Announcing Dedicated Node Services</h4>-->
+                <!--<p>-->
+                    <!--Last week we announced Dedicated Node Services for OpenShift.-->
+                    <!--Dedicated Node gives Enterprise users more options and power than ever,-->
+                    <!--providing customized and dedicated nodes to-->
+                <!--</p>-->
+            <!--</dd>-->
+        </dl>
+
+        <div>
+            <div class="btn-group" style="margin: 0 auto;">
+                <button type="button" class="prev-btn btn btn-default btn-sm"><i class="fa fa-chevron-left"></i></button>
+                <button type="button" class="next-btn btn btn-default btn-sm"><i class="fa fa-chevron-right"></i></button>
+            </div>
+            <span class="mails-page-indicator">1-100 of 1024</span>
+        </div>
+
+    </div>
 
 </aside>
 
@@ -405,7 +412,7 @@
 
         <!--<hr/>-->
         <!--<div class="mail-reply">-->
-        <!--<textarea cols="100" rows="5" placeholder="Click to Reply or Forward"></textarea>-->
+            <!--<textarea cols="100" rows="5" placeholder="Click to Reply or Forward"></textarea>-->
         <!--</div>-->
 
     </div>
@@ -477,25 +484,25 @@
                     <div class="form-group">
                         <div class="col-sm-offset-4 col-sm-8">
                             <div class="checkbox">
-                                <label>
-                                    <input id="chkSSL" type="checkbox"> Use SSL
-                                </label>
+                            <label>
+                                <input id="chkSSL" type="checkbox"> Use SSL
+                            </label>
                             </div>
                         </div>
                     </div>
                     <!--<div class="form-group">-->
-                    <!--<div class="col-sm-offset-3 col-sm-9">-->
-                    <!--<div class="checkbox">-->
-                    <!--<label>-->
-                    <!--<input type="checkbox"> Remember me-->
-                    <!--</label>-->
-                    <!--</div>-->
-                    <!--</div>-->
+                        <!--<div class="col-sm-offset-3 col-sm-9">-->
+                            <!--<div class="checkbox">-->
+                                <!--<label>-->
+                                    <!--<input type="checkbox"> Remember me-->
+                                <!--</label>-->
+                            <!--</div>-->
+                        <!--</div>-->
                     <!--</div>-->
                     <!--<div class="form-group">-->
-                    <!--<div class="col-sm-offset-3 col-sm-9">-->
-                    <!--<button type="submit" class="btn btn-default">Sign in</button>-->
-                    <!--</div>-->
+                        <!--<div class="col-sm-offset-3 col-sm-9">-->
+                            <!--<button type="submit" class="btn btn-default">Sign in</button>-->
+                        <!--</div>-->
                     <!--</div>-->
 
                 </form>
@@ -508,6 +515,26 @@
     </div>
 </div>
 
+
+<script id="mailSummary" type="text/template">
+    <% for (var i = 0; i < items.length; i++) { var item = items[i]; %>
+    <dd data-messageIndex="" data-id="<%=item.id%>" class="mail-list-item <% if (item.flagUnread) { %>unread<%}%>">
+        <div class="action-controls">
+            <input type="checkbox" />
+            <div style="margin-top:8px;">
+                <i class="fa fa-star-o"></i>
+            </div>
+        </div>
+        <div class="writer">
+            <strong><%= item.from %></strong>
+            <span class="pull-right"><%=item.date%></span>
+        </div>
+        <h4><%= item.subject %></h4>
+        <p>
+        </p>
+    </dd>
+    <%}%>
+</script>
 
 <script src="/resources/js/jquery-2.1.1.js"></script>
 <script src="/resources/js/bootstrap.js"></script>
@@ -617,6 +644,7 @@
             state.removeClass('hidden');
         }
     }
+
     function loadProfile() {
         var xhr = $.get('/rest/user/profile', function(data, textStatus, response) {
 
@@ -767,8 +795,6 @@
         // hide delete btn
         $('#maillist .toolbar button:has(.fa-trash)').addClass('hidden');
 
-        // load mails when page loaded
-        loadMails('inbox', 1, true);
     }
 
     /**
@@ -813,7 +839,7 @@
                 var itemsAll = $('#maillist .mail-list-item');
                 var selected = itemsAll.filter('.selected');
                 var btn = $('#maillist').find('.select-btn button.select-all-btn')[0];
-                toggleIt(btn, itemsAll.size() == selected.size());
+                toggleIt(btn, itemsAll.size() == selected.size() && itemsAll.size() != 0);
             }
         };
         updateSelectAllButton();

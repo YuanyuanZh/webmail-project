@@ -1,4 +1,4 @@
-package cs601.webmail.page;
+package cs601.webmail.pages;
 
 import cs601.webmail.auth.AuthenticationCheckFilter;
 import cs601.webmail.entity.User;
@@ -8,6 +8,7 @@ import cs601.webmail.entity.Mail;
 import cs601.webmail.frameworks.db.Order;
 import cs601.webmail.frameworks.db.PageRequest;
 import cs601.webmail.frameworks.web.PageTemplate;
+import cs601.webmail.pages.Page;
 import cs601.webmail.service.AccountService;
 import cs601.webmail.service.MailService;
 import cs601.webmail.service.impl.AccountServiceImpl;

@@ -1,7 +1,8 @@
-package cs601.webmail.page;
+package cs601.webmail.pages;
 
 import cs601.webmail.entity.Mail;
 import cs601.webmail.frameworks.web.RequestContext;
+import cs601.webmail.pages.Page;
 import cs601.webmail.service.MailService;
 import cs601.webmail.service.impl.MailServiceImpl;
 import cs601.webmail.util.Strings;

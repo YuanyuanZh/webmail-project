@@ -1,4 +1,4 @@
-package cs601.webmail.page;
+package cs601.webmail.pages;
 
 import cs601.webmail.auth.AuthenticationCheckFilter;
 import cs601.webmail.entity.Account;

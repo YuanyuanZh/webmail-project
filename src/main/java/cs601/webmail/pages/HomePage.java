@@ -1,7 +1,7 @@
-package cs601.webmail.page;
+package cs601.webmail.pages;
 
 import cs601.webmail.frameworks.web.RequestContext;
-
+import cs601.webmail.pages.Page;
 
 
 public class HomePage extends Page {

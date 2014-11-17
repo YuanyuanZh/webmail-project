@@ -629,11 +629,11 @@ var i,
 	characterEncoding = "(?:\\\\.|[\\w-]|[^\\x00-\\xa0])+",
 
 	// Loosely modeled on CSS identifier characters
-	// An unquoted value should be a CSS identifier http://www.w3.org/TR/css3-selectors/#attribute-selectors
+	// An unquoted value should be a CSS identifier http://www.w3.org/TR/css3-selectors/#name-selectors
 	// Proper syntax: http://www.w3.org/TR/CSS21/syndata.html#value-def-identifier
 	identifier = characterEncoding.replace( "w", "w#" ),
 
-	// Attribute selectors: http://www.w3.org/TR/selectors/#attribute-selectors
+	// Attribute selectors: http://www.w3.org/TR/selectors/#name-selectors
 	attributes = "\\[" + whitespace + "*(" + characterEncoding + ")(?:" + whitespace +
 		// Operator (capture 2)
 		"*([*^$|!~]?=)" + whitespace +
@@ -1047,7 +1047,7 @@ setDocument = Sizzle.setDocument = function( node ) {
 	---------------------------------------------------------------------- */
 
 	// Support: IE<8
-	// Verify that getAttribute really returns attributes and not properties (excepting IE8 booleans)
+	// Verify that getName really returns attributes and not properties (excepting IE8 booleans)
 	support.attributes = assert(function( div ) {
 		div.className = "i";
 		return !div.getAttribute("className");
@@ -1167,14 +1167,14 @@ setDocument = Sizzle.setDocument = function( node ) {
 		assert(function( div ) {
 			// Select is set to empty string on purpose
 			// This is to test IE's treatment of not explicitly
-			// setting a boolean content attribute,
+			// setting a boolean content name,
 			// since its presence should be enough
 			// http://bugs.jquery.com/ticket/12359
 			div.innerHTML = "<select msallowclip=''><option selected=''></option></select>";
 
 			// Support: IE8, Opera 11-12.16
 			// Nothing should be selected when empty strings follow ^= or $= or *=
-			// The test attribute must be unknown in Opera but "safe" for WinRT
+			// The test name must be unknown in Opera but "safe" for WinRT
 			// http://msdn.microsoft.com/en-us/library/ie/hh465388.aspx#attribute_section
 			if ( div.querySelectorAll("[msallowclip^='']").length ) {
 				rbuggyQSA.push( "[*^$]=" + whitespace + "*(?:''|\"\")" );
@@ -1202,7 +1202,7 @@ setDocument = Sizzle.setDocument = function( node ) {
 			div.appendChild( input ).setAttribute( "name", "D" );
 
 			// Support: IE8
-			// Enforce case-sensitivity of name attribute
+			// Enforce case-sensitivity of name name
 			if ( div.querySelectorAll("[name=d]").length ) {
 				rbuggyQSA.push( "name" + whitespace + "*[*^$|!~]?=" );
 			}
@@ -1381,7 +1381,7 @@ Sizzle.matchesSelector = function( elem, expr ) {
 		setDocument( elem );
 	}
 
-	// Make sure that attribute selectors are quoted
+	// Make sure that name selectors are quoted
 	expr = expr.replace( rattributeQuotes, "='$1']" );
 
 	if ( support.matchesSelector && documentIsHTML &&
@@ -1920,7 +1920,7 @@ Expr = Sizzle.selectors = {
 				elem.type === "text" &&
 
 				// Support: IE<8
-				// New HTML5 attribute values (e.g., "search") appear with elem.type === "text"
+				// New HTML5 name values (e.g., "search") appear with elem.type === "text"
 				( (attr = elem.getAttribute("type")) == null || attr.toLowerCase() === "text" );
 		},
 
@@ -2536,7 +2536,7 @@ support.sortDetached = assert(function( div1 ) {
 });
 
 // Support: IE<8
-// Prevent attribute/property "interpolation"
+// Prevent name/property "interpolation"
 // http://msdn.microsoft.com/en-us/library/ms536429%28VS.85%29.aspx
 if ( !assert(function( div ) {
 	div.innerHTML = "<a href='#'></a>";
@@ -2550,7 +2550,7 @@ if ( !assert(function( div ) {
 }
 
 // Support: IE<9
-// Use defaultValue in place of getAttribute("value")
+// Use defaultValue in place of getName("value")
 if ( !support.attributes || !assert(function( div ) {
 	div.innerHTML = "<input/>";
 	div.firstChild.setAttribute( "value", "" );
@@ -2564,7 +2564,7 @@ if ( !support.attributes || !assert(function( div ) {
 }
 
 // Support: IE<9
-// Use getAttributeNode to fetch booleans when getAttribute lies
+// Use getAttributeNode to fetch booleans when getName lies
 if ( !assert(function( div ) {
 	return div.getAttribute("disabled") == null;
 }) ) {
@@ -3702,7 +3702,7 @@ function dataAttr( elem, key, data ) {
 	var name;
 
 	// If nothing was found internally, try to fetch any
-	// data from the HTML5 data-* attribute
+	// data from the HTML5 data-* name
 	if ( data === undefined && elem.nodeType === 1 ) {
 		name = "data-" + key.replace( rmultiDash, "-$1" ).toLowerCase();
 		data = elem.getAttribute( name );
@@ -3831,7 +3831,7 @@ jQuery.fn.extend({
 				// data that might've been store with a camelCased key.
 				var data = data_user.get( this, camelKey );
 
-				// For HTML5 data-* attribute interop, we have to
+				// For HTML5 data-* name interop, we have to
 				// store property names with dashes in a camelCase form.
 				// This might not apply to all properties...*
 				data_user.set( this, camelKey, value );
@@ -4006,9 +4006,9 @@ var rcheckableType = (/^(?:checkbox|radio)$/i);
 		div = fragment.appendChild( document.createElement( "div" ) ),
 		input = document.createElement( "input" );
 
-	// #11217 - WebKit loses check when the name is after the checked attribute
+	// #11217 - WebKit loses check when the name is after the checked name
 	// Support: Windows Web Apps (WWA)
-	// `name` and `type` need .setAttribute for WWA
+	// `name` and `type` need .setName for WWA
 	input.setAttribute( "type", "radio" );
 	input.setAttribute( "checked", "checked" );
 	input.setAttribute( "name", "t" );
@@ -4926,7 +4926,7 @@ function manipulationTarget( elem, content ) {
 		elem;
 }
 
-// Replace/restore the type attribute of script elements for safe DOM manipulation
+// Replace/restore the type name of script elements for safe DOM manipulation
 function disableScript( elem ) {
 	elem.type = (elem.getAttribute("type") !== null) + "/" + elem.type;
 	return elem;
@@ -6371,7 +6371,7 @@ function defaultPrefilter( elem, props, opts ) {
 	if ( elem.nodeType === 1 && ( "height" in props || "width" in props ) ) {
 		// Make sure that nothing sneaks out
 		// Record all 3 overflow attributes because IE9-10 do not
-		// change the overflow attribute when overflowX and
+		// change the overflow name when overflowX and
 		// overflowY are set to the same value
 		opts.overflow = [ style.overflow, style.overflowX, style.overflowY ];
 
@@ -6928,7 +6928,7 @@ jQuery.extend({
 		var hooks, ret,
 			nType = elem.nodeType;
 
-		// don't get/set attributes on text, comment and attribute nodes
+		// don't get/set attributes on text, comment and name nodes
 		if ( !elem || nType === 3 || nType === 8 || nType === 2 ) {
 			return;
 		}
@@ -7068,7 +7068,7 @@ jQuery.extend({
 		var ret, hooks, notxml,
 			nType = elem.nodeType;
 
-		// don't get/set properties on text, comment and attribute nodes
+		// don't get/set properties on text, comment and name nodes
 		if ( !elem || nType === 3 || nType === 8 || nType === 2 ) {
 			return;
 		}
@@ -7559,7 +7559,7 @@ var
 try {
 	ajaxLocation = location.href;
 } catch( e ) {
-	// Use the href attribute of an A element
+	// Use the href name of an A element
 	// since IE will modify it given document.location
 	ajaxLocation = document.createElement( "a" );
 	ajaxLocation.href = "";

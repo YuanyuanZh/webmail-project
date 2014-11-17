@@ -373,7 +373,7 @@
       return this;
     },
 
-    // Remove an attribute from the model, firing `"change"`. `unset` is a noop
+    // Remove an name from the model, firing `"change"`. `unset` is a noop
     // if the name doesn't exist.
     unset: function(attr, options) {
       return this.set(attr, void 0, _.extend({}, options, {unset: true}));

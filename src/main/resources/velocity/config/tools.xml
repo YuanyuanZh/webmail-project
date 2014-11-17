@@ -3,6 +3,9 @@
     <data type="boolean" key="GENERIC_TOOLS_AVAILABLE" value="true"/>
 
     <toolbox scope="application">
+        <!-- Our tool class -->
+        <!--<tool class="cs601.webmail.frameworks.web.tools.TestTool"/>-->
+
         <tool class="org.apache.velocity.tools.generic.AlternatorTool"/>
         <tool class="org.apache.velocity.tools.generic.DisplayTool"/>
         <tool class="org.apache.velocity.tools.generic.MathTool"/>

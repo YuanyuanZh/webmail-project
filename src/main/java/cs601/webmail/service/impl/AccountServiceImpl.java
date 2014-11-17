@@ -3,7 +3,7 @@ package cs601.webmail.service.impl;
 import cs601.webmail.Configuration;
 import cs601.webmail.dao.AccountDao;
 import cs601.webmail.dao.UserDao;
-import cs601.webmail.dao.impl.AccountDaojdbcImpl;
+import cs601.webmail.dao.impl.AccountDaoImpl;
 import cs601.webmail.dao.impl.UserDAOImpl;
 import cs601.webmail.entity.Account;
 import cs601.webmail.frameworks.mail.pop3.Pop3Client;
@@ -15,7 +15,7 @@ import java.util.List;
  * Created by yuanyuan on 10/26/14.
  */
 public class AccountServiceImpl implements AccountService {
-    private AccountDao accountDao =new AccountDaojdbcImpl();
+    private AccountDao accountDao =new AccountDaoImpl();
     private UserDao userDao=new UserDAOImpl();
 
 

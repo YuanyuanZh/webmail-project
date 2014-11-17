@@ -1,10 +1,11 @@
-package cs601.webmail.page;
+package cs601.webmail.pages;
 
 import cs601.webmail.entity.Account;
 import cs601.webmail.entity.Mail;
 import cs601.webmail.frameworks.db.PageRequest;
 import cs601.webmail.frameworks.db.Order;
 import cs601.webmail.frameworks.web.RequestContext;
+import cs601.webmail.pages.Page;
 import cs601.webmail.service.AccountService;
 import cs601.webmail.service.MailService;
 import cs601.webmail.service.impl.AccountServiceImpl;
@@ -23,7 +24,7 @@ import java.util.*;
  * Created by yuanyuan on 10/20/14.
  */
 @Deprecated
-public class InboxPage extends Page{
+public class InboxPage extends Page {
 
     public void verify() {
         // no-op

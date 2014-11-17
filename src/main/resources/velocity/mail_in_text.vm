@@ -15,13 +15,13 @@
 ${mail.content}
 </pre>
 
-
 </div><!-- end .mail-body -->
+
 ##<hr/>
 ##<div class="mail-attachments">
 ##    <h5><i class="fa fa-paperclip"></i> Attachments <small>(3 files, 680kb)</small></h5>
 ##    <div class="list-group">
-##        <a href="#" class="list-group-item"><i class="fa fa-file-o"></i> force.gif <small>(128kb)</small></a>
+##        <a href="/attachments?id=123123212312" class="list-group-item"><i class="fa fa-file-o"></i> force.gif <small>(128kb)</small></a>
 ##        <a href="#" class="list-group-item"><i class="fa fa-file-o"></i> lighsaber.png</a>
 ##        <a href="#" class="list-group-item"><i class="fa fa-file-o"></i> hax.html</a>
 ##    </div>
