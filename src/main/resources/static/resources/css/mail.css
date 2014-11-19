@@ -67,6 +67,21 @@ h1,.h1,h2,.h2, h3,.h3,h4,.h4,h5,.h5{font-weight: normal;color:#555;}
   color: #fff;
 }
 
+.left-side-tabs .nav-tabs>li>a,
+.left-side-tabs .nav-tabs>li>a:hover,
+.left-side-tabs .nav-tabs>li>a:focus{
+    background-color: #E0E0E0;
+    border-radius: 0;
+    color: #aaa;
+}
+.left-side-tabs .nav-tabs>li.active>a,
+.left-side-tabs .nav-tabs>li.active>a:hover,
+.left-side-tabs .nav-tabs>li.active>a:focus{
+    background-color: #f9f9f9;
+    border-radius: 0;
+    color: #555;
+}
+
 #maillistWrapper{
   height: 600px; overflow-y:auto; overflow-x: hidden; padding: 0 15px 20px;
 }

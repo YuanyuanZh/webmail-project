@@ -32,8 +32,6 @@ public class MailListPage extends Page {
     @Override
     public void body() throws Exception {
 
-
-
         RequestContext context = RequestContext.getCurrentInstance();
 
         MailService mailService = new MailServiceImpl();
