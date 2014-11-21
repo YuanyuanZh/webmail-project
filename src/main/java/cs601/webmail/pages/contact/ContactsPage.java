@@ -1,6 +1,8 @@
-package cs601.webmail.pages;
+package cs601.webmail.pages.contact;
 
 import cs601.webmail.frameworks.web.RequestContext;
+import cs601.webmail.pages.Page;
+
 /**
  * Created by yuanyuan on 11/19/14.
  */

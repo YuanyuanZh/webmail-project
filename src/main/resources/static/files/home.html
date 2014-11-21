@@ -39,16 +39,16 @@
 <aside class="left-side x-col">
     <div id="profile" class="profile column-header">
         <img src="/resources/img/avatar/avatar_2x.png" height="40" width="40" class="profile-avatar img-circle img-thumbnail" alt="Avatar" />
-        <span class="profile-name">Hello,</span>
+        <span class="profile-name"></span>
 
-        <div class="profile-dropdown dropdown" >
+        <!--<div class="profile-dropdown dropdown" >
             <span class="glyphicon glyphicon-collapse-down dropdown-trigger" data-toggle="dropdown"></span>
 
             <ul class="dropdown-menu" role="menu">
                 <li><a href="#">Foo</a></li>
                 <li><a href="#">Bar</a></li>
             </ul>
-        </div>
+        </div>-->
     </div>
     <div class="left-side-tabs">
         <ul class="nav nav-tabs nav-justified">
@@ -154,7 +154,7 @@
         </div>
 
         <div class="pull-right" style="display:inline-block; margin-left: 15px; vertical-align: top; text-align: right;">
-            <small class="mails-page-indicator">1-100 of 1024</small>
+            <small class="page-indicator">1-100 of 1024</small>
             <br/>
             <i class="prev-btn fa fa-chevron-left"></i>&nbsp;&nbsp;&nbsp;
             <i class="next-btn fa fa-chevron-right"></i>
@@ -332,7 +332,7 @@
                 <button type="button" class="prev-btn btn btn-default btn-sm"><i class="fa fa-chevron-left"></i></button>
                 <button type="button" class="next-btn btn btn-default btn-sm"><i class="fa fa-chevron-right"></i></button>
             </div>
-            <span class="mails-page-indicator">1-100 of 1024</span>
+            <span class="page-indicator">1-100 of 1024</span>
         </div>
 
     </div>
@@ -521,106 +521,14 @@
     </div>
 </div>
 
-
-<script id="mailSummary" type="text/template">
-    <% for (var i = 0; i < items.length; i++) { var item = items[i]; %>
-    <dd data-messageIndex="" data-id="<%=item.id%>" class="mail-list-item <% if (item.flagUnread) { %>unread<%}%>">
-        <div class="action-controls">
-            <input type="checkbox" />
-            <div style="margin-top:8px;">
-                <i class="fa fa-star-o"></i>
-            </div>
-        </div>
-        <div class="writer">
-            <strong><%= item.from %></strong>
-            <span class="pull-right"><%=item.date%></span>
-        </div>
-        <h4><%= item.subject %></h4>
-        <p>
-        </p>
-    </dd>
-    <%}%>
-</script>
-
 <script src="/resources/js/jquery-2.1.1.js"></script>
 <script src="/resources/js/bootstrap.js"></script>
 <script src="/resources/js/underscore-min.js"></script>
 <script src="/resources/js/backbone-min.js"></script>
 <script src="/resources/js/notify.min.js"></script>
+<script src="/resources/js/webmail.js"></script>
 
 <script>
-
-    // http://notifyjs.com/
-    var Noty = {
-        error : function(msg) {
-            $.notify(msg, "error")
-        },
-        info: function(msg) {
-            $.notify(msg, "info")
-        },
-        success: function(msg) {
-            $.notify(msg, "success")
-        }
-    };
-
-    var Pagination = function() {
-        this._page = 1;
-        this._pages = 1;
-        this._prev = 1;
-        this._next = 1;
-    }
-
-    /**
-     * @param page (int) current page number.
-     * @param pageSize (int) Numbers of record each page.
-     * @param total (int) Total count of records.
-     */
-    Pagination.prototype.update = function(page, pageSize, total) {
-        if (total <= pageSize) {
-            this._page = 1;
-        } else {
-            this._page = page;
-            var pages = Math.ceil(total / pageSize);  // ceil(5 / 2) = 3
-            this._pages = pages;
-
-            this._prev = (page <= 1) ? 1 : (page - 1);
-            this._next = page >= pages ? pages : (page + 1);
-        }
-
-        var startPos = (page - 1) * pageSize + 1;
-        var endPos = Math.min(page * pageSize, total);
-
-        // update page indicator
-        $('.mails-page-indicator').text(startPos + "-" + endPos + " of " + total);
-    }
-
-    Pagination.prototype.next = function() {
-        return this._next;
-    }
-
-    Pagination.prototype.prev = function() {
-        return this._prev;
-    }
-
-    Pagination.prototype.page = function() {
-        return this._page;
-    }
-
-    Pagination.prototype.hasPrev = function() {
-        return this._page > 1;
-    }
-
-    Pagination.prototype.hasNext = function() {
-        return this._page < this._pages;
-    }
-
-    Pagination.prototype.reset = function() {
-        this._page = 1;
-        this._pages = 1;
-        this._prev = 1;
-        this._next = 1;
-    }
-
 
     var currentFolder = 'inbox';
     var pagination = new Pagination();
@@ -796,7 +704,7 @@
         $('#mailViewport .mail-entry').empty();
 
         // update page indicator
-        $('.mails-page-indicator').text('0 of 0');
+        $('.page-indicator').text('0 of 0');
 
         // hide delete btn
         $('#maillist .toolbar button:has(.fa-trash)').addClass('hidden');

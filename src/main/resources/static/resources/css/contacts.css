@@ -2,7 +2,7 @@
 
 .contact-list-item{
   position: relative;
-  min-height: 80px;
+  min-height: 60px;
   padding: 10px;
 }
 
@@ -16,15 +16,16 @@
   border-radius: 30px;
 }
 .contact-list-item .info{
-  padding-left: 60px;
+  padding:.2em 20px 1px 62px;
   color: #999;
   font-size: .9em;
 }
 .contact-list-item .info strong{
   color: #333;
+  font-weight: 400;
 }
 .contact-list-item .info .space{padding: 0 6px;}
-.contact-list-item .actions{
+.contact-list-item .action-controls{
   position: absolute;
   right: 8px;
   top: 8px;
@@ -32,7 +33,14 @@
 .contact-list-item:nth-child(2n-1) {
   background-color: #f5f5f5;
 }
-.contact-list-item .info>p:last-child{display:none;}
+.contact-list-item .info>p:last-child{
+ margin-bottom: 2px;
+ }
+
+.contact-list-item.selected{
+}
+  background-color:#fafba6;
+ }
 .contact-list-item.active{
   background-color: #b7bcc7;
 }
@@ -40,4 +48,12 @@
 .contact-list-item.active .info strong,
 .contact-list-item.active i.fa{
   color: #fff;
+}
+.contact-list-item.active i.fa.fa-star,
+.contact-list-item.selected i.fa.fa-star{
+  color: #ff9f12;
+}
+
+.contact-entry{
+  padding: 0 20px;
 }

@@ -1,12 +1,12 @@
-package cs601.webmail.pages;
+package cs601.webmail.pages.mail;
 
 import cs601.webmail.auth.AuthenticationCheckFilter;
 import cs601.webmail.entity.User;
 import cs601.webmail.frameworks.web.RequestContext;
 import cs601.webmail.entity.Account;
 import cs601.webmail.entity.Mail;
-import cs601.webmail.frameworks.db.Order;
-import cs601.webmail.frameworks.db.PageRequest;
+import cs601.webmail.frameworks.db.page.Order;
+import cs601.webmail.frameworks.db.page.PageRequest;
 import cs601.webmail.frameworks.web.PageTemplate;
 import cs601.webmail.pages.Page;
 import cs601.webmail.service.AccountService;
@@ -86,9 +86,9 @@ public class MailListPage extends Page {
         pageRequest.page = curPage != null ? Integer.parseInt(curPage) : 1;
 
         try {
-            cs601.webmail.frameworks.db.Page<Mail> pageResult =
+            cs601.webmail.frameworks.db.page.Page<Mail> pageResult =
                     mailService.findPage(folder, currentAccount, pageRequest);
-            /*cs601.webmail.frameworks.db.Page<Mail> pageResult
+            /*cs601.webmail.frameworks.db.page.Page<Mail> pageResult
                     = mailService.findByAccountAndPage(currentAccount, pageRequest);*/
 
             if (pageResult == null||!(pageResult.getPageList()!=null&&pageResult.getPageList().size()>0)) {

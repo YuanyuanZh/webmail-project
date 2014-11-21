@@ -1,4 +1,4 @@
-package cs601.webmail.frameworks.db;
+package cs601.webmail.frameworks.db.page;
 
 import java.util.List;
 

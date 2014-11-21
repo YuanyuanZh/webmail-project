@@ -1,0 +1,39 @@
+<form id="editForm" action="/rest/contact/edit" method="post" class="form-horizontal" role="form">
+    <input type="hidden" name="id" value="$!item.id" />
+
+    <div class="form-group">
+        <label for="" class="col-sm-3 control-label">Full Name*</label>
+        <div class="col-sm-9">
+            <input type="text" class="form-control" name="fullName"
+                   value="$!item.fullName" placeholder="e.g. Tom Hanks" />
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="" class="col-sm-3 control-label">Email*</label>
+        <div class="col-sm-9">
+            <input type="text" class="form-control" name="email"
+                   value="$!item.email" placeholder="e.g. tom.hanks@aixmail.com" />
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="" class="col-sm-3 control-label">Phone</label>
+        <div class="col-sm-9">
+            <input type="text" class="form-control" name="phone"
+                   value="$!item.phone" placeholder="e.g. 202-456-1111" />
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="" class="col-sm-3 control-label">Address</label>
+        <div class="col-sm-9">
+            <input type="text" class="form-control" name="address"
+                   value="$!item.address" placeholder="address of this contact" />
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="" class="col-sm-3 control-label">ZIP Code</label>
+        <div class="col-sm-9">
+            <input type="text" class="form-control" name="zipcode"
+                   value="$!item.zipcode" placeholder="e.g. 20500" />
+        </div>
+    </div>
+</form>

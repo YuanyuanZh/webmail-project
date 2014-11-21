@@ -6,7 +6,18 @@ html, body{overflow: hidden!important;}
 
 h1,.h1,h2,.h2, h3,.h3,h4,.h4,h5,.h5{font-weight: normal;color:#555;}
 
-
+::-webkit-input-placeholder { /* WebKit browsers */
+    color:    #dedede;
+}
+:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+    color:    #dedede;
+}
+::-moz-placeholder { /* Mozilla Firefox 19+ */
+    color:    #dedede;
+}
+:-ms-input-placeholder { /* Internet Explorer 10+ */
+    color:    #dedede;
+}
 .header{
   background-color: #eaeaea;
   padding: 15px;
@@ -39,7 +50,10 @@ h1,.h1,h2,.h2, h3,.h3,h4,.h4,h5,.h5{font-weight: normal;color:#555;}
 }
 
 .column-header > h2{margin: 0; font-size: 22px; color: #fff;}
+.action-controls .fa{color: #999; cursor: pointer;}
 
+.active .action-controls .fa-star,
+.selected .action-controls .fa-star,
 .action-controls .fa-star{color: #ff9f12;}
 
 .profile{
@@ -82,7 +96,8 @@ h1,.h1,h2,.h2, h3,.h3,h4,.h4,h5,.h5{font-weight: normal;color:#555;}
     color: #555;
 }
 
-#maillistWrapper{
+#maillistWrapper,
+#contactlistWrapper{
   height: 600px; overflow-y:auto; overflow-x: hidden; padding: 0 15px 20px;
 }
 
@@ -110,10 +125,6 @@ h1,.h1,h2,.h2, h3,.h3,h4,.h4,h5,.h5{font-weight: normal;color:#555;}
     left: 10px;
 }
 .mail-list-item > h4{font-size: 14px;}
-.mail-list-item .action-controls{
-    color: #999;
-    cursor: pointer;
-}
 .mail-list-item > h4,
 .mail-list-item .writer > strong{
     font-weight: normal;

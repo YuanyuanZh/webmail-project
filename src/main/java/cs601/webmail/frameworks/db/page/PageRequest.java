@@ -1,4 +1,6 @@
-package cs601.webmail.frameworks.db;
+package cs601.webmail.frameworks.db.page;
+
+import cs601.webmail.frameworks.db.page.Order;
 
 import java.util.ArrayList;
 import java.util.List;

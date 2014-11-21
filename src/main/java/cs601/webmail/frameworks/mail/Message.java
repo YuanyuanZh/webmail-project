@@ -42,6 +42,11 @@ public class Message implements MimePart{
         parse(in);
     }
 
+    public Message(Headers headers, byte[] content) {
+        this.headers = headers;
+        this.content = content;
+    }
+
     private void parse(InputStream in) throws IOException {
         LineInputStream reader = new LineInputStream(in);
 

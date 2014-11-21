@@ -1,0 +1,19 @@
+#foreach( $item in $items )
+<dd class="contact-list-item" data-id="$item.id">
+    <div class="avatar">
+        <img class="" width=50 height=50 src="#if($item.avatar)${item.avatar}#else/resources/img/avatar/avatar_2x.png#end" />
+    </div>
+    <div class="info">
+        <p><strong>$item.fullName</strong></p>
+##        <p><i class="fa fa-mobile"></i> $item.phone</p>
+        <p><i class="fa fa-envelope-o"></i> $item.email</p>
+##        <p><i class="fa fa-location-arrow"></i> $item.address</p>
+    </div>
+    <div class="action-controls">
+        <p>
+            <input type="checkbox" name="chkSelected" value="$item.id" />
+        </p>
+        <i class="fav-btn fa #if ($item.flagFav == 0) fa-star-o #else fa-star #end"></i>
+    </div>
+</dd>
+#end

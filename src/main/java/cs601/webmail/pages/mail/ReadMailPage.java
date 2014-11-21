@@ -1,4 +1,4 @@
-package cs601.webmail.pages;
+package cs601.webmail.pages.mail;
 
 import cs601.webmail.auth.AuthenticationCheckFilter;
 import cs601.webmail.entity.Account;
@@ -9,6 +9,7 @@ import cs601.webmail.frameworks.mail.MessagingException;
 import cs601.webmail.frameworks.mail.MimeContent;
 import cs601.webmail.frameworks.web.PageTemplate;
 import cs601.webmail.frameworks.web.RequestContext;
+import cs601.webmail.pages.Page;
 import cs601.webmail.service.AccountService;
 import cs601.webmail.service.MailService;
 import cs601.webmail.service.impl.AccountServiceImpl;

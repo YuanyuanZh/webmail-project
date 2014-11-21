@@ -1,4 +1,4 @@
-package cs601.webmail.pages;
+package cs601.webmail.pages.mail;
 
 import cs601.webmail.entity.Mail;
 import cs601.webmail.frameworks.web.RequestContext;

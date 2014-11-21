@@ -42,7 +42,7 @@ public class ProfilePage extends Page {
         }
         try{
             PageTemplate template=new PageTemplate("/velocity/fragment_profile.vm");
-            template.addParam("fullName",user.getFirstName()+" "+user.getLastName());
+            template.addParam("fullName",user.getFirstName());
 
             StringWriter writer=new StringWriter();
             template.merge(writer);

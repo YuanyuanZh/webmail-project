@@ -1,4 +1,4 @@
-package cs601.webmail.frameworks.db;
+package cs601.webmail.frameworks.db.page;
 
 /**
  * Created by yuanyuan on 10/29/14.

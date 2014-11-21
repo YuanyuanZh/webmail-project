@@ -4,20 +4,41 @@ package cs601.webmail.pages;
  * Created by yuanyuan on 10/15/14.
  */
 import cs601.webmail.frameworks.web.AjaxResponse;
+import cs601.webmail.frameworks.web.PageTemplate;
 import cs601.webmail.frameworks.web.RequestContext;
+import cs601.webmail.entity.User;
+import cs601.webmail.exception.NotAuthenticatedException;
 import org.codehaus.jackson.map.ObjectMapper;
 import z.managers.ErrorManager;
 import z.misc.VerifyException;
+import javax.servlet.http.HttpSession;
+import cs601.webmail.auth.AuthenticationCheckFilter;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.StringWriter;
 
 public abstract class Page {
 
     PrintWriter out;
     int pageNum;
+
+
+    protected User checkUserLogin(HttpServletRequest req, HttpServletResponse resp)
+            throws NotAuthenticatedException {
+
+        HttpSession session = req.getSession(true);
+
+        User user = (User)session.getAttribute(AuthenticationCheckFilter.LOGIN_SESSION_FLAG);
+
+        if (user == null) {
+            throw new NotAuthenticatedException();
+        }
+
+        return user;
+    }
 
     protected void renderText(String text) {
 

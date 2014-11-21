@@ -15,6 +15,11 @@ import cs601.webmail.Configuration;
 
 import cs601.webmail.frameworks.web.RequestContext;
 import cs601.webmail.frameworks.web.RequestContextFactory;
+import cs601.webmail.pages.contact.*;
+import cs601.webmail.pages.mail.MailActionsPage;
+import cs601.webmail.pages.mail.MailListPage;
+import cs601.webmail.pages.mail.ReadMailPage;
+import cs601.webmail.pages.mail.SyncMailsPage;
 import org.apache.log4j.Logger;
 import z.managers.ErrorManager;
 
@@ -34,15 +39,21 @@ public class DispatchServlet extends HttpServlet {
         mapping.put("/inbox",InboxPage.class);
         mapping.put("/login",LoginPage.class);
         mapping.put("/logout", LogoutPage.class);
-        mapping.put("/rest/mail/sync", SyncMailsPage.class);
-        mapping.put("/rest/mail/list", MailListPage.class);
-        mapping.put("/rest/mail/read", ReadMailPage.class);
         mapping.put("/register", RegisterPage.class);
         mapping.put("/registerNext", RegisterNextPage.class);
 
         mapping.put("/rest/user/profile", ProfilePage.class);
         mapping.put("/rest/mail/control", MailActionsPage.class);
+        mapping.put("/rest/mail/sync", SyncMailsPage.class);
+        mapping.put("/rest/mail/list", MailListPage.class);
+        mapping.put("/rest/mail/read", ReadMailPage.class);
+
         mapping.put("/contacts", ContactsPage.class);
+        mapping.put("/rest/contact/list", ContactListPage.class);
+        mapping.put("/rest/contact/read", ContactReadPage.class);
+        mapping.put("/rest/contact/edit", ContactEditPage.class);
+        mapping.put("/rest/contact/create", ContactCreatePage.class);
+        mapping.put("/rest/contact/control", ContactActionsPage.class);
 
 
     }

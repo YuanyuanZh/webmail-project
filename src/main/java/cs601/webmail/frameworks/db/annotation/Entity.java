@@ -6,18 +6,12 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
+ * To identify the class as Entity
+ *
  * Created by yuanyuan on 10/27/14.
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target(value={ElementType.METHOD, ElementType.FIELD})
-public @interface Column {
-
-    String columnName() default "";
-
-    String propertyName() default "";
-
-//    Class columnType();
-//
-//    Class propertyType();
+@Target(value={ElementType.TYPE})
+public @interface Entity {
 
 }

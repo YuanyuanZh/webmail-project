@@ -1,0 +1,49 @@
+<div class="mail-info" style="padding-left: 80px;">
+    <h3>$item.fullName</h3>
+    <p><i class="fa fa-envelope-o"></i> <span>$item.email</span></p>
+</div>
+
+<hr/>
+
+<div class="mail-body">
+
+    <form class="form-horizontal" role="form">
+        <div class="form-group">
+            <label for="" class="col-sm-3 control-label">Full Name</label>
+            <div class="col-sm-9">
+                <p class="form-control-static">$item.fullName</p>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="" class="col-sm-3 control-label">Email</label>
+            <div class="col-sm-9">
+                <p class="form-control-static">$item.email</p>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="" class="col-sm-3 control-label">Phone</label>
+            <div class="col-sm-9">
+                <p class="form-control-static">$item.phone</p>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="" class="col-sm-3 control-label">Address</label>
+            <div class="col-sm-9">
+                <p class="form-control-static">
+                    $item.address</p>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="" class="col-sm-3 control-label">ZIP Code</label>
+            <div class="col-sm-9">
+                <p class="form-control-static">$item.zipcode</p>
+            </div>
+        </div>
+##        <div class="form-group">
+##            <div class="col-sm-offset-3 col-sm-9">
+##                <button type="submit" class="btn btn-primary">Save</button>
+##            </div>
+##        </div>
+    </form>
+
+</div><!-- end .mail-body -->
