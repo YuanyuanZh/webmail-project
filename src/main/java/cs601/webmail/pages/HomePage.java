@@ -1,10 +1,12 @@
 package cs601.webmail.pages;
 
 import cs601.webmail.frameworks.web.RequestContext;
-import cs601.webmail.pages.Page;
 
 
-public class HomePage extends Page {
+/**
+ * Created by yuanyuan on 10/23/14.
+ */
+public class HomePage extends ControllerPage {
 
     public void verify() {
         // no-op

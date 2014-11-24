@@ -1,6 +1,6 @@
 package cs601.webmail.dao;
 
-
+import cs601.webmail.dao.DaoException;
 import cs601.webmail.frameworks.db.DBUtils;
 import cs601.webmail.frameworks.db.QueryRunner;
 import cs601.webmail.frameworks.db.ResultSetHandler;
@@ -8,28 +8,25 @@ import cs601.webmail.util.Strings;
 
 import java.sql.*;
 
-
 /**
- * Created by yuanyuan on 10/27/14.
+ * Created by yuanyuan on 10/29/14.
  */
-public abstract class BaseDao{
+public abstract class BaseDao {
 
     private QueryRunner _queryRunner;
 
-    protected QueryRunner getQueryRunner(){
-        if(_queryRunner==null){
-            _queryRunner =new QueryRunner();
+    protected QueryRunner getQueryRunner() {
+        if (_queryRunner == null) {
+            _queryRunner = new QueryRunner();
         }
         return _queryRunner;
     }
 
-    //private Connection connection;
-
     protected Connection getConnection() {
-
         return DBUtils.generateConnection();
-
     }
+
+    // Return how many rows are there in the table
     protected int count(String tableName) {
 
         QueryRunner qr = getQueryRunner();
@@ -76,17 +73,14 @@ public abstract class BaseDao{
         }
     }
 
-
-    // To close ResultSet
+    // Close ResultSet & ignore exception
     protected void closeResultSetQuietly(ResultSet rs) {
         DBUtils.closeResultSetQuietly(rs);
     }
 
-    // To close Statement
+    // Close Statement & ignore exception
     protected void closeStatementQuietly(Statement statement) {
         DBUtils.closeStatementQuietly(statement);
     }
 
 }
-
-

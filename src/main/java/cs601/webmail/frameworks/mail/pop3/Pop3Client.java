@@ -1,7 +1,7 @@
 package cs601.webmail.frameworks.mail.pop3;
 
+import cs601.webmail.frameworks.mail.Header;
 import org.apache.log4j.Logger;
-
 
 import javax.net.ssl.SSLSocketFactory;
 import java.io.*;
@@ -10,9 +10,11 @@ import java.net.Socket;
 import java.util.*;
 
 /**
- * * ref: https://www.ietf.org/rfc/rfc1939.txt
+ * ref: https://www.ietf.org/rfc/rfc1939.txt
+ *
  * ref: http://mike-java.blogspot.com/2008/03/simple-pop3-client-in-java-tutorial.html
- * Created by yuanyuan on 10/28/14.
+ *
+ * Created by yuanyuan on 10/24/14.
  */
 public class Pop3Client {
 
@@ -30,7 +32,7 @@ public class Pop3Client {
     private BufferedReader reader;
     private BufferedWriter writer;
 
-    private boolean debug = true;
+    private boolean debug = false;
     private boolean sslEnabled = false;
 
     private final static int DEFAULT_PORT = 110;
@@ -130,7 +132,69 @@ public class Pop3Client {
         return Integer.parseInt(values[1]);
     }
 
+    public Pop3Message getMessageTop(int messageId, int topCount) throws IOException {
 
+        String response = sendCommand("TOP " + messageId + " " + topCount);
+        Map<String, List<String>> headers = new HashMap<String, List<String>>();
+        String headerName = null;
+
+        Map<String, List<Header>> _headers = new HashMap<String, List<Header>>();
+        Header lastHeader = null;
+
+        // process headers
+        while ((response = readResponseLine()).length() != 0) {
+            System.out.println(">" + response);
+
+            if (response.startsWith(" ") || response.startsWith("\t")) {
+                System.out.println(">> <with space>" + response);
+                if (lastHeader != null) {
+                    lastHeader.setValue(lastHeader.getValue() + response);
+                }
+                continue; //no process of multiline headers
+            }
+
+            int colonPosition = response.indexOf(":");
+
+            // no colon
+            if (colonPosition == -1) {
+                LOGGER.debug("ignore header line: " + response);
+                continue;
+            }
+
+            headerName = response.substring(0, colonPosition);
+            String headerValue;
+            if (response.length() > colonPosition + 2) {
+                headerValue = response.substring(colonPosition + 2);
+            } else {
+                headerValue = "";
+            }
+            List<String> headerValues = headers.get(headerName);
+            if (headerValues == null) {
+                headerValues = new ArrayList<String>();
+                headers.put(headerName, headerValues);
+            }
+            headerValues.add(headerValue);
+
+            lastHeader = new Header(headerName, headerValue);
+            List<Header> _headerValues = _headers.get(headerName);
+            if (_headerValues == null) {
+                _headerValues = new ArrayList<Header>();
+                _headers.put(headerName, _headerValues);
+            }
+            _headerValues.add(lastHeader);
+        }
+
+        // process body
+        StringBuilder bodyBuilder = new StringBuilder();
+        while (!(response = readResponseLine()).equals(".")) {
+            bodyBuilder.append(response + "\n");
+        }
+        return new Pop3Message(_headers);
+    }
+
+    private Pop3Message __parseTOP(String substring) {
+        return null;
+    }
 
     public Pop3MessageInfo listUniqueIdentifier(int messageId) throws IOException {
         String response = sendCommand("UIDL " + messageId);
@@ -266,6 +330,7 @@ public class Pop3Client {
         String response = sendCommand("RETR " + i);
         Map<String, List<String>> headers = new HashMap<String, List<String>>();
         String headerName = null;
+
         // process headers
         while ((response = readResponseLine()).length() != 0) {
             if (response.startsWith("\t")) {
@@ -293,6 +358,7 @@ public class Pop3Client {
             }
             headerValues.add(headerValue);
         }
+
         // process body
         StringBuilder bodyBuilder = new StringBuilder();
         while (!(response = readResponseLine()).equals(".")) {
@@ -338,14 +404,15 @@ public class Pop3Client {
         return messageList;
     }
 
-    public static Pop3Client createInstance(String host,int port,boolean sslEnabled) throws IOException {
-        //MailServerCredential credential = MailServerCredential.getDefault();
-
+    public static Pop3Client createInstance(String host, int port, boolean sslEnabled) throws IOException {
         Pop3Client client = new Pop3Client(sslEnabled);
         client.setDebug(false);
-        client.connect(host,port);
+        client.connect(host, port);
         return client;
     }
+
+
+    // ----------------------------- Listeners
 
     private List<ClientListener> listeners = new ArrayList<ClientListener>();
 
@@ -366,32 +433,6 @@ public class Pop3Client {
                 }
             }
         }
-    }
-
-    public static void main(String[] args) throws IOException {
-
-
-        Pop3Client client = Pop3Client.createInstance("pop.gmail.com", 995, true);
-
-        client.login("yuanyuantest2014@gmail.com", "zyy638708");
-        client.listUniqueIdentifiers();
-
-        System.out.println("Number of new emails: " + client.getNumberOfNewMessages());
-
-
-
-        Pop3MessageInfo[] mms = client.listUniqueIdentifiers();
-
-        System.out.println(mms.length);
-
-        List<Pop3Message> messages = client.getMessages(-1);
-        for (int index = 0; index < messages.size(); index++) {
-            System.out.println("--- Message num. " + index + " ---");
-            System.out.println(messages.get(index).getHeaders());
-        }
-
-        client.logout();
-        client.disconnect();
     }
 
 }

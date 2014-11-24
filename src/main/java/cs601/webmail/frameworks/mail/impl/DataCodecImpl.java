@@ -1,8 +1,6 @@
 package cs601.webmail.frameworks.mail.impl;
 
 import cs601.webmail.frameworks.mail.*;
-
-import cs601.webmail.frameworks.mail.*;
 import cs601.webmail.frameworks.mail.codec.QuotedPrintable;
 import cs601.webmail.frameworks.mail.util.QuotePrintableEncoderStream;
 import cs601.webmail.util.Base64;
@@ -18,9 +16,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by yuanyuan on 11/13/14.
+ * Created by yuanyuan on 11/11/14.
  */
 public class DataCodecImpl implements DataCodec {
+
+    protected Object content;
+
+    protected String contentType;
+
+    public DataCodecImpl() {
+    }
+
+    public DataCodecImpl(Object obj, String type) {
+        this.content = obj;
+        this.contentType = type;
+    }
 
     // Any type what we supports now, return HTML!
     @Override
@@ -157,5 +167,9 @@ public class DataCodecImpl implements DataCodec {
         }
     }
 
-}
+    public String encode() throws MessagingException {
 
+        return "";
+    }
+
+}

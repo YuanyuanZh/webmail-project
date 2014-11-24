@@ -1,12 +1,12 @@
 package cs601.webmail.frameworks.mail.pop3;
 
 import cs601.webmail.entity.Mail;
-
+import cs601.webmail.util.MimeUtils;
 
 import java.util.List;
 
 /**
- * Created by yuanyuan on 10/28/14.
+ * Created by yuanyuan on 10/27/14.
  */
 public class Pop3Extractor {
 
@@ -33,7 +33,7 @@ public class Pop3Extractor {
         mail.setDate(getHeader(message, DATE));
         mail.setFrom(getFromTo(getHeader(message, FROM)));
         mail.setTo(getFromTo(getHeader(message, TO)));
-        mail.setSubject(getHeader(message, SUBJECT));
+        mail.setSubject(MimeUtils.decodeText(getHeader(message, SUBJECT)));
         mail.setMessageId(getHeader(message, MESSAGE_ID));
         mail.setContentType(getHeader(message, CONTENT_TYPE));
 
@@ -56,9 +56,9 @@ public class Pop3Extractor {
         boolean hasQuote = ss[0].startsWith("\"");
 
         if (hasQuote) {
-            sender = "\"" + sender.replace("\"", "") + "\"";
+            sender = "\"" + MimeUtils.decodeText(sender.replace("\"", "")) + "\"";
         } else {
-            sender = sender;
+            sender = MimeUtils.decodeText(sender);
         }
 
         return sender + " " + ss[1];
@@ -71,4 +71,3 @@ public class Pop3Extractor {
     }
 
 }
-

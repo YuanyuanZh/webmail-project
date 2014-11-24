@@ -6,11 +6,14 @@ package cs601.webmail;
 public class Constants {
 
     public static final boolean DEBUG_MODE = true;
+
     public static final String DEFAULT_HOME = "/";
+
     public static final int REMEMBER_DURATION_IN_SECONDS = 14 * 24 * 60 * 60; // 2 weeks
 
     public static final String SESSION_ID = "JSESSIONID";
-    public static final String DEFAULT_AES_CIPHER_KEY = "CaliforniaHotel!";
 
+    // length 16, OracleJDK 7 builtin provider only support 16 chars (128 bits)
+    public static final String DEFAULT_AES_CIPHER_KEY = "CaliforniaHotel!";
 
 }

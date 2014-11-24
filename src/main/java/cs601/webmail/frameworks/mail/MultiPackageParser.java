@@ -1,5 +1,6 @@
 package cs601.webmail.frameworks.mail;
 
+import cs601.webmail.frameworks.mail.ParseException;
 import cs601.webmail.frameworks.mail.util.LineInputStream;
 
 import java.io.IOException;
@@ -8,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by yuanyuan on 11/13/14.
+ * Created by yuanyuan on 11/9/14.
  */
 public class MultiPackageParser {
 
@@ -88,4 +89,3 @@ public class MultiPackageParser {
     }
 
 }
-

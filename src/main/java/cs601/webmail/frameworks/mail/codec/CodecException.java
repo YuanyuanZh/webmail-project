@@ -1,7 +1,7 @@
 package cs601.webmail.frameworks.mail.codec;
 
 /**
- * Created by yuanyuan on 11/13/14.
+ * Created by yuanyuan on 11/11/14.
  */
 public class CodecException extends Exception {
 
@@ -24,4 +24,3 @@ public class CodecException extends Exception {
         super(message, cause, enableSuppression, writableStackTrace);
     }
 }
-

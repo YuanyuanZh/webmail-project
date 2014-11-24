@@ -3,12 +3,10 @@ package cs601.webmail.frameworks.mail;
 import cs601.webmail.frameworks.mail.impl.DataCodecImpl;
 import cs601.webmail.util.IOUtils;
 
-import java.io.BufferedInputStream;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
+
 /**
- * Created by yuanyuan on 11/13/14.
+ * Created by yuanyuan on 11/11/14.
  */
 public class BodyPart implements MimePart {
 
@@ -94,6 +92,11 @@ public class BodyPart implements MimePart {
     }
 
     @Override
+    public void writeTo(OutputStream os) throws MessagingException {
+        throw new IllegalStateException("Not impl yet");
+    }
+
+    @Override
     public String[] getHeader(String name) throws MessagingException {
         return headers.getHeader(name);
     }
@@ -123,4 +126,3 @@ public class BodyPart implements MimePart {
         return headers.getHeader(name, delimiter);
     }
 }
-

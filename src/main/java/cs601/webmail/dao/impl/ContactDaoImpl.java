@@ -1,13 +1,15 @@
 package cs601.webmail.dao.impl;
 
 import cs601.webmail.dao.BaseDao;
-import cs601.webmail.dao.ContactDao;
 import cs601.webmail.dao.DaoException;
 import cs601.webmail.entity.Contact;
+import cs601.webmail.entity.Mail;
 import cs601.webmail.frameworks.db.QueryRunner;
 import cs601.webmail.frameworks.db.ResultSetHandler;
+import cs601.webmail.frameworks.db.page.Order;
+import cs601.webmail.frameworks.db.page.Page;
+import cs601.webmail.frameworks.db.page.PageRequest;
 import cs601.webmail.util.Strings;
-import cs601.webmail.frameworks.db.page.*;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -16,9 +18,9 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * Created by yuanyuan on 11/19/14.
+ * Created by yuanyuan on 11/17/14.
  */
-public class ContactDaoImpl extends BaseDao implements ContactDao {
+public class ContactDaoImpl extends BaseDao implements cs601.webmail.dao.ContactDao {
 
     @Override
     public Contact findById(Long id) {
@@ -243,5 +245,3 @@ public class ContactDaoImpl extends BaseDao implements ContactDao {
     }
 
 }
-
-

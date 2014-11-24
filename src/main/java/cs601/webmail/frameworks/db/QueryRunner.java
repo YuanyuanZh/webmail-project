@@ -1,5 +1,6 @@
 package cs601.webmail.frameworks.db;
 
+
 import cs601.webmail.Constants;
 
 import java.sql.Connection;
@@ -8,7 +9,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
- * Created by yuanyuan on 11/6/14.
+ * Created by yuanyuan on 10/31/14.
  */
 public class QueryRunner {
 
@@ -32,27 +33,33 @@ public class QueryRunner {
         this.connection = connection;
     }
 
-    public <T> T query(String sql,ResultSetHandler<T> resultSetHandler,Object[] params)throws SQLException{
-        Connection connection =prepareConnection();
-        PreparedStatement statement=null;
-        ResultSet rs=null;
+    public <T> T query(String sql, ResultSetHandler<T> resultSetHandler, Object[] params) throws SQLException {
 
-        if(Constants.DEBUG_MODE)
-            System.out.println("[DEBUG] execute sql > \" + sql");
-        try{
+        Connection connection = prepareConnection();
+
+        PreparedStatement statement = null;
+        ResultSet rs = null;
+
+        if (Constants.DEBUG_MODE)
+            System.out.println("[DEBUG] execute sql > " + sql);
+
+        try {
             connection.setAutoCommit(true);
-            statement=connection.prepareStatement(sql);
-            if(params.length>0){
-                for(int i=0,len=params.length;i<len;i++){
-                    statement.setObject(i+1,params[i]);
+            statement = connection.prepareStatement(sql);
+
+            if (params.length > 0) {
+                for (int i = 0, len = params.length; i < len; i++) {
+                    statement.setObject(i + 1, params[i]);
                 }
             }
-            rs= statement.executeQuery();
+
+            rs = statement.executeQuery();
 
             return resultSetHandler.handle(rs);
-        }catch (SQLException e){
+
+        } catch (SQLException e) {
             throw new IllegalStateException(e);
-        }finally {
+        } finally {
             DBUtils.closeStatementQuietly(statement);
             DBUtils.closeResultSetQuietly(rs);
             releaseConnection(connection);
@@ -63,9 +70,28 @@ public class QueryRunner {
         return query(sql, handler, EMPTY_STRINGS);
     }
 
-    public int update(String sql,Object[] params)throws SQLException{
-        Connection connection= prepareConnection();
-        PreparedStatement statement=null;
+    protected void releaseConnection(Connection connection) {
+        if (shouldCloseConn) {
+            DBUtils.closeConnectionQuietly(connection);
+            shouldCloseConn = false;
+        }
+    }
+
+    protected Connection prepareConnection() throws SQLException {
+        if (connection != null) {
+            return connection;
+        } else {
+            shouldCloseConn = true;
+            return DBUtils.generateConnection();
+        }
+    }
+
+    public int update(String sql, Object[] params) throws SQLException {
+
+        Connection connection = prepareConnection();
+
+        PreparedStatement statement = null;
+
         if (Constants.DEBUG_MODE)
             System.out.println("[DEBUG] execute sql > " + sql);
 
@@ -91,22 +117,4 @@ public class QueryRunner {
     public int update(String sql) throws SQLException {
         return update(sql, EMPTY_STRINGS);
     }
-
-    protected Connection prepareConnection()throws SQLException{
-        if(connection!=null){
-            return connection;
-        }else {
-            shouldCloseConn=true;
-            return DBUtils.generateConnection();
-        }
-    }
-    protected void releaseConnection(Connection connection) {
-        if (shouldCloseConn) {
-            DBUtils.closeConnectionQuietly(connection);
-            shouldCloseConn = false;
-        }
-    }
-
-
 }
-

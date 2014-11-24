@@ -5,17 +5,16 @@ import cs601.webmail.dao.MailDao;
 import cs601.webmail.dao.impl.MailDaoImpl;
 import cs601.webmail.entity.Account;
 import cs601.webmail.entity.Mail;
+import cs601.webmail.frameworks.db.page.Page;
+import cs601.webmail.frameworks.db.page.PageRequest;
 import cs601.webmail.frameworks.mail.pop3.*;
 import cs601.webmail.service.MailService;
 import cs601.webmail.service.ServiceException;
-import cs601.webmail.frameworks.db.page.Page;
-import cs601.webmail.frameworks.db.page.PageRequest;
 import cs601.webmail.util.DigestUtils;
 import cs601.webmail.util.ResourceUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
-
 
 import java.io.File;
 import java.io.IOException;
@@ -86,10 +85,11 @@ public class MailServiceImpl implements MailService {
     }
 
     @Override
-    public Page<Mail> findPage(String folder, Account account, PageRequest pageRequest){
-        if("fav".equals(folder)){
+    public Page<Mail> findPage(String folder, Account account, PageRequest pageRequest) {
+        if ("fav".equals(folder)) {
             // return all fav flag mail but FLAG_DEL = FLAG_DELETE
-            String condition = String.format("ACCOUNTID = %d and USERSID = %d and FLAG_FAV > 0 and FLAG_DEL <> %d",
+            String condition = String.format("OWNER_ADDRESS = '%s' and ACCOUNTID = %d and USERSID = %d and FLAG_FAV > 0 and FLAG_DEL <> %d",
+                    account.getEmailUsername(),
                     account.getId(),
                     account.getUserId(),
                     Mail.FLAG_DELETE);
@@ -98,7 +98,8 @@ public class MailServiceImpl implements MailService {
         }
         else if ("trash".equals(folder)) {
 
-            String condition = String.format("ACCOUNTID = %d and USERSID = %d and FLAG_DEL = %d",
+            String condition = String.format("OWNER_ADDRESS = '%s' and ACCOUNTID = %d and USERSID = %d and FLAG_DEL = %d",
+                    account.getEmailUsername(),
                     account.getId(),
                     account.getUserId(),
                     Mail.FLAG_TRASH);
@@ -108,7 +109,8 @@ public class MailServiceImpl implements MailService {
         // 'inbox' as default.
         // of course, excluded those who's FLAG_DEL not equals FLAG_NO
         else {
-            String condition = String.format("ACCOUNTID = %d and USERSID = %d and FLAG_DEL = %d",
+            String condition = String.format("OWNER_ADDRESS = '%s' and ACCOUNTID = %d and USERSID = %d and FLAG_DEL = %d",
+                    account.getEmailUsername(),
                     account.getId(),
                     account.getUserId(),
                     Mail.FLAG_NO);
@@ -153,7 +155,6 @@ public class MailServiceImpl implements MailService {
 
         client.login(username, password);
 
-        //List<String> currentUIDs = mailDao.findAllMailUIDs();
         List<String> currentUIDs = mailDao.findMailUIDs(account.getId());
 
         Map<String, Long> localUIDMap = _parseLocalUIDMap(currentUIDs);
@@ -198,6 +199,7 @@ public class MailServiceImpl implements MailService {
 
             mail.setFlagNew(Mail.FLAG_YES);
             mail.setFlagUnread(Mail.FLAG_YES);
+            mail.setOwnerAddress(account.getEmailUsername());
 
             LOGGER.debug("save mail to DB: " + mail);
             mail = mailDao.save(mail);

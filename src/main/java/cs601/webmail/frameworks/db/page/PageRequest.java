@@ -1,12 +1,10 @@
 package cs601.webmail.frameworks.db.page;
 
-import cs601.webmail.frameworks.db.page.Order;
-
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by yuanyuan on 10/29/14.
+ * Created by yuanyuan on 10/28/14.
  */
 public class PageRequest {
 
@@ -29,4 +27,3 @@ public class PageRequest {
         }
     }
 }
-

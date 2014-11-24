@@ -1,7 +1,9 @@
 package cs601.webmail.frameworks.mail;
 
+import cs601.webmail.frameworks.mail.impl.ContentType;
+
 /**
- * Created by yuanyuan on 11/13/14.
+ * Created by yuanyuan on 11/12/14.
  */
 public class MimeContent {
 
@@ -36,4 +38,3 @@ public class MimeContent {
         this.content = content;
     }
 }
-

@@ -5,7 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
- * Created by  yuanyuan on 10/25/14.
+ * Created by yuanyuan on 10/25/14.
  */
 public class DateTimeUtils {
 
@@ -17,6 +17,7 @@ public class DateTimeUtils {
 
     static final SimpleDateFormat DF = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss Z (zzz)", Locale.ENGLISH);
     static final SimpleDateFormat DF_WITHOUT_ZZZ = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss Z", Locale.ENGLISH);
+    static final SimpleDateFormat DF_WITHOUT_ZZZ_DAY = new SimpleDateFormat("dd MMM yyyy HH:mm:ss Z", Locale.ENGLISH);
 
     static Map<String, SimpleDateFormat> OUT_DF_CACHE;
 
@@ -34,13 +35,18 @@ public class DateTimeUtils {
         if (dateString == null || dateString.length() == 0)
             return null;
 
-        if (dateString.indexOf("CST") > -1 || dateString.indexOf("UTC") > -1) {
+        boolean hasZZZ = dateString.indexOf("CST") > -1 || dateString.indexOf("UTC") > -1;
+        boolean hasDay = dateString.indexOf(",") > -1;
+
+        if (hasDay && hasZZZ) {
             return DF.parse(dateString);
         }
-        else {
+        else if (hasDay) {
             return DF_WITHOUT_ZZZ.parse(dateString);
         }
-
+        else {
+            return DF_WITHOUT_ZZZ_DAY.parse(dateString);
+        }
     }
 
     @Deprecated

@@ -5,7 +5,7 @@ import cs601.webmail.entity.User;
 import cs601.webmail.exception.NotAuthenticatedException;
 import cs601.webmail.frameworks.web.PageTemplate;
 import cs601.webmail.frameworks.web.RequestContext;
-import cs601.webmail.pages.Page;
+import cs601.webmail.pages.ControllerPage;
 import cs601.webmail.service.ContactService;
 import cs601.webmail.service.impl.ContactServiceImpl;
 
@@ -15,60 +15,72 @@ import java.io.IOException;
 import java.io.StringWriter;
 
 /**
- * Created by yuanyuan on 11/20/14.
+ * Created by yuanyuan on 11/18/14.
  */
-public class ContactCreatePage extends Page {
+public class ContactCreatePage extends ControllerPage {
 
     @Override
-    public void body() throws Exception{
-        HttpServletRequest request= RequestContext.getCurrentInstance().getRequest();
-        HttpServletResponse response=RequestContext.getCurrentInstance().getResponse();
+    public void body() throws Exception {
 
+        RequestContext context = RequestContext.getCurrentInstance();
+
+        HttpServletRequest req = context.getRequest();
+        HttpServletResponse resp = context.getResponse();
         User user;
+
         try {
-            user = checkUserLogin(request, response);
+            user = checkUserLogin(req, resp);
         } catch (NotAuthenticatedException e) {
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            response.addHeader("x-state", "error");
-            response.addHeader("x-msg", "Illegal request without user in session.");
+            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            resp.addHeader("x-state", "error");
+            resp.addHeader("x-msg", "Illegal request without user in session.");
             return;
         }
 
-        String method=request.getMethod();
-        Exception exception=null;
+        String method = req.getMethod();
+        Exception exception = null;
 
-        try{
-            if("get".equalsIgnoreCase(method)){
-                doRenderTemplate(request,response,user);
-                return;
-            }else if("post".equalsIgnoreCase(method)){
-                doSaveContact(request,response,user);
+        try {
+
+            // render editing template
+            if ("get".equalsIgnoreCase(method)) {
+                doRenderTemplate(req, resp, user);
                 return;
             }
-        }catch (Exception e){
-            exception =e;
+            else if ("post".equalsIgnoreCase(method)) {
+                doSaveContact(req, resp, user);
+                return;
+            }
+
+        } catch (Exception e) {
+            exception = e;
         }
 
-        response.setStatus(HttpServletResponse.SC_BAD_REQUEST); //400
-        response.setHeader("x-state", "error");
-        response.setHeader("x-msg", "only  GET and POST are supported");
+        resp.setStatus(HttpServletResponse.SC_BAD_REQUEST); //400
+        resp.setHeader("x-state", "error");
+        resp.setHeader("x-msg", "only  GET and POST are supported");
 
         if (exception != null) {
-            response.setHeader("x-exception", exception.getMessage());
+            resp.setHeader("x-exception", exception.getMessage());
         }
+
     }
 
-    private void doSaveContact(HttpServletRequest request,HttpServletResponse response,User user){
-        ContactService contactService=new ContactServiceImpl();
+    private void doSaveContact(HttpServletRequest req, HttpServletResponse resp, User user) {
+        ContactService contactService = new ContactServiceImpl();
 
-        try{
-            Contact contact=restoreEntity(request);
+        try {
+            Contact contact = restoreEntity(req);
+
             contact.setUserId(user.getId());
+
             contactService.save(contact);
-            response.addHeader("x-state","ok");
-        }catch (Exception e){
-            response.addHeader("x-state","error");
-            response.addHeader("x-exception",e.getMessage());
+
+            resp.addHeader("x-state", "ok");
+
+        } catch (Exception e) {
+            resp.addHeader("x-state", "error");
+            resp.addHeader("x-exception", e.getMessage());
             return;
         }
     }
@@ -85,13 +97,13 @@ public class ContactCreatePage extends Page {
         return contact;
     }
 
-   private void doRenderTemplate(HttpServletRequest request,HttpServletResponse response,User user)throws IOException{
-       PageTemplate template = new PageTemplate("/velocity/contact_edit.vm");
-       StringWriter writer = new StringWriter();
-       template.merge(writer);
-       response.addHeader("x-state", "ok");
-       response.setContentType("text/html; charset=utf-8");
-       getOut().print(writer.toString());
-   }
+    private void doRenderTemplate(HttpServletRequest req, HttpServletResponse resp, User user) throws IOException {
+        PageTemplate template = new PageTemplate("/velocity/contact_edit.vm");
+        StringWriter writer = new StringWriter();
+        template.merge(writer);
+        resp.addHeader("x-state", "ok");
+        resp.setContentType("text/html; charset=utf-8");
+        getOut().print(writer.toString());
+    }
 
 }

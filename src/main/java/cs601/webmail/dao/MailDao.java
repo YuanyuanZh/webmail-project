@@ -3,6 +3,7 @@ package cs601.webmail.dao;
 import cs601.webmail.entity.Mail;
 import cs601.webmail.frameworks.db.page.Page;
 import cs601.webmail.frameworks.db.page.PageRequest;
+
 import java.util.List;
 
 /**
@@ -23,6 +24,8 @@ public interface MailDao {
     // UID
     public List<String> findAllMailUIDs();
 
+    public List<String> findMailUIDs(Long accountId);
+
 //    void insertMail(String MSGID,String SUBJECT,String MFROM,String MTO,String CONTENT,String DATE,Integer uid,Integer aid);
 
     public void removeByUID(String uid);
@@ -36,5 +39,4 @@ public interface MailDao {
      * @return Paged result.
      */
     public Page<Mail> findPageByConditions(PageRequest pageRequest, String condition);
-    List<String> findMailUIDs(Long accountId);
 }

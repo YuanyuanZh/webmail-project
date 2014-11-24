@@ -26,13 +26,78 @@ public class AccountDaoImpl extends BaseDao implements AccountDao{
         if(account==null){
             throw new IllegalArgumentException();
         }
+
+        if (account.getId() != null) {
+            doUpdate(account);
+        } else {
+            doInsert(account);
+        }
+    }
+
+    private void doUpdate(Account account) {
+
+        Object[] params = new Object[]{
+                account.getUserId(),
+                account.getEmailUsername(),
+                account.getEmailPassword(),
+                account.getPopServer(),
+                account.getPopServerPort(),
+                account.isEnableSsl(),
+
+                account.getSmtpServer(),
+                account.getSmtpServerPort(),
+                account.isEnableSmtpSsl(),
+                account.getDisplayName(),
+                account.getMailSignature(),
+
+                account.getId()
+        };
+
         QueryRunner qr = getQueryRunner();
+
+        try {
+            int row = qr.update("update accounts set userid=?,email_address=?,epass=?," +
+                    "POP_SERVER=?,POP_SERVER_PORT=?,ENABLE_SSL=?," +
+                    "SMTP_SERVER=?,SMTP_SERVER_PORT=?,ENABLE_SMTP_SSL=?," +
+                    "DISPLAY_NAME=?,MAIL_SIGNATURE=?" +
+                    " where AID=?", params);
+
+            if (row == 0) {
+                //return false;
+                throw new IllegalStateException("Save account failed.");
+            }
+        } catch (SQLException e) {
+            throw new DaoException(e);
+        }
+    }
+
+    private void doInsert(Account account) {
+
+        Object[] params = new Object[]{
+                account.getUserId(),
+                account.getEmailUsername(),
+                account.getEmailPassword(),
+                account.getPopServer(),
+                account.getPopServerPort(),
+                account.isEnableSsl(),
+
+                account.getSmtpServer(),
+                account.getSmtpServerPort(),
+                account.isEnableSmtpSsl(),
+                account.getDisplayName(),
+                account.getMailSignature()
+        };
+
+        QueryRunner qr = getQueryRunner();
+
         try {
 
-            int row = qr.update("insert into accounts(userid,email_address,epass,POP_SERVER,POP_SERVER_PORT,ENABLE_SSL) values(?,?,?,?,?,?)",
-                    new Object[]{account.getUserId(), account.getEmailUsername(), account.getEmailPassword(),account.getPopServer(),account.getPopServerPort(),account.isEnableSsl()});
+            int row = qr.update("insert into accounts(userid,email_address,epass," +
+                            "POP_SERVER,POP_SERVER_PORT,ENABLE_SSL," +
+                            "SMTP_SERVER,SMTP_SERVER_PORT,ENABLE_SMTP_SSL," +
+                            "DISPLAY_NAME,MAIL_SIGNATURE) values(?,?,?,?,?,? ,?,?,?,?,?)", params);
 
-            if (row != 1) {
+            if (row == 0) {
                 //return false;
                 throw new IllegalStateException("Save account failed.");
             }
@@ -60,7 +125,6 @@ public class AccountDaoImpl extends BaseDao implements AccountDao{
         }
 
     }
-
     public List<Account> listAll() {
         QueryRunner qr = getQueryRunner();
 
@@ -76,13 +140,13 @@ public class AccountDaoImpl extends BaseDao implements AccountDao{
         }
     }
 
-    public Account findById(Long userid){
-        if(userid==null){
+    public Account findById(Long accountId){
+        if(accountId==null){
             throw new IllegalArgumentException();
         }
         QueryRunner qr = getQueryRunner();
         try {
-            return qr.query("select * from Accounts where USERID=?", new ResultSetHandler<Account>() {
+            return qr.query("select * from Accounts where AID=?", new ResultSetHandler<Account>() {
                 @Override
                 public Account handle(ResultSet resultSet) throws SQLException {
                     if (resultSet.next()) {
@@ -90,11 +154,34 @@ public class AccountDaoImpl extends BaseDao implements AccountDao{
                     }
                     return null;
                 }
-            }, new Object[]{userid});
+            }, new Object[]{accountId});
         } catch (SQLException e) {
             throw new DaoException(e);
         }
+    }
 
+    public List<Account> findByUserId(Long userId) {
+        if(userId==null){
+            throw new IllegalArgumentException();
+        }
+        QueryRunner qr = getQueryRunner();
+        try {
+            return qr.query("select * from Accounts where USERID=?", new ResultSetHandler<List<Account>>() {
+                @Override
+                public List<Account> handle(ResultSet resultSet) throws SQLException {
+
+                    List<Account> ret = new ArrayList<Account>();
+
+                    while (resultSet.next()) {
+                        ret.add(handleRowMapping(resultSet));
+                    }
+
+                    return ret;
+                }
+            }, new Object[]{userId});
+        } catch (SQLException e) {
+            throw new DaoException(e);
+        }
     }
 
     public List<String> listEmails(Long userid){
@@ -132,6 +219,12 @@ public class AccountDaoImpl extends BaseDao implements AccountDao{
         account.setPopServerPort(rs.getInt("POP_SERVER_PORT"));
         account.setEnableSsl(rs.getBoolean("ENABLE_SSL"));
 
+        account.setSmtpServer(rs.getString("SMTP_SERVER"));
+        account.setSmtpServerPort(rs.getInt("SMTP_SERVER_PORT"));
+        account.setEnableSmtpSsl(rs.getBoolean("ENABLE_SMTP_SSL"));
+        account.setDisplayName(rs.getString("DISPLAY_NAME"));
+        account.setMailSignature(rs.getString("MAIL_SIGNATURE"));
+
         return account;
     }
     private List<Account> handleRowsMapping(ResultSet rs) throws SQLException {
@@ -144,3 +237,4 @@ public class AccountDaoImpl extends BaseDao implements AccountDao{
         return accounts;
     }
 }
+

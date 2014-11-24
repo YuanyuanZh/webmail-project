@@ -11,13 +11,9 @@
     <link href="/resources/css/bootstrap.progress-auto.css" rel="stylesheet" type="text/css" />
     <!-- font Awesome -->
     <link href="/resources/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
-    <!-- Ionicons -->
-    <!--<link href="/resources/css/ionicons.min.css" rel="stylesheet" type="text/css" />-->
-    <!-- bootstrap wysihtml5 - text editor -->
-    <!--<link href="/resources/css/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css" rel="stylesheet" type="text/css" />-->
-    <!-- iCheck for checkboxes and radio inputs -->
-    <!--<link href="/resources/css/iCheck/minimal/blue.css" rel="stylesheet" type="text/css" />-->
-    <!-- Theme style -->
+
+    <link href="/resources/js/magicsuggest/magicsuggest-min.css" rel="stylesheet" type="text/css" />
+
     <link href="/resources/css/mail.css" rel="stylesheet" type="text/css" />
     <link href="/resources/css/mail-resp.css" rel="stylesheet" type="text/css" />
 
@@ -25,9 +21,7 @@
     <link rel="shortcut icon" href="/resources/img/favicon.ico" type="image/x-icon">
     <link rel="icon" href="/resources/img/favicon.ico" type="image/x-icon">
 
-    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
+
     <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
     <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
     <![endif]-->
@@ -40,16 +34,8 @@
     <div id="profile" class="profile column-header">
         <img src="/resources/img/avatar/avatar_2x.png" height="40" width="40" class="profile-avatar img-circle img-thumbnail" alt="Avatar" />
         <span class="profile-name"></span>
-
-        <!--<div class="profile-dropdown dropdown" >
-            <span class="glyphicon glyphicon-collapse-down dropdown-trigger" data-toggle="dropdown"></span>
-
-            <ul class="dropdown-menu" role="menu">
-                <li><a href="#">Foo</a></li>
-                <li><a href="#">Bar</a></li>
-            </ul>
-        </div>-->
     </div>
+
     <div class="left-side-tabs">
         <ul class="nav nav-tabs nav-justified">
             <li role="presentation" class="active"><a href="#">Mail</a></li>
@@ -58,7 +44,7 @@
     </div>
 
     <div style="padding: 1.4em 1em;">
-        <button class="btn btn-primary btn-block compose-btn btn-disabled" disabled="disabled"><i class="fa fa-pencil-square-o"></i>&nbsp;&nbsp; Compose</button>
+        <button class="btn btn-primary btn-block compose-btn btn-disabled"><i class="fa fa-pencil-square-o"></i>&nbsp;&nbsp; Compose</button>
     </div>
 
     <div style="padding: 0;">
@@ -66,13 +52,12 @@
             <li id="folderInbox" class="active" data-name="inbox"><a href="#/mail/list/inbox"><i class="fa fa-inbox"></i> <span>Inbox</span>
                 <!--<small class="badge pull-right bg-green">192</small>-->
             </a></li>
-            <!--<li><a href="#"><i class="fa fa-archive"></i> <span>Sent</span></a></li>-->
-            <li data-name="fav"><a href="#/mail/list/fav"><i class="fa fa-star-o"></i> <span>Starred</span></a></li>
+            <!--<li data-name="sent"><a href="#/mail/list/sent"><i class="fa fa-archive"></i> <span>Sent</span></a></li>-->
+            <li data-name="fav"><a href="#/mail/list/starred"><i class="fa fa-star-o"></i> <span>Starred</span></a></li>
             <!--<li><a href="#"><i class="fa fa-file-o"></i> <span>Drafts</span></a></li>-->
             <li data-name="trash"><a href="#"><i class="fa fa-trash"></i> <span>Trash</span></a></li>
         </ul>
 
-        <!-- <h5 class="h5">TAGS</h5> -->
     </div>
 
     <div id="tbSystem" class="toolbar toolbar-bottom">
@@ -176,155 +161,6 @@
 
         <dl class="mail-list">
 
-            <!--<dd class="mail-list-item unread">-->
-                <!--<div class="action-controls">-->
-                    <!--<input type="checkbox" />-->
-                    <!--<div style="margin-top:8px;">-->
-                        <!--<i class="fav-btn fa fa-star-o"></i>-->
-                    <!--</div>-->
-                <!--</div>-->
-                <!--<div class="writer">-->
-                    <!--<strong>Facebook</strong>-->
-                    <!--<span class="pull-right">3:04 (1小时前)</span>-->
-                <!--</div>-->
-                <!--<h4>Do you know Tony Townsend, Boyu Wang and 8 others?</h4>-->
-            <!--</dd>-->
-
-
-            <!--<dd class="mail-list-item unread">-->
-                <!--<div class="action-controls">-->
-                    <!--<input type="checkbox" />-->
-                    <!--<div style="margin-top:8px;">-->
-                        <!--<i class="fa fa-star-o"></i>-->
-                    <!--</div>-->
-                <!--</div>-->
-                <!--<div class="writer">-->
-                    <!--<strong>Pinterest</strong>-->
-                    <!--<span class="pull-right">September 21</span>-->
-                <!--</div>-->
-                <!--<h4>Another thing you can do on Pinterest: Renovate your home!</h4>-->
-                <!--<p>Did you know you can also use Pinterest to plan out any improvements-->
-                    <!--you want to make to your home? So if you’re redecorating your living-->
-                    <!--room, just do a quick search to see what rugs,-->
-                    <!--couches and other great ideas people have discovered. </p>-->
-            <!--</dd>-->
-
-
-            <!--<dd class="mail-list-item active">-->
-                <!--<div class="action-controls">-->
-                    <!--<input type="checkbox" />-->
-                    <!--<div style="margin-top:8px;">-->
-                        <!--<i class="fa fa-star-o"></i>-->
-                    <!--</div>-->
-                <!--</div>-->
-                <!--<div class="writer">-->
-                    <!--<strong>OpenShift by Red Hat</strong>-->
-                    <!--<span class="pull-right">21:39 (4小时前)</span>-->
-                <!--</div>-->
-                <!--<h4>Announcing Dedicated Node Services</h4>-->
-                <!--<p>-->
-                    <!--Last week we announced Dedicated Node Services for OpenShift.-->
-                    <!--Dedicated Node gives Enterprise users more options and power than ever,-->
-                    <!--providing customized and dedicated-->
-                <!--</p>-->
-            <!--</dd>-->
-
-            <!--<dd class="mail-list-item">-->
-                <!--<div class="action-controls">-->
-                    <!--<input type="checkbox" />-->
-                    <!--<div style="margin-top:8px;">-->
-                        <!--<i class="fa fa-star-o"></i>-->
-                    <!--</div>-->
-                <!--</div>-->
-                <!--<div class="writer">-->
-                    <!--<strong>OpenShift by Red Hat</strong>-->
-                      <!--<span class="pull-right">-->
-                        <!--<i class="fa fa-paperclip"></i>-->
-                         <!--21:39 (4小时前)</span>-->
-                <!--</div>-->
-                <!--<h4>Work Inquire from Apple</h4>-->
-                <!--<p>-->
-                    <!--Last week we announced Dedicated Node Services for OpenShift.-->
-                    <!--Dedicated Node gives Enterprise users more options and power than ever,-->
-                    <!--providing customized and dedicated nodes to-->
-                <!--</p>-->
-            <!--</dd>-->
-
-            <!--<dd class="mail-list-item">-->
-                <!--<div class="action-controls">-->
-                    <!--<input type="checkbox" />-->
-                    <!--<div style="margin-top:8px;">-->
-                        <!--<i class="fa fa-star-o"></i>-->
-                    <!--</div>-->
-                <!--</div>-->
-                <!--<div class="writer">-->
-                    <!--<strong>OpenShift by Red Hat</strong>-->
-                    <!--<span class="pull-right">21:39 (4小时前)</span>-->
-                <!--</div>-->
-                <!--<h4>Work Inquire from Apple</h4>-->
-                <!--<p>-->
-                    <!--Last week we announced Dedicated Node Services for OpenShift.-->
-                    <!--Dedicated Node gives Enterprise users more options and power than ever,-->
-                    <!--providing customized and dedicated nodes to-->
-                <!--</p>-->
-            <!--</dd>-->
-
-            <!--<dd class="mail-list-item">-->
-                <!--<div class="action-controls">-->
-                    <!--<input type="checkbox" />-->
-                    <!--<div style="margin-top:8px;">-->
-                        <!--<i class="fa fa-star-o"></i>-->
-                    <!--</div>-->
-                <!--</div>-->
-                <!--<div class="writer">-->
-                    <!--<strong>OpenShift by Red Hat</strong>-->
-                    <!--<span class="pull-right">21:39 (4小时前)</span>-->
-                <!--</div>-->
-                <!--<h4>Work Inquire from Apple</h4>-->
-                <!--<p>-->
-                    <!--Last week we announced Dedicated Node Services for OpenShift.-->
-                    <!--Dedicated Node gives Enterprise users more options and power than ever,-->
-                    <!--providing customized and dedicated nodes to-->
-                <!--</p>-->
-            <!--</dd>-->
-
-            <!--<dd class="mail-list-item">-->
-                <!--<div class="action-controls">-->
-                    <!--<input type="checkbox" />-->
-                    <!--<div style="margin-top:8px;">-->
-                        <!--<i class="fa fa-star-o"></i>-->
-                    <!--</div>-->
-                <!--</div>-->
-                <!--<div class="writer">-->
-                    <!--<strong>OpenShift by Red Hat</strong>-->
-                    <!--<span class="pull-right">21:39 (4小时前)</span>-->
-                <!--</div>-->
-                <!--<h4>Work Inquire from Apple</h4>-->
-                <!--<p>-->
-                    <!--Last week we announced Dedicated Node Services for OpenShift.-->
-                    <!--Dedicated Node gives Enterprise users more options and power than ever,-->
-                    <!--providing customized and dedicated nodes to-->
-                <!--</p>-->
-            <!--</dd>-->
-
-            <!--<dd class="mail-list-item">-->
-                <!--<div class="action-controls">-->
-                    <!--<input type="checkbox" />-->
-                    <!--<div style="margin-top:8px;">-->
-                        <!--<i class="fa fa-star-o"></i>-->
-                    <!--</div>-->
-                <!--</div>-->
-                <!--<div class="writer">-->
-                    <!--<strong>OpenShift by Red Hat</strong>-->
-                    <!--<span class="pull-right">21:39 (4小时前)</span>-->
-                <!--</div>-->
-                <!--<h4>Announcing Dedicated Node Services</h4>-->
-                <!--<p>-->
-                    <!--Last week we announced Dedicated Node Services for OpenShift.-->
-                    <!--Dedicated Node gives Enterprise users more options and power than ever,-->
-                    <!--providing customized and dedicated nodes to-->
-                <!--</p>-->
-            <!--</dd>-->
         </dl>
 
         <div>
@@ -343,25 +179,23 @@
 <aside class="right-side x-col">
 
     <div class="column-header">
-        <div class="pull-right">
-            <div class="btn-group">
-                <button type="button" class="btn btn-default btn-sm"><i class="fa fa-chevron-left"></i></button>
-                <button type="button" class="btn btn-default btn-sm"><i class="fa fa-chevron-right"></i></button>
-            </div>
-        </div>
         <h2 class="mail-title"></h2>
     </div>
 
     <header class="toolbar">
-        <div class="btn-group">
-            <button type="button" class="btn btn-default btn-sm"><i class="fa fa-archive"></i></button>
-            <button type="button" class="btn btn-default btn-sm"><i class="fa fa-info-circle"></i></button>
-            <button type="button" class="btn btn-default btn-sm"><i class="fa fa-trash"></i></button>
-        </div>
 
-        <div class="btn-group">
-            <button type="button" class="btn btn-default btn-sm"><i class="fa fa-folder"></i></button>
-            <button type="button" class="btn btn-default btn-sm"><i class="fa fa-tag"></i></button>
+        <button type="button" class="delete-btn btn btn-default btn-sm"><i class="fa fa-trash"></i> Delete</button>
+
+        <div class="btn-group reply">
+            <button type="button" class="reply-btn btn btn-default btn-sm"><i class="fa fa-reply"></i> Reply</button>
+            <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown">
+                <span class="caret"></span>
+                <span class="sr-only">Toggle Dropdown</span>
+            </button>
+            <ul class="dropdown-menu" role="menu">
+                <li class="reply-all-menu"><a href="#"><i class="fa fa-reply"></i> Reply All</a></li>
+                <li class="forward-menu"><a href="#"><i class="fa fa-share"></i> Forward</a></li>
+            </ul>
         </div>
 
     </header>
@@ -432,7 +266,7 @@
             <div class="modal-header">
                 <!-- <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span>
           <span class="sr-only">Close</span></button> -->
-                <h4 class="modal-title" id="myModalLabel">Loading</h4>
+                <h4 class="modal-title" id="myModalLabel">Please wait a second...</h4>
             </div>
             <div class="modal-body">
                 <div class="progress auto-progress">
@@ -442,10 +276,10 @@
                     </div>
                 </div>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
-            </div>
+            <!--<div class="modal-footer">-->
+                <!--<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>-->
+                <!--&lt;!&ndash; <button type="button" class="btn btn-primary">Save changes</button> &ndash;&gt;-->
+            <!--</div>-->
         </div>
     </div>
 </div>
@@ -462,60 +296,69 @@
             </div>
             <div class="modal-body">
 
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="no-btn btn btn-default" data-dismiss="modal">Cancel</button>
+                <button type="button" class="yes-btn btn btn-primary">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="dlgCompose" class="modal fade bs-example-modal-md" tabindex="-1" role="dialog"
+     aria-labelledby="Compose Mail" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">New mail</h4>
+            </div>
+            <div class="modal-body">
+
                 <form class="form-horizontal" role="form">
                     <div class="form-group">
-                        <label for="txtPopServer" class="col-sm-4 control-label">Incoming Mail Server</label>
-                        <div class="col-sm-8">
-                            <input type="email" class="form-control" id="txtPopServer" placeholder="pop.yourmailserver.com">
+                        <label for="txtTo" class="col-sm-2 control-label">To</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="txtTo" name="to" placeholder="" />
+                        </div>
+                    </div>
+                    <div class="form-group hidden group-cc">
+                        <label for="txtCC" class="col-sm-2 control-label">Cc</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="txtCc" name="cc" placeholder="">
+                        </div>
+                    </div>
+                    <div class="form-group hidden group-bcc">
+                        <label for="txtBcc" class="col-sm-2 control-label">Bcc</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="txtBcc" name="bcc" placeholder="">
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="txtEmail" class="col-sm-4 control-label">Email Address</label>
-                        <div class="col-sm-8">
-                            <input type="email" class="form-control" id="txtEmail" placeholder="john@foobar.com">
+                        <div class="col-sm-offset-2 col-sm-10">
+                            <!-- toggle cc & bcc input -->
+                            <a href="#" class="toggle-btn" data-toggle=".group-cc" ><span>Add</span> Cc</a>
+                            <span style="color: #EDEDED;">|</span>
+                            <a href="#" class="toggle-btn" data-toggle=".group-bcc"><span>Add</span> Bcc</a>
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="txtUsername" class="col-sm-4 control-label">User Name</label>
-                        <div class="col-sm-8">
-                            <input type="email" class="form-control" id="txtUsername" placeholder="John">
+                        <label for="txtSubject" class="col-sm-2 control-label">Subject</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="txtSubject" name="subject" placeholder="">
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="inputPassword3" class="col-sm-4 control-label">Password</label>
-                        <div class="col-sm-8">
-                            <input type="password" class="form-control" id="inputPassword3" placeholder="Password">
+                        <label for="txtContent" class="col-sm-2 control-label">Content</label>
+                        <div class="col-sm-10">
+                            <textarea class="form-control" id="txtContent" name="content"  placeholder=""
+                                    style="height: 160px;"></textarea>
                         </div>
                     </div>
-                    <div class="form-group">
-                        <div class="col-sm-offset-4 col-sm-8">
-                            <div class="checkbox">
-                            <label>
-                                <input id="chkSSL" type="checkbox"> Use SSL
-                            </label>
-                            </div>
-                        </div>
-                    </div>
-                    <!--<div class="form-group">-->
-                        <!--<div class="col-sm-offset-3 col-sm-9">-->
-                            <!--<div class="checkbox">-->
-                                <!--<label>-->
-                                    <!--<input type="checkbox"> Remember me-->
-                                <!--</label>-->
-                            <!--</div>-->
-                        <!--</div>-->
-                    <!--</div>-->
-                    <!--<div class="form-group">-->
-                        <!--<div class="col-sm-offset-3 col-sm-9">-->
-                            <!--<button type="submit" class="btn btn-default">Sign in</button>-->
-                        <!--</div>-->
-                    <!--</div>-->
-
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-primary">Save</button>
+                <button type="button" class="no-btn btn btn-default" data-dismiss="modal">Cancel</button>
+                <button type="button" class="yes-btn btn btn-primary"><i class="fa fa-send"></i> Send</button>
             </div>
         </div>
     </div>
@@ -523,15 +366,22 @@
 
 <script src="/resources/js/jquery-2.1.1.js"></script>
 <script src="/resources/js/bootstrap.js"></script>
-<script src="/resources/js/underscore-min.js"></script>
-<script src="/resources/js/backbone-min.js"></script>
+<!--<script src="/resources/js/underscore-min.js"></script>-->
+<!--<script src="/resources/js/backbone-min.js"></script>-->
 <script src="/resources/js/notify.min.js"></script>
+<script src="/resources/js/magicsuggest/magicsuggest-min.js"></script>
+
 <script src="/resources/js/webmail.js"></script>
 
 <script>
 
     var currentFolder = 'inbox';
     var pagination = new Pagination();
+
+    function isArray(obj) {
+        return typeof obj == 'object' &&
+                Object.prototype.toString.call(obj) == '[object Array]';
+    }
 
     function adjustColumnsHeight() {
         var col_h = $('.left-side').height();
@@ -572,7 +422,7 @@
         })
     }
 
-    function loadMails(folder, page, firstInvoke) {
+    function loadMailList(folder, page, firstInvoke) {
 
         folder = folder || currentFolder || 'inbox';
         page = page || pagination.page() || '1'; // page 1 as default
@@ -617,7 +467,7 @@
         var ajax = $.getJSON("/rest/mail/sync", function(data){
             if (data && data.state === 'ok') {
                 if (data.update) {
-                    loadMails();
+                    loadMailList();
                 } else {
                     Noty.info("No new messages received");
                 }
@@ -738,7 +588,7 @@
         }
 
         // update 'select-all' button icon
-        var updateSelectAllButton = function(allSelected) {
+        ;(function(allSelected) {
 
             var toggleIt = function(btn, toggle) {
                 $(btn).find('i.fa').
@@ -755,8 +605,21 @@
                 var btn = $('#maillist').find('.select-btn button.select-all-btn')[0];
                 toggleIt(btn, itemsAll.size() == selected.size() && itemsAll.size() != 0);
             }
-        };
-        updateSelectAllButton();
+        })();
+
+
+        // mail view port context toolbar
+        ;(function() {
+            var selected = $('#maillist .mail-list-item').filter('.active');
+            var tb = $('.right-side .toolbar');
+
+            if (selected[0]) {
+                tb.find('.delete-btn,.reply').toggleClass('hidden', false);
+            } else {
+                tb.find('.delete-btn,.reply').toggleClass('hidden', true);
+                $('#mailViewport article').empty();
+            }
+        })();
 
         // ------------------------- pagination buttons
         if (!pagination.hasPrev()) {
@@ -873,11 +736,14 @@
                 $(self).siblings().removeClass('active').end().addClass('active');
                 // change url hash
                 location.hash = '#/mail/read/' + id;
+                updateUI();
             });
         })
     }
 
-
+    /**
+     * Mail list context menu and button event handler.
+     */
     function bindMailListMenu() {
 
         // customize event 'select' and 'unselect', and delegate to #maillist
@@ -911,6 +777,12 @@
             });
         });
 
+        /**
+         * Filter mails that if filter return true.
+         *
+         * @param filter {function}
+         * @returns {Array}
+         */
         var filterMails = function(filter) {
             var items = [];
             var itemsAll = $('#maillist .mail-list-item');
@@ -1025,7 +897,7 @@
             }).toArray();
 
             ctrlMail(ids.join(','), ctrl, function() {
-                loadMails();
+                loadMailList();
             });
         };
 
@@ -1106,20 +978,22 @@
         // --------------------- pagination handler
 
         $('#maillistWrapper').on('click', '.prev-btn', function() {
-            loadMails(currentFolder, pagination.prev());
+            loadMailList(currentFolder, pagination.prev());
         });
         $('#maillistWrapper').on('click', '.next-btn', function() {
-            loadMails(currentFolder, pagination.next());
+            loadMailList(currentFolder, pagination.next());
         });
         $('#maillist').on('click', '.toolbar .prev-btn', function() {
-            loadMails(currentFolder, pagination.prev());
+            loadMailList(currentFolder, pagination.prev());
         });
         $('#maillist').on('click', '.toolbar .next-btn', function() {
-            loadMails(currentFolder, pagination.next());
+            loadMailList(currentFolder, pagination.next());
         });
     }
 
-    // To switch mail folder
+    /**
+     * To switch mail folder
+     */
     function bindFolderSwitch() {
         $('#mainMenu > li').on('click', function(e) {
 
@@ -1140,14 +1014,368 @@
 
             pagination.reset();
 
-            loadMails(folder);
+            loadMailList(folder);
+        })
+    }
+
+    /**
+     * Popup a compose dialog, and ready to send message.
+     *
+     * All of New and Reply and Forward are using
+     * the same compose dialog.
+     *
+     * @param params {object}
+     */
+    function openCompose(params) {
+
+        params = $.extend({
+            title: 'New mail',
+            op: 'new',  // new | reply | reply-all | forward
+            to: null,
+            cc: null,
+            bcc: null,
+            subject: null,
+            content: null,
+            callback: function(){}
+        }, params);
+
+        var dialogId = '#dlgCompose';
+        var $dlg = $(dialogId);
+
+        var _formatAddress = function(address) {
+            if (typeof address == 'string') {
+                return address.split(",");
+            }
+            if (isArray(address)) {
+                return address;
+            }
+            return null;
+        };
+
+        // this == dialog
+        var handler = function() {
+            $(this).find('.modal-title').text(params.title);
+
+            var mc_to = $('#txtTo').magicSuggest();
+            var mc_cc = $('#txtCc').magicSuggest();
+            var mc_bcc = $('#txtBcc').magicSuggest();
+
+            // reset form {
+            mc_to.clear();
+            mc_cc.clear();
+            mc_bcc.clear();
+
+            $(this).find('[name=subject]').val('');
+            $(this).find('[name=content]').val('');
+
+            $(this).find('.group-cc').toggleClass('hidden', true);
+            $(this).find('.toggle-btn[data-toggle=".group-cc"] > span').text('Add');
+            $(this).find('.group-bcc').toggleClass('hidden', true);
+            $(this).find('.toggle-btn[data-toggle=".group-bcc"] > span').text('Add');
+            // reset form }
+
+            if (params.to) {
+                mc_to.setValue(_formatAddress(params.to));
+            }
+            if (params.cc) {
+                mc_cc.setValue(_formatAddress(params.cc));
+                $(this).find('.group-cc').toggleClass('hidden', false); // show it
+                $(this).find('.toggle-btn[data-toggle=".group-cc"] > span').text('Remove');
+            }
+            if (params.bcc) {
+                mc_bcc.setValue(_formatAddress(params.bcc));
+                $(this).find('.group-bcc').toggleClass('hidden', false); // show it
+                $(this).find('.toggle-btn[data-toggle=".group-bcc"] > span').text('Remove');
+            }
+            if (params.subject) {
+                $(this).find('[name=subject]').val(params.subject);
+            }
+            if (params.content) {
+                $(this).find('[name=content]').val(params.content);
+            }
+
+            $dlg.modal();
+        };
+
+        if (!$dlg.data('initialized')) {
+            // update contacts suggestion
+            $.get('/rest/contacts.json', {}, function(data, status, xhr) {
+                var state = xhr.getResponseHeader("x-state");
+
+                var mcParams = {
+                    placeholder: 'Enter recipients...',
+                    data: [],
+                    valueField: 'email',
+                    renderer: function(data){
+                        return data.name + ' (<b>' + data.email + '</b>)';
+                    },
+                    resultAsString: true
+                };
+
+                if (state == 'ok') {
+                    mcParams.data = data;
+                }
+
+                var $dlg = $(dialogId);
+                $dlg.find(':text[name=to]').magicSuggest(mcParams);
+                $dlg.find(':text[name=cc]').magicSuggest(mcParams);
+                $dlg.find(':text[name=bcc]').magicSuggest(mcParams);
+
+                $dlg.data('initialized', true);
+
+                handler.call($dlg[0]);
+            }).fail(function(){
+                console.error('load contacts suggestion failed.');
+            });
+            return;
+        }
+
+        handler.call($dlg[0]);
+    }
+
+    /**
+     * initialize compose dialog
+     */
+    function bindComposeDialog() {
+        var dialogId = '#dlgCompose';
+
+        $('.left-side').on('click', '.compose-btn', function(){
+            openCompose(); // default as NEW
+        });
+
+        // add Bcc & Cc btn event handler
+        $(dialogId).on('click', '.toggle-btn', function(){
+
+            var target = $(this).data('toggle');
+            var span = $(this).find('span');
+
+            var add = span.text().toLowerCase() == 'add';
+
+            $(target).toggleClass('hidden', !add);
+            span.text(add ? 'Remove' : 'Add');
+
+            if (!add) {
+                try {
+                    // clear Bcc or Cc field
+                    $(target).find('.ms-ctn').magicSuggest().clear();
+                } catch(e){}
+            }
+
+            return false;
+        });
+
+        // compose button event handler
+        $(dialogId).on('click', '.yes-btn', function(e){
+            var $form = $(dialogId).find('form');
+
+            if ($form.find('[name="to[]"]').size() == 0) {
+                Noty.error("'To' field is required.");
+                return;
+            }
+
+            if ($form.find('[name="subject"]').val() == '') {
+                Noty.error("'Subject' field is required.");
+                return;
+            }
+
+            if ($form.find('[name="content"]').val() == '') {
+                Noty.error("'Content' field is required.");
+                return;
+            }
+
+            $(dialogId).modal('hide');
+            var $dlgProgress = $('#dlgProgress').modal();
+
+            $.post('/rest/mail/send', $form.serialize(), function(data, status, xhr){
+                var state = xhr.getResponseHeader("x-state");
+                var msg = xhr.getResponseHeader("x-msg") || xhr.getResponseHeader("x-exception") || '';
+
+                $dlgProgress.modal('hide');
+
+                if (state == 'ok') {
+                    try {
+                        $('#txtTo').magicSuggest().clear();
+                        $('#txtCc').magicSuggest().clear();
+                        $('#txtBcc').magicSuggest().clear();
+
+                        $('.group-cc, .group-bcc').addClass('hidden');
+
+                        $form[0].reset();
+                    } catch(e) {}
+
+                    Noty.info('Mail send successfully.');
+                } else {
+                    Noty.error('Failed to send. Please check your input & try it later. ' + (msg));
+                }
+
+            }).fail(function(){
+                $dlgProgress.modal('hide');
+                Noty.error('Failed to send, try it later.');
+            });
+        });
+    }
+
+    /**
+     * initialize account settings dialog
+     */
+    function bindSettingsDialog() {
+
+        var dialogId = '#dlgSetting';
+
+        // Show settings dialog
+        $('#tbSystem').on('click', '.settings-btn', function() {
+
+            $.get('/rest/user/settings', {}, function(data, status, xhr) {
+                //
+                var state = xhr.getResponseHeader("x-state");
+                var msg = xhr.getResponseHeader("x-msg") || xhr.getResponseHeader("x-exception") || '';
+
+                if (state == 'ok') {
+                    $(dialogId).find('.modal-body').html(data);
+                    $(dialogId).modal();
+                } else {
+                    Noty.error("Can't load setting dialog now. MSG:" + msg);
+                }
+
+            }).fail(function(){
+                console.error('Failed to load setting dialog.');
+            });
+
+        });
+
+        $(dialogId).on('click', '.yes-btn', function() {
+            var $form = $(dialogId + ' form');
+            var params = $form.serialize();
+//            var id = $form.find('[name=id]').val();
+//
+//            if ($form.find('[name=fullName]').val() == '') {
+//                Noty.error('Full Name is required');
+//                return;
+//            }
+//
+//            if ($form.find('[name=email]').val() == '') {
+//                Noty.error('Email is required');
+//                return;
+//            }
+
+            $.post('/rest/user/settings', params, function(data, status, xhr){
+                var state = xhr.getResponseHeader('x-state');
+                var error = xhr.getResponseHeader('x-msg');
+                var exception = xhr.getResponseHeader('x-exception');
+
+                if ('ok' == state) {
+                    $(dialogId).modal('hide');
+
+                    Noty.info("Changes of settings saved.");
+                } else {
+                    Noty.error("Failed to save. [" + error || exception || '' + ']');
+                }
+            });
+        })
+
+    }
+
+    function bindMailContextToolbar() {
+        var $tb = $('.right-side .toolbar');
+
+        $tb.on('click', '.delete-btn', function(e){
+            //TODO delete mail
+        });
+
+        // replay directly
+        // On {0}, {1} wrote:
+        $tb.on('click', '.reply .reply-btn', function(){
+            var $mailInfo = $('.mail-info');
+
+            var date = $mailInfo.find('[name=mail_date]').val();
+            var mFrom = $mailInfo.find('[name=mail_from]').val();
+            var cType = $mailInfo.find('[name=mail_content_type]').val();
+
+            var content = '\r\nOn ' + date + ', ' + mFrom + ' wrote:\r\n';
+
+            if (/^text\/plain/g.test(cType)) {
+                content = content + '> ' + $('.mail-body pre').text().replace(/\n/g, '\n> ');
+            }
+            else if (/^text\/html/g.test(cType)) {
+                content = content + '(HTML content will be attached when sent ...)';
+            } else {
+                content = content + '(content will be attached when sent ...)';
+            }
+
+            openCompose({
+                title: 'Reply',
+                to: $mailInfo.find('[name=mail_from]').val(),
+                subject: 'RE:' + $mailInfo.find('[name=mail_subject]').val(),
+                content: content
+            })
+        });
+        // replay to all
+        $tb.on('click', '.reply .reply-all-menu', function(){
+            var $mailInfo = $('.mail-info');
+
+            var date = $mailInfo.find('[name=mail_date]').val();
+            var mFrom = $mailInfo.find('[name=mail_from]').val();
+            var cType = $mailInfo.find('[name=mail_content_type]').val();
+
+            var content = '\r\nOn ' + date + ', ' + mFrom + ' wrote:\r\n';
+
+            if (/^text\/plain/g.test(cType)) {
+                content = content + '> ' + $('.mail-body pre').text().replace(/\n/g, '\n> ');
+            }
+            else if (/^text\/html/g.test(cType)) {
+                content = content + '(HTML content will be attached when sent ...)';
+            } else {
+                content = content + '(content will be attached when sent ...)';
+            }
+
+            openCompose({
+                title: 'Reply to all',
+                to: $mailInfo.find('[name=mail_from]').val(),
+                cc: $mailInfo.find('[name=mail_cc]').val(),
+                subject: 'RE:' + $mailInfo.find('[name=mail_subject]').val(),
+                content: content
+            })
+        });
+        // forward
+        $tb.on('click', '.reply .forward-menu', function(){
+            var $mailInfo = $('.mail-info');
+
+            var date = $mailInfo.find('[name=mail_date]').val();
+            var mFrom = $mailInfo.find('[name=mail_from]').val();
+            var mTo = $mailInfo.find('[name=mail_to]').val();
+            var mCc = $mailInfo.find('[name=mail_cc]').val();
+            var cType = $mailInfo.find('[name=mail_content_type]').val();
+            var subject = $mailInfo.find('[name=mail_subject]').val();
+
+            var content = '\r\n--------- Forwarded message --------\r\n';
+            content += 'From: ' + mFrom + '\r\n';
+            content += 'Date: ' + date + '\r\n';
+            content += 'To: ' + mTo + '\r\n';
+            if (mCc) {
+                content += 'Cc: ' + mCc + '\r\n';
+            }
+            content += 'Subject: ' + subject + '\r\n\r\n\r\n\r\n';
+
+            if (/^text\/plain/g.test(cType)) {
+                content += $('.mail-body pre').text();
+            }
+            else if (/^text\/html/g.test(cType)) {
+                content += '(HTML content will be attached when sent ...)';
+            } else {
+                content += '(content will be attached when sent ...)';
+            }
+
+            openCompose({
+                title: 'Forward',
+                subject: 'Fwd:' + $mailInfo.find('[name=mail_subject]').val(),
+                content: content
+            })
         })
     }
 
     $(window).resize(function(){
         adjustColumnsHeight();
     });
-
 
     // when this page got loaded
     $(function(){
@@ -1156,11 +1384,6 @@
 
         // Synchronize mails
         $('#maillist').on('click', '.refresh-btn', syncMails);
-
-        // Show settings dialog
-        $('#tbSystem').on('click', '.settings-btn', function() {
-            $('#dlgSetting').modal();
-        });
 
         // Logout the system
         $('#tbSystem').on('click', '.logout-btn', function(){
@@ -1180,8 +1403,15 @@
         // load profile fragment
         loadProfile();
 
+        // load contacts & init compose dialog
+        bindComposeDialog();
+
+        bindSettingsDialog();
+
         // load mails when page loaded
-        loadMails('inbox', 1, true);
+        loadMailList('inbox', 1, true);
+
+        bindMailContextToolbar();
 
         updateUI();
     })

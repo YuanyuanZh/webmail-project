@@ -4,7 +4,7 @@ import cs601.webmail.auth.AuthenticationCheckFilter;
 import cs601.webmail.entity.Account;
 import cs601.webmail.entity.User;
 import cs601.webmail.frameworks.web.RequestContext;
-import cs601.webmail.pages.Page;
+import cs601.webmail.pages.ControllerPage;
 import cs601.webmail.service.AccountService;
 import cs601.webmail.service.MailService;
 import cs601.webmail.service.impl.AccountServiceImpl;
@@ -17,7 +17,10 @@ import javax.servlet.http.HttpSession;
 import java.util.HashMap;
 import java.util.Map;
 
-public class SyncMailsPage extends Page {
+/**
+ * Created by yuanyuan on 10/28/14.
+ */
+public class SyncMailsPage extends ControllerPage {
 
     public void verify() {
         // no-op
@@ -35,7 +38,6 @@ public class SyncMailsPage extends Page {
 
     @Override
     public void body() throws Exception {
-
         HttpServletRequest request = RequestContext.getCurrentInstance().getRequest();
         HttpServletResponse response = RequestContext.getCurrentInstance().getResponse();
         HttpSession session = request.getSession();
@@ -45,8 +47,7 @@ public class SyncMailsPage extends Page {
         User user=(User)session.getAttribute(AuthenticationCheckFilter.LOGIN_SESSION_FLAG);
 
 
-        Account currentAccount = accountService.findById(user.getId());
-
+        Account currentAccount = accountService.findSingleByUserId(user.getId());
         Map model = new HashMap();
 
         try {

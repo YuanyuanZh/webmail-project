@@ -1,9 +1,9 @@
 package cs601.webmail.service;
 
-import cs601.webmail.frameworks.db.page.Page;
-import cs601.webmail.frameworks.db.page.PageRequest;
 import cs601.webmail.entity.Account;
 import cs601.webmail.entity.Mail;
+import cs601.webmail.frameworks.db.page.Page;
+import cs601.webmail.frameworks.db.page.PageRequest;
 
 import java.util.List;
 
@@ -15,6 +15,10 @@ public interface MailService {
 
     void save(List<Mail> mails);
 
+    // mark as trashed
+    public void trash(Mail mail);
+
+    // mark as deleted
     void delete(Mail mail);
 
     Mail findById(long id);
@@ -25,5 +29,6 @@ public interface MailService {
     int syncMails(Account account);
 
     Page<Mail> findByAccountAndPage(Account account, PageRequest pageRequest);
+
     Page<Mail> findPage(String folder, Account currentAccount, PageRequest pageRequest);
 }

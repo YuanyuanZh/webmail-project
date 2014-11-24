@@ -1,15 +1,16 @@
 package cs601.webmail.pages.mail;
 
-import cs601.webmail.auth.AuthenticationCheckFilter;
 import cs601.webmail.entity.Account;
 import cs601.webmail.entity.Mail;
 import cs601.webmail.entity.User;
+import cs601.webmail.exception.NotAuthenticatedException;
+import cs601.webmail.frameworks.mail.Address;
 import cs601.webmail.frameworks.mail.Message;
 import cs601.webmail.frameworks.mail.MessagingException;
 import cs601.webmail.frameworks.mail.MimeContent;
 import cs601.webmail.frameworks.web.PageTemplate;
 import cs601.webmail.frameworks.web.RequestContext;
-import cs601.webmail.pages.Page;
+import cs601.webmail.pages.ControllerPage;
 import cs601.webmail.service.AccountService;
 import cs601.webmail.service.MailService;
 import cs601.webmail.service.impl.AccountServiceImpl;
@@ -21,40 +22,61 @@ import cs601.webmail.util.Strings;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.StringWriter;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
- * Created by yuanyuan on 11/8/14.
+ * Created by yuanyuan on 11/6/14.
  */
-public class ReadMailPage extends Page {
+public class ReadMailPage extends ControllerPage {
 
-    public void body()throws Exception{
-        HttpServletRequest request= RequestContext.getCurrentInstance().getRequest();
-        HttpServletResponse response=RequestContext.getCurrentInstance().getResponse();
+    @Override
+    public void body() throws Exception {
 
-        String id=request.getParameter("id");
+        HttpServletRequest request = RequestContext.getCurrentInstance().getRequest();
+        HttpServletResponse response = RequestContext.getCurrentInstance().getResponse();
 
+        String id = request.getParameter("id");
 
-        if(Strings.haveLength(id)){
-            renderByRawFile(request,response,id);
-        }else {
+        if (!Strings.haveLength(id)) {
             response.addHeader("x-state", "error");
-            response.addHeader("x-msg", "Invalid mail id");
+            response.addHeader("x-msg", "Invalid mail ID");
             return;
         }
+
+        User user;
+
+        try {
+            user = checkUserLogin(request, response);
+        } catch (NotAuthenticatedException e) {
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            response.addHeader("x-state", "error");
+            response.addHeader("x-msg", "Illegal request without user in session.");
+            return;
+        }
+
+        renderByRawFile(request, response, user, id);
     }
 
-    private void renderByRawFile(HttpServletRequest request, HttpServletResponse response, String id) throws IOException {
+    /**
+     * Parse raw file and wrapped into a java object in real time.
+     *
+     * @param user
+     * @param id Identity of mail object.
+     */
+    private void renderByRawFile(HttpServletRequest request, HttpServletResponse response, User user, String id) throws IOException {
         AccountService accountService = new AccountServiceImpl();
         MailService mailService = new MailServiceImpl();
 
         Mail mail = mailService.findById(Long.parseLong(id));
+        Map<String, Object> extraParams = new HashMap<String, Object>();
 
         if (mail == null) {
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
             response.addHeader("x-state", "error");
             response.addHeader("x-msg", "Mail entry not found");
             return;
@@ -67,11 +89,13 @@ public class ReadMailPage extends Page {
             mailService.save(mail);
         }
 
-        HttpSession session = request.getSession();
+        Account currentAccount = accountService.findSingleByUserId(user.getId());
 
-        User user=(User)session.getAttribute(AuthenticationCheckFilter.LOGIN_SESSION_FLAG);
-
-        Account currentAccount = accountService.findById(user.getId());
+        if (currentAccount == null) {
+            response.addHeader("x-state", "error");
+            response.addHeader("x-msg", "Sorry, your account was not available.");
+            return;
+        }
 
         String uid = mail.getUid();
 
@@ -90,15 +114,23 @@ public class ReadMailPage extends Page {
         String originalContentType = null;
         Object msgContent = null;
 
+        response.setContentType("text/html; charset=utf-8");
+        // default template is text
+        PageTemplate template = new PageTemplate("/velocity/mail_in_text.vm");
+
         try {
             message = new Message(new FileInputStream(rawFile));
 
             originalContentType = message.getContentType();
 
             mail.setSubject(MimeUtils.decodeText(message.getSubject()));
-            mail.setFrom(Strings.join(message.getFrom(), ", "));
+            mail.setFrom(getFromField(message));
             mail.setUid(uid);
             mail.setDate(message.getSentDate() != null ? message.getSentDate().toString() : null);
+
+            extraParams.put("mail_from", getPlainAddresses(message.getFrom()));
+            extraParams.put("mail_to", getPlainAddresses(message.getRecipients(Message.RecipientType.TO)));
+            extraParams.put("mail_cc", getPlainAddresses(message.getRecipients(Message.RecipientType.CC)));
 
             // try to get content
             msgContent = message.getContent();
@@ -107,11 +139,6 @@ public class ReadMailPage extends Page {
         } catch (MessagingException e) {
             exception = e;
         }
-
-        response.setContentType("text/html; charset=utf-8");
-
-        // default template is text
-        PageTemplate template = new PageTemplate("/velocity/mail_in_text.vm");
 
         if (msgContent instanceof MimeContent) {
             MimeContent mc = (MimeContent) msgContent;
@@ -144,6 +171,8 @@ public class ReadMailPage extends Page {
         }
 
         template.addParam("mail", mail);
+        template.addParam("mail_content_type", originalContentType);
+        template.addParams(extraParams);
 
         StringWriter writer = new StringWriter();
         template.merge(writer);
@@ -151,6 +180,31 @@ public class ReadMailPage extends Page {
         response.addHeader("x-state", "ok");
         response.addHeader("x-Content-Type", originalContentType);
         getOut().print(writer.toString());
+    }
+
+    private String getPlainAddresses(Address[] addresses) {
+        if (addresses == null || addresses.length == 0) {
+            return null;
+        }
+
+        StringBuilder sb = new StringBuilder();
+        int idx = 0;
+        for (Address a : addresses) {
+            if (idx++ > 0) {
+                sb.append(",");
+            }
+            sb.append(a.getAddress());
+        }
+        return  sb.toString();
+    }
+
+
+    private String getFromField(Message message) throws MessagingException {
+        Address[] a = message.getFrom();
+        if (a == null || a.length == 0) {
+            return null;
+        }
+        return Address.toString(a);
     }
 
     @Deprecated
@@ -184,7 +238,7 @@ public class ReadMailPage extends Page {
         getOut().print(writer.toString());
     }
 
-
+    @Deprecated
     private void decodeMail(Mail mail) {
 
         String contentType = mail.getContentType();
@@ -195,6 +249,6 @@ public class ReadMailPage extends Page {
             if (Strings.haveLength(content)) {
             }
         }
-
     }
+
 }

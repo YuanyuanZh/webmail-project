@@ -1,7 +1,7 @@
 package cs601.webmail.frameworks.mail.util;
 
 /**
- * Created by yuanyuan on 11/13/14.
+ * Created by yuanyuan on 11/12/14.
  */
 public class AsciiUtils {
 
@@ -82,4 +82,3 @@ public class AsciiUtils {
     }
 
 }
-

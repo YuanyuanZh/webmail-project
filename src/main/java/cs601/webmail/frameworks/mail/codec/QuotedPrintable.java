@@ -2,14 +2,13 @@ package cs601.webmail.frameworks.mail.codec;
 
 import java.io.UnsupportedEncodingException;
 
+
 /**
- *  * A class containing static methods to perform decoding from <b>quoted
+ * A class containing static methods to perform decoding from <b>quoted
  * printable</b> content transfer encoding and to encode into
  *
- * Created by yuanyuan on 11/13/14.
+ * Created by yuanyuan on 11/10/14.
  */
-
-
 public class QuotedPrintable extends MimeCodec {
 
     // Content-Type: text/html;charset=GBK
@@ -173,4 +172,3 @@ public class QuotedPrintable extends MimeCodec {
             mCurrentLineLength += required;
     }
 }
-

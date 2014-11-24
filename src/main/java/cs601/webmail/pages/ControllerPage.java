@@ -3,28 +3,67 @@ package cs601.webmail.pages;
 /**
  * Created by yuanyuan on 10/15/14.
  */
+import cs601.webmail.auth.AuthenticationCheckFilter;
+import cs601.webmail.entity.User;
+import cs601.webmail.exception.NotAuthenticatedException;
 import cs601.webmail.frameworks.web.AjaxResponse;
 import cs601.webmail.frameworks.web.PageTemplate;
 import cs601.webmail.frameworks.web.RequestContext;
-import cs601.webmail.entity.User;
-import cs601.webmail.exception.NotAuthenticatedException;
 import org.codehaus.jackson.map.ObjectMapper;
 import z.managers.ErrorManager;
-import z.misc.VerifyException;
-import javax.servlet.http.HttpSession;
-import cs601.webmail.auth.AuthenticationCheckFilter;
+import cs601.webmail.exception.VerifyException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
-public abstract class Page {
+public abstract class ControllerPage {
 
     PrintWriter out;
     int pageNum;
 
+
+    protected String getStringParam(HttpServletRequest req, String param) {
+        return req.getParameter(param);
+    }
+
+    protected String getStringParam(HttpServletRequest req, String param, String def) {
+        String val = req.getParameter(param);
+        return val == null ? def : val;
+    }
+
+    protected Long getLongParam(HttpServletRequest req, String param) {
+        String val = req.getParameter(param);
+        return val == null ? null : Long.parseLong(val);
+    }
+
+    protected Long getLongParam(HttpServletRequest req, String param, long def) {
+        String val = req.getParameter(param);
+        return val == null ? def : Long.parseLong(val);
+    }
+
+    protected Integer getIntParam(HttpServletRequest req, String param) {
+        String val = req.getParameter(param);
+        return val == null ? null : Integer.parseInt(val);
+    }
+
+    protected Integer getIntParam(HttpServletRequest req, String param, int def) {
+        String val = req.getParameter(param);
+        return val == null ? def : Integer.parseInt(val);
+    }
+
+    protected Boolean getBooleanParam(HttpServletRequest req, String param) {
+        String val = req.getParameter(param);
+        return val == null ? null : Boolean.valueOf(val);
+    }
+
+    protected Boolean getBooleanParam(HttpServletRequest req, String param, boolean def) {
+        String val = req.getParameter(param);
+        return val == null ? def : Boolean.valueOf(val);
+    }
 
     protected User checkUserLogin(HttpServletRequest req, HttpServletResponse resp)
             throws NotAuthenticatedException {
@@ -71,11 +110,11 @@ public abstract class Page {
         }
     }
 
-    protected HttpServletResponse getResponse() {
+    private HttpServletResponse getResponse() {
         return RequestContext.getCurrentInstance().getResponse();
     }
 
-    protected HttpServletRequest getRequest() {
+    private HttpServletRequest getRequest() {
         return RequestContext.getCurrentInstance().getRequest();
     }
 
@@ -131,14 +170,14 @@ public abstract class Page {
     }
 
     public void header() {
-       // out.println("<html>");
-        //out.println("<body>");
+//        out.println("<html>");
+//        out.println("<body>");
     }
 
     public abstract void body() throws Exception;
 
     public void footer() {
-       // out.println("</body>");
-        //out.println("</html>");
+//        out.println("</body>");
+//        out.println("</html>");
     }
 }

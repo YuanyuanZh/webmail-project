@@ -4,7 +4,7 @@ import cs601.webmail.entity.Contact;
 import cs601.webmail.entity.User;
 import cs601.webmail.exception.NotAuthenticatedException;
 import cs601.webmail.frameworks.web.RequestContext;
-import cs601.webmail.pages.Page;
+import cs601.webmail.pages.ControllerPage;
 import cs601.webmail.service.ContactService;
 import cs601.webmail.service.impl.ContactServiceImpl;
 import cs601.webmail.util.Strings;
@@ -13,31 +13,32 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * Created by yuanyuan on 11/20/14.
+ * Created by yuanyuan on 11/17/14.
  */
-public class ContactActionsPage extends Page {
+public class ContactActionsPage extends ControllerPage {
     @Override
-    public void body() throws Exception{
-        RequestContext context=RequestContext.getCurrentInstance();
+    public void body() throws Exception {
+        RequestContext context = RequestContext.getCurrentInstance();
 
-        HttpServletRequest req=context.getRequest();
-        HttpServletResponse resp=context.getResponse();
+        HttpServletRequest req = context.getRequest();
+        HttpServletResponse resp = context.getResponse();
 
-        String action =req.getParameter("action");
+        String action = req.getParameter("action");
 
-        ActionType actionType=ActionType.fromString(action);
+        ActionType actionType = ActionType.fromString(action);
 
-        if(actionType==null){
-            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            resp.setHeader("x-state","error");
-            resp.setHeader("x-msg","param 'action' not found ");
+        if (actionType == null) {
+            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST); //400
+            resp.setHeader("x-state", "error");
+            resp.setHeader("x-msg", "param 'action' not found.");
             return;
         }
 
         final User user;
-        try{
-            user=checkUserLogin(req,resp);
-        }catch (NotAuthenticatedException e){
+
+        try {
+            user = checkUserLogin(req, resp);
+        } catch (NotAuthenticatedException e) {
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             resp.addHeader("x-state", "error");
             resp.addHeader("x-msg", "Illegal request without user in session.");
@@ -110,22 +111,19 @@ public class ContactActionsPage extends Page {
             resp.setHeader("x-exception", e.getMessage());
         }
     }
-    private static interface IActionController<T> {
 
-        void doAction(T object);
+    private void doAction(HttpServletRequest req, HttpServletResponse resp, IActionController controller) {
 
-    }
+        final ContactService contactService = new ContactServiceImpl();
 
-    private void doAction(HttpServletRequest req,HttpServletResponse resp,IActionController controller){
+        String id = req.getParameter("id");
 
-        final ContactService contactService=new ContactServiceImpl();
-        String id=req.getParameter("id");
-
-        if(!Strings.haveLength(id)){
+        if (!Strings.haveLength(id)) {
             throw new IllegalArgumentException("'id' not found!");
         }
 
-        //multi-ids
+        // multi-ids
+        // e.g.  201,203,204
         if (id.indexOf(',') > -1) {
 
             String[] ids = id.split(",");
@@ -142,8 +140,9 @@ public class ContactActionsPage extends Page {
 
                 contactService.save(contact);
             }
-
-        }else {
+        }
+        // one
+        else {
             Contact contact = contactService.findById(Long.parseLong(id));
 
             if (contact == null) {
@@ -156,7 +155,14 @@ public class ContactActionsPage extends Page {
         }
     }
 
-    private static enum ActionType{
+    private static interface IActionController<T> {
+
+        void doAction(T object);
+
+    }
+
+    private static enum  ActionType {
+
         delete,
 
         enable,
@@ -182,5 +188,4 @@ public class ContactActionsPage extends Page {
         }
 
     }
-
 }

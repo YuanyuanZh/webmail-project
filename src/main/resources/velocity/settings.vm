@@ -1,0 +1,117 @@
+<div style="max-height: 410px; overflow-y: auto; overflow-x: hidden; padding-right: 10px; ">
+<form  id="formSetting" class="form-horizontal" role="form">
+    <input name="id" value="$!account.id" type="hidden" />
+    <input name="userId" value="$!account.userId" type="hidden" />
+
+    <h4 class="color-blue">Incoming</h4>
+    <div class="form-group">
+        <label for="txtPopServer" class="col-sm-3 control-label">POP Server</label>
+        <div class="col-sm-5">
+            <input type="email" class="form-control" id="txtPopServer" name="popServer" value="$!account.popServer" placeholder="e.g. pop.yourmailserver.com">
+        </div>
+        <div class="col-sm-2">
+            <input type="text" class="form-control" id="txtPopPort" name="popServerPort" value="$!account.popServerPort" placeholder="Port">
+        </div>
+        <div class="col-sm-2">
+            <div class="checkbox">
+                <label>
+                    <input id="chkSSL" name="popSSL" #if($account.enableSsl) checked #end type="checkbox"> SSL
+                </label>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="txtPopAccount" class="col-sm-3 control-label">POP Account</label>
+        <div class="col-sm-5">
+            <input type="email" class="form-control" id="txtPopAccount"
+                   name="popAccount" value="$!account.emailUsername" placeholder="e.g.  john@foobar.com">
+        </div>
+        <div class="col-sm-4">
+            <input type="password" class="form-control" id="txtPopPassword"
+                   name="popPassword" value="$!account.emailPassword" placeholder="Password">
+        </div>
+    </div>
+
+    <h4 class="color-blue">Outgoing</h4>
+    <div class="form-group">
+        <label for="txtSmtpServer" class="col-sm-3 control-label">SMTP Server</label>
+        <div class="col-sm-5">
+            <input type="text" class="form-control" id="txtSmtpServer"
+                   name="smtpServer" value="$!account.smtpServer" placeholder="e.g. smtp.yourmailserver.com">
+        </div>
+        <div class="col-sm-2">
+            <input type="text" class="form-control" id="txtSmtpPort"
+                   name="smtpServerPort" value="$!account.smtpServerPort" placeholder="Port">
+        </div>
+        <div class="col-sm-2">
+            <div class="checkbox">
+                <label>
+                    <input id="chkSmtpSSL" name="smtpSSL" #if($account.enableSmtpSsl) checked #end  type="checkbox"> SSL
+                </label>
+            </div>
+        </div>
+    </div>
+##    <div class="form-group">
+##        <label for="txtSmtpAccount" class="col-sm-3 control-label">SMTP Account</label>
+##        <div class="col-sm-5">
+##            <input type="email" class="form-control" id="txtSmtpAccount" placeholder="e.g.  john@foobar.com">
+##        </div>
+##        <div class="col-sm-4">
+##            <input type="password" class="form-control" id="txtSMTPPassword" placeholder="Password">
+##        </div>
+##    </div>
+    <div class="form-group">
+        <label for="txtUsername" class="col-sm-3 control-label">Display Name</label>
+        <div class="col-sm-9">
+            <input type="text" class="form-control" id="txtUsername"
+                   name="displayName" value="$!account.displayName" placeholder="e.g. John Smith">
+        </div>
+    </div>
+##    <div class="form-group">
+##        <label for="txtUsername" class="col-sm-3 control-label">Ending Signature</label>
+##        <div class="col-sm-9">
+##            <textarea class="form-control" name="mailSignature"
+##                      placeholder="">$!account.mailSignature</textarea>
+##        </div>
+##    </div>
+
+    <h4 class="color-blue">Account Security</h4>
+    <div class="form-group">
+        <label for="txtCurrentPassword" class="col-sm-3 control-label">Current Pass</label>
+        <div class="col-sm-5">
+            <input type="password" class="form-control" id="txtCurrentPassword"
+                   name="currentPassword" placeholder="Password">
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="txtNewPassword" class="col-sm-3 control-label">New Pass</label>
+        <div class="col-sm-5">
+            <input type="password" class="form-control" id="txtNewPassword"
+                   name="newPassword" placeholder="Password">
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="txtNewPassword2" class="col-sm-3 control-label">Confirm Pass</label>
+        <div class="col-sm-5">
+            <input type="password" class="form-control" id="txtNewPassword2"
+                   name="newPassword2" placeholder="Password">
+        </div>
+    </div>
+
+    <!--<div class="form-group">-->
+    <!--<div class="col-sm-offset-3 col-sm-9">-->
+    <!--<div class="checkbox">-->
+    <!--<label>-->
+    <!--<input type="checkbox"> Remember me-->
+    <!--</label>-->
+    <!--</div>-->
+    <!--</div>-->
+    <!--</div>-->
+    <!--<div class="form-group">-->
+    <!--<div class="col-sm-offset-3 col-sm-9">-->
+    <!--<button type="submit" class="btn btn-default">Sign in</button>-->
+    <!--</div>-->
+    <!--</div>-->
+
+</form>
+</div>

@@ -1,8 +1,9 @@
 package cs601.webmail.util;
 
+import org.apache.commons.codec.binary.Hex;
+
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import org.apache.commons.codec.binary.Hex;
 
 /**
  * Created by yuanyuan on 11/11/14.
@@ -21,4 +22,3 @@ public final class DigestUtils {
     }
 
 }
-

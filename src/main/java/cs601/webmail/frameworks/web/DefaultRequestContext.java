@@ -1,12 +1,10 @@
 package cs601.webmail.frameworks.web;
 
-import cs601.webmail.frameworks.web.RequestContext;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * Created by yuanyuan on 11/3/14.
+ * Created by yuanyuan on 10/26/14.
  */
 class DefaultRequestContext extends RequestContext {
 

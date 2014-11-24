@@ -9,7 +9,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 /**
- * Created by yuanyuan on 11/12/14.
+ * Created by yuanyuan on 11/8/14.
  */
 public class ContentType {
 
@@ -230,4 +230,3 @@ public class ContentType {
     }
 
 }
-

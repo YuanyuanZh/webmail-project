@@ -16,52 +16,46 @@ import java.util.List;
  */
 public class AccountServiceImpl implements AccountService {
     private AccountDao accountDao =new AccountDaoImpl();
-    private UserDao userDao=new UserDAOImpl();
+    //private UserDao userDao=new UserDAOImpl();
+    //Account account = new Account();
 
-
-    /*public Account findById(Long id) {
-        Account account = new Account();
-
-        account.setId(3l);
-        account.setUserId(1l);
-
-        return account;
-    }*/
-    Account account = new Account();
-
-    public Account findById(Long id) {  //FIXME must to impl this method in production environment.
-        /*Account account = new Account();
-
-        account.setId(3l);
-        account.setUserId(2l);
-
-        account.setEmailUsername(Configuration.getDefault().get("email"));
-        account.setEmailPassword(Configuration.getDefault().get("password"));
-
-        account.setPopServer(Configuration.getDefault().get("pop"));
-        account.setPopServerPort(Configuration.getDefault().getInteger("pop.port"));
-        account.setEnableSsl(Configuration.getDefault().getBoolean("pop.ssl"));*/
+    public Account findById(Long id) {
 
         return accountDao.findById(id);
+    }
+
+    //setting page
+    public Account findSingleByUserId (Long userId) {
+
+        List<Account> accounts = accountDao.findByUserId(userId);
+
+        if (accounts.size() > 0)
+            return accounts.get(0);
+        else
+            return null;
     }
 
     public void addAccount(Account account){
         if(account==null){
             throw new IllegalStateException("account missing");
         }
-
         accountDao.save(account);
     }
 
     public boolean verifyAccount(String emailAddress, String pass,String popServer,int popPort){
         try{
-        Pop3Client client = Pop3Client.createInstance(popServer,popPort,true);
-        if(!client.login(emailAddress, pass)){
-            return false;
-        }
+            Pop3Client client = Pop3Client.createInstance(popServer,popPort,true);
+            if(!client.login(emailAddress, pass)){
+                return false;
+            }
         }catch (IOException e){}
 
-       return true;
+        return true;
+    }
+
+    @Override
+    public void save(Account account) {
+        accountDao.save(account);
     }
 
     public List<String> emailAccount(Account account){

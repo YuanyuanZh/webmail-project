@@ -1,7 +1,7 @@
 package cs601.webmail.frameworks.mail.pop3;
 
 /**
- * Created by yuanyuan on 11/12/14.
+ * Created by yuanyuan on 11/9/14.
  */
 public interface ClientListener {
 

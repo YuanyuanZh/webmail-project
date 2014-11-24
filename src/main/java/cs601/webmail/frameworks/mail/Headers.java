@@ -1,5 +1,6 @@
 package cs601.webmail.frameworks.mail;
 
+import cs601.webmail.frameworks.mail.util.LineInputStream;
 import cs601.webmail.util.Strings;
 import org.apache.log4j.Logger;
 
@@ -9,10 +10,9 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
-import cs601.webmail.frameworks.mail.util.LineInputStream;
 
 /**
- * Created by yuanyuan on 11/13/14.
+ * Created by yuanyuan on 11/7/14.
  */
 public class Headers {
 
@@ -227,7 +227,7 @@ public class Headers {
         int pos = headers.size();
         boolean addReverse =
                 name.equalsIgnoreCase("Received") ||
-                        name.equalsIgnoreCase("Return-Path");
+                name.equalsIgnoreCase("Return-Path");
 
         if (addReverse)
             pos = 0;
@@ -298,11 +298,111 @@ public class Headers {
     /**
      * Return all the header lines as an iterator of Strings.
      */
-    public Iterator getAllHeaders() { // TODO impl it
-        throw new IllegalStateException("NOT IMPL");
+    public Iterator getAllHeaders() {
+        return new headerIterator(true);
     }
 
+    public Iterator getNonMatchedHeaders(String[] names) {
+        return new headerIterator(names, false, true);
+    }
 
+    public Iterator getMatchedHeaders(String[] names) {
+        return new headerIterator(names, true, true);
+    }
+
+    // Iterator of Headers.
+    class headerIterator implements Iterator {
+
+        Iterator itr;
+        boolean want_line;
+        InnerHeader next_header;
+        String[] names = null;
+        boolean match;
+
+        // If no names passed, `match` does not meaning anything.
+        headerIterator(String[] names, boolean match, boolean line) {
+            itr = headers.iterator();
+
+            this.names = names;
+            this.match = match;
+            this.want_line = line;
+        }
+
+        headerIterator(boolean line) {
+            this(null, false, line);
+        }
+
+        @Override
+        public boolean hasNext() {
+            if (next_header == null) {
+                next_header = nextMatch();
+            }
+            return next_header != null;
+        }
+
+        @Override
+        public Object next() {
+            if (next_header == null) {
+                next_header = nextMatch();
+            }
+
+            if (next_header == null)
+                throw new IllegalStateException("No more element");
+
+            InnerHeader h = next_header;
+
+            next_header = null;
+
+            if (want_line)
+                return h.line;
+            else
+                return new Header(h.getName(), h.getValue());
+        }
+
+        @Override
+        public void remove() {
+            throw new IllegalStateException("Not supported");
+        }
+
+        private InnerHeader nextMatch() {
+
+            next:
+            while (itr.hasNext()) {
+
+                InnerHeader h = (InnerHeader) itr.next();
+
+                // skip empty line
+                if (h.line == null) {
+                    continue;
+                }
+
+                if (names == null) {
+                   return match ? null : h;
+                }
+
+                for (String n : names) {
+                    if (n.equalsIgnoreCase(h.getName())) {
+                        if (match) {
+                            return h;
+                        }
+                        else {
+                            continue next; // go to next header
+                        }
+                    }
+                }
+
+                // no match found
+                if (!match) {
+                    return h;
+                }
+            }
+
+            return null;
+        }
+
+    }
+
+    // parse headers from InputStream
     static void readHeaders(Headers headers, InputStream is) throws MessagingException {
         LineInputStream reader = new LineInputStream(is);
 
@@ -344,4 +444,3 @@ public class Headers {
     }
 
 }
-

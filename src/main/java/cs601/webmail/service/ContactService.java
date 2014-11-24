@@ -8,7 +8,7 @@ import cs601.webmail.frameworks.db.page.PageRequest;
 import java.util.List;
 
 /**
- * Created by yuanyuan on 11/19/14.
+ * Created by yuanyuan on 11/17/14.
  */
 public interface ContactService {
 

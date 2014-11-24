@@ -1,12 +1,13 @@
 package cs601.webmail.util;
 
-import java.io.File;
 import cs601.webmail.Configuration;
+
+import java.io.File;
 
 /**
  * Created by yuanyuan on 10/25/14.
  */
-public class ResourceUtils {
+public final class ResourceUtils {
 
     public static String getClassPath() {
         return ResourceUtils.class.getResource("/").getPath();
@@ -16,7 +17,9 @@ public class ResourceUtils {
         return Configuration.getDefault().getString(Configuration.WORK_DIR);
     }
 
-
+    // Calculate path to store raw file.<p>
+    // save raw content to {WorkDir}/raw/accountId/MD5-16(mailAccount)/uid.dat
+    // for example: /Users/foobar/webmail/raw/2/abcdef12345467890/cDebdfdafd0122.dat
     public static String getRawMailStorePath(String username) {
 
         StringBuilder sb = new StringBuilder(getWorkDir());
@@ -28,6 +31,5 @@ public class ResourceUtils {
 
         return sb.toString();
     }
-
 
 }

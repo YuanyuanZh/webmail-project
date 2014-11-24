@@ -155,7 +155,7 @@ public class smtpMail {
         StringBuilder sb = new StringBuilder();
         sb.append("From:<"+from+">"+enter);
         sb.append("To:<"+to+">"+enter);
-        sb.append("Subject: test"+enter);
+        sb.append("Subject:test"+enter);
         sb.append("Content-Type:text/plain;charset=\"GB2312\""+enter);
         sb.append(enter);
         sb.append(content);

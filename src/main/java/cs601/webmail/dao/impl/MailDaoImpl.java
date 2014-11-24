@@ -3,17 +3,16 @@ package cs601.webmail.dao.impl;
 import cs601.webmail.dao.BaseDao;
 import cs601.webmail.dao.DaoException;
 import cs601.webmail.dao.MailDao;
-import cs601.webmail.frameworks.db.*;
 import cs601.webmail.entity.Mail;
+import cs601.webmail.frameworks.db.DBUtils;
+import cs601.webmail.frameworks.db.QueryRunner;
+import cs601.webmail.frameworks.db.ResultSetHandler;
 import cs601.webmail.frameworks.db.page.Order;
 import cs601.webmail.frameworks.db.page.Page;
 import cs601.webmail.frameworks.db.page.PageRequest;
 import cs601.webmail.util.Strings;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -23,92 +22,79 @@ import java.util.List;
  */
 public class MailDaoImpl extends BaseDao implements MailDao {
 
+    /**
+     * @param id PK
+     * @return Mail entity if found. otherwise, return NULL
+     */
     @Override
     public Mail findById(Long id) {
 
-        QueryRunner qr=getQueryRunner();
+        QueryRunner qr = getQueryRunner();
 
-
-        try{
-
+        try {
             return qr.query("select * from emails where MSGID=?", new ResultSetHandler<Mail>() {
                 @Override
                 public Mail handle(ResultSet rs) throws SQLException {
-                    if (rs.next()){
+
+                    if (rs.next()) {
                         return handleRowMapping(rs);
                     }
+
                     return null;
                 }
-            },new Object[]{id});
+            }, new Object[]{id});
 
-
-        }catch (SQLException e){
-            throw new DaoException(e);
-        }
-    }
-    @Override
-    public Mail findByUID(String uid){
-        QueryRunner qr=getQueryRunner();
-        try{
-            return qr.query("select * from emails where UID=?",new ResultSetHandler<Mail>() {
-                @Override
-                public Mail handle(ResultSet rs) throws SQLException {
-                    if(rs.next()){
-                        return handleRowMapping(rs);
-                    }
-                    return null;
-                }
-            },new Object[]{uid});
-
-        }catch (SQLException e){
+        } catch (SQLException e) {
             throw new DaoException(e);
         }
     }
 
     @Override
-    public List<Mail> findAll(){
-        QueryRunner qr=getQueryRunner();
-        try{
-            return qr.query("select * from emails",new ResultSetHandler<List<Mail>>() {
-                @Override
-                public List<Mail> handle(ResultSet rs) throws SQLException {
-                    List<Mail> mails=new ArrayList<Mail>();
-                    while(rs.next()){
-                        Mail mail= handleRowMapping(rs);
-                        mails.add(mail);
-                    }
-                    return mails;
-                }
-            });
+    public Mail findByUID(String uid) {
 
-        }catch (SQLException e){
-            throw new DaoException(e);
-        }
-
-    }
-    @Override
-    public List<String> findMailUIDs(Long accountId) {
         QueryRunner qr = getQueryRunner();
 
-        String sql = String.format("select MSGID,UID from emails where ACCOUNTID = %d", accountId);
-
         try {
-            return qr.query(sql, new ResultSetHandler<List<String>>() {
+            return qr.query("select * from emails where UID=?", new ResultSetHandler<Mail>() {
                 @Override
-                public List<String> handle(ResultSet rs) throws SQLException {
-                    List<String> lines = new ArrayList<String>();
-
-                    while (rs.next()) {
-                        lines.add(String.format("%d %s", rs.getLong("MSGID"), rs.getString("UID")));
+                public Mail handle(ResultSet rs) throws SQLException {
+                    if (rs.next()) {
+                        return handleRowMapping(rs);
                     }
 
-                    return lines;
+                    return null;
+                }
+            }, new Object[]{uid});
+
+        } catch (SQLException e) {
+            throw new DaoException(e);
+        }
+    }
+
+    @Override
+    public List<Mail> findAll() {
+
+        QueryRunner qr = getQueryRunner();
+
+        try {
+            return qr.query("select * from emails", new ResultSetHandler<List<Mail>>() {
+                @Override
+                public List<Mail> handle(ResultSet rs) throws SQLException {
+                    List<Mail> mails = new ArrayList<Mail>();
+
+                    while (rs.next()) {
+                        Mail mail = handleRowMapping(rs);
+                        mails.add(mail);
+                    }
+
+                    return mails;
                 }
             });
         } catch (SQLException e) {
             throw new DaoException(e);
         }
     }
+
     private Mail handleRowMapping(ResultSet rs) throws SQLException {
         Mail mail = new Mail();
 
@@ -126,9 +112,12 @@ public class MailDaoImpl extends BaseDao implements MailDao {
         mail.setFlagNew(rs.getInt("FLAG_NEW"));
         mail.setFlagUnread(rs.getInt("FLAG_UNREAD"));
         mail.setFlagFav(rs.getInt("FLAG_FAV"));
+        mail.setFlagDel(rs.getInt("FLAG_DEL"));
+        mail.setOwnerAddress(rs.getString("OWNER_ADDRESS"));
 
         return mail;
     }
+
     @Override
     public Page<Mail> findByPage(PageRequest pageRequest, Long accountId, Long userId) {
 
@@ -139,7 +128,7 @@ public class MailDaoImpl extends BaseDao implements MailDao {
         int position = (pageRequest.page - 1) * pageRequest.pageSize;
         int step = pageRequest.pageSize;
 
-        QueryRunner qr=getQueryRunner();
+        QueryRunner qr = getQueryRunner();
 
         try {
 
@@ -192,16 +181,16 @@ public class MailDaoImpl extends BaseDao implements MailDao {
         }
     }
 
-
-    //Page<Mail> findByPage(PageRequest pageRequest, Long accountId, Long userId);
     @Override
-    public Mail save(Mail mail){
-        if(mail==null){
-            throw new IllegalArgumentException();}
+    public Mail save(Mail mail) {
 
-        if(mail.getId()!=null){
+        if (mail == null) {
+            throw new IllegalArgumentException();
+        }
+
+        if (mail.getId() != null) {
             return doUpdate(mail);
-        }else {
+        } else {
             return doInsert(mail);
         }
     }
@@ -212,8 +201,8 @@ public class MailDaoImpl extends BaseDao implements MailDao {
 
         String sql = "update emails set SUBJECT=?,MFROM=?,MTO=?,CONTENT=?,DATE=?," +
                 "USERSID=?,ACCOUNTID=?,MESSAGE_ID=?,CONTENT_TYPE=?,UID=?," +
-                "FLAG_NEW=?,FLAG_UNREAD=?,FLAG_FAV=?,FLAG_DEL=? where MSGID=" + mail.getId();
-
+                "FLAG_NEW=?,FLAG_UNREAD=?,FLAG_FAV=?, FLAG_DEL=?," +
+                "OWNER_ADDRESS=? where MSGID=" + mail.getId();
         Object[] params = new Object[]{
                 mail.getSubject(),
                 mail.getFrom(),
@@ -230,7 +219,8 @@ public class MailDaoImpl extends BaseDao implements MailDao {
                 mail.getFlagNew(),
                 mail.getFlagUnread(),
                 mail.getFlagFav(),
-                mail.getFlagDel()
+                mail.getFlagDel(),
+                mail.getOwnerAddress()
         };
 
         try {
@@ -241,6 +231,7 @@ public class MailDaoImpl extends BaseDao implements MailDao {
 
         return mail;
     }
+
     private Mail doInsert(Mail mail) {
         Connection conn = getConnection();
         PreparedStatement statement = null;
@@ -250,8 +241,8 @@ public class MailDaoImpl extends BaseDao implements MailDao {
             statement = conn.prepareStatement("insert into emails" +
                     "(SUBJECT, MFROM, MTO, CONTENT, DATE" +
                     ", USERSID, ACCOUNTID, MESSAGE_ID, CONTENT_TYPE, UID" +
-                    ", FLAG_NEW, FLAG_UNREAD, FLAG_FAV, FLAG_DEL)" +
-                    " values (?, ?, ?, ?, ?,  ?, ?, ?, ?, ?,  ?, ?, ?, ?)");
+                    ", FLAG_NEW, FLAG_UNREAD, FLAG_FAV, FLAG_DEL, OWNER_ADDRESS)" +
+                    " values (?, ?, ?, ?, ?,  ?, ?, ?, ?, ?,  ?, ?, ?, ?, ?)");
 
             statement.setString(1, mail.getSubject());
             statement.setString(2, mail.getFrom());
@@ -269,6 +260,7 @@ public class MailDaoImpl extends BaseDao implements MailDao {
             statement.setInt(12, mail.getFlagUnread());
             statement.setInt(13, mail.getFlagFav());
             statement.setInt(14, mail.getFlagDel());
+            statement.setString(15, mail.getOwnerAddress());
 
             int rows = statement.executeUpdate();
 
@@ -286,10 +278,9 @@ public class MailDaoImpl extends BaseDao implements MailDao {
         return findByUID(mail.getUid());
     }
 
-
-
     @Override
-    public List<String> findAllMailUIDs(){
+    public List<String> findAllMailUIDs() {
+
         QueryRunner qr = getQueryRunner();
 
         try {
@@ -308,14 +299,34 @@ public class MailDaoImpl extends BaseDao implements MailDao {
         } catch (SQLException e) {
             throw new DaoException(e);
         }
+    }
 
-    };
+    @Override
+    public List<String> findMailUIDs(Long accountId) {
+        QueryRunner qr = getQueryRunner();
 
+        String sql = String.format("select MSGID,UID from emails where ACCOUNTID = %d", accountId);
 
+        try {
+            return qr.query(sql, new ResultSetHandler<List<String>>() {
+                @Override
+                public List<String> handle(ResultSet rs) throws SQLException {
+                    List<String> lines = new ArrayList<String>();
 
-//    void insertMail(String MSGID,String SUBJECT,String MFROM,String MTO,String CONTENT,String DATE,Integer uid,Integer aid);
+                    while (rs.next()) {
+                        lines.add(String.format("%d %s", rs.getLong("MSGID"), rs.getString("UID")));
+                    }
 
-    public void removeByUID(String uid){
+                    return lines;
+                }
+            });
+        } catch (SQLException e) {
+            throw new DaoException(e);
+        }
+    }
+
+    @Override
+    public void removeByUID(String uid) {
 
         QueryRunner qr = getQueryRunner();
 
@@ -329,6 +340,7 @@ public class MailDaoImpl extends BaseDao implements MailDao {
             throw new DaoException(e);
         }
     }
+
     @Override
     public Page<Mail> findPageByConditions(PageRequest pageRequest, String condition) {
 
@@ -396,7 +408,4 @@ public class MailDaoImpl extends BaseDao implements MailDao {
             throw new DaoException(e);
         }
     }
-
-};
-
-
+}

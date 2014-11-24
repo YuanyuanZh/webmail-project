@@ -1,7 +1,7 @@
 package cs601.webmail.service;
 
 /**
- * Created by yuanyuan on 10/29/14.
+ * Created by yuanyuan on 10/28/14.
  */
 public class ServiceException extends RuntimeException {
 

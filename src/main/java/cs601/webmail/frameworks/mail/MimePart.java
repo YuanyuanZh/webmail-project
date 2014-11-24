@@ -1,10 +1,7 @@
 package cs601.webmail.frameworks.mail;
 
-import cs601.webmail.frameworks.mail.MessagingException;
-import cs601.webmail.frameworks.mail.Part;
-
 /**
- * Created by yuanyuan on 11/13/14.
+ * Created by yuanyuan on 11/11/14.
  */
 public interface MimePart extends Part {
 

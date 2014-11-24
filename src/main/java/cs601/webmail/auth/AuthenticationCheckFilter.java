@@ -1,5 +1,7 @@
 package cs601.webmail.auth;
 
+import cs601.webmail.util.Strings;
+
 import javax.servlet.*;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -8,7 +10,7 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 /**
- * Created by yuanyuan on 11/5/14.
+ * Created by yuanyuan on 11/6/14.
  */
 public class AuthenticationCheckFilter implements Filter {
 
@@ -16,7 +18,7 @@ public class AuthenticationCheckFilter implements Filter {
     public static final String LOGIN_COOKIE_FLAG = "webmail_login";
 
     private static final String[] WHITE_LIST = {
-            "/resources/", "/login", "/logout", "/register","/register", "/rest/"
+        "/resources/", "/login", "/logout", "/register", "/rest/"
     };
 
     @Override
@@ -41,7 +43,7 @@ public class AuthenticationCheckFilter implements Filter {
 
             String rememberMe = readRememberMe(req);
 
-            if (rememberMe !=null &&rememberMe.length()!=0)
+            if (Strings.haveLength(rememberMe))
                 resp.sendRedirect("/login?username=" + rememberMe);
             else
                 resp.sendRedirect("/login");
@@ -62,7 +64,8 @@ public class AuthenticationCheckFilter implements Filter {
         return null;
     }
 
-    private void checkLogin(HttpServletRequest req, HttpSession session) throws UnauthenticatedException {Object sessionFlag = session.getAttribute(LOGIN_SESSION_FLAG);
+    private void checkLogin(HttpServletRequest req, HttpSession session) throws UnauthenticatedException {
+        Object sessionFlag = session.getAttribute(LOGIN_SESSION_FLAG);
 
         String uri = req.getRequestURI();
 

@@ -5,15 +5,26 @@
     </div>
     <h3></h3>
     <p><span>$esc.html($mail.from)</span> to me</p>
+    #if ($!mail_cc)
+            <p>Cc: $!mail_cc</p>
+        #end
+        <p></p>
+        <div class="hidden">
+            <input type="hidden" name="mail_id" value="$!mail.id"/>
+            <input type="hidden" name="mail_subject" value="$!mail.subject"/>
+            <input type="hidden" name="mail_date" value="$!mail.date"/>
+            <input type="hidden" name="mail_from" value="$!mail_from"/>
+            <input type="hidden" name="mail_to" value="$!mail_to"/>
+            <input type="hidden" name="mail_cc" value="$!mail_cc"/>
+            <input type="hidden" name="mail_content_type" value="$!mail_content_type"/>
+        </div>
 </div>
 
 <hr/>
 
 <div class="mail-body">
 
-
     ${mail.content}
-
 
 </div><!-- end .mail-body -->
 

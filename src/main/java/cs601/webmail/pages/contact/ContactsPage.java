@@ -1,13 +1,12 @@
 package cs601.webmail.pages.contact;
 
 import cs601.webmail.frameworks.web.RequestContext;
-import cs601.webmail.pages.Page;
+import cs601.webmail.pages.ControllerPage;
 
 /**
- * Created by yuanyuan on 11/19/14.
+ * Created by yuanyuan on 11/17/14.
  */
-
-public class ContactsPage extends Page {
+public class ContactsPage extends ControllerPage {
 
     public void verify() {
         // no-op

@@ -5,8 +5,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.PushbackInputStream;
 
+
 /**
- * Created by yuanyuan on 11/13/14.
+ * This class implements a QP Decoder.
+ *
+ * Created by yuanyuan on 11/12/14.
  */
 public class QuotePrintableEncoderStream extends FilterInputStream {
 
@@ -122,5 +125,4 @@ public class QuotePrintableEncoderStream extends FilterInputStream {
     }
 
 }
-
 

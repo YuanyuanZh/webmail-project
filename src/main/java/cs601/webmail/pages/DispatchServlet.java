@@ -16,10 +16,7 @@ import cs601.webmail.Configuration;
 import cs601.webmail.frameworks.web.RequestContext;
 import cs601.webmail.frameworks.web.RequestContextFactory;
 import cs601.webmail.pages.contact.*;
-import cs601.webmail.pages.mail.MailActionsPage;
-import cs601.webmail.pages.mail.MailListPage;
-import cs601.webmail.pages.mail.ReadMailPage;
-import cs601.webmail.pages.mail.SyncMailsPage;
+import cs601.webmail.pages.mail.*;
 import org.apache.log4j.Logger;
 import z.managers.ErrorManager;
 
@@ -35,59 +32,69 @@ public class DispatchServlet extends HttpServlet {
     public static Map<String,Class> mapping = new HashMap<String, Class>();
 
     static {
-        mapping.put("/",HomePage.class);
-        mapping.put("/inbox",InboxPage.class);
-        mapping.put("/login",LoginPage.class);
+        mapping.put("/", HomePage.class);
+        mapping.put("/inbox", InboxPage.class);
+        mapping.put("/contacts", ContactsPage.class);
+
+        mapping.put("/register", RegisterPage.class);
+        mapping.put("/login", LoginPage.class);
         mapping.put("/logout", LogoutPage.class);
         mapping.put("/register", RegisterPage.class);
         mapping.put("/registerNext", RegisterNextPage.class);
 
         mapping.put("/rest/user/profile", ProfilePage.class);
-        mapping.put("/rest/mail/control", MailActionsPage.class);
-        mapping.put("/rest/mail/sync", SyncMailsPage.class);
+        mapping.put("/rest/user/settings", SettingsPage.class);
+
+
         mapping.put("/rest/mail/list", MailListPage.class);
         mapping.put("/rest/mail/read", ReadMailPage.class);
+        mapping.put("/rest/mail/sync", SyncMailsPage.class);
+        mapping.put("/rest/mail/control", MailActionsPage.class);
+        mapping.put("/rest/mail/send", MailSendPage.class);
 
-        mapping.put("/contacts", ContactsPage.class);
         mapping.put("/rest/contact/list", ContactListPage.class);
         mapping.put("/rest/contact/read", ContactReadPage.class);
         mapping.put("/rest/contact/edit", ContactEditPage.class);
         mapping.put("/rest/contact/create", ContactCreatePage.class);
         mapping.put("/rest/contact/control", ContactActionsPage.class);
-
+        mapping.put("/rest/contacts.json", ContactListJsonPage.class);
 
     }
 
     private Configuration configuration;
 
-   // private PersistenceContextFactory persistenceContextFactory;
+
 
     @Override
     public void init() throws ServletException {
 
         configuration = Configuration.getDefault();
 
-       // persistenceContextFactory = new PersistenceContextFactory();
+
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        doGet(req, resp);
     }
 
     public void doGet(HttpServletRequest request,
                       HttpServletResponse response)
             throws ServletException, IOException
     {
+
+        if (Constants.DEBUG_MODE)
+            System.out.println("[DEBUG] request URI " + request.getRequestURI());
+
         String uri = request.getRequestURI();
-        Page p = createPage(uri);
+        ControllerPage p = createPage(uri);
 
         if ( p == null ) {
             response.sendRedirect("/files/error.html");
             return;
         }
 
-        if (Constants.DEBUG_MODE)
-            System.out.println("[DEBUG] request URI " + request.getRequestURI());
-
         try {
-
-            //preparePersistenceContext();
 
             RequestContextFactory.create(request, response);
 
@@ -109,16 +116,12 @@ public class DispatchServlet extends HttpServlet {
             if (context != null) {
                 context.release();
             }
-
-            //releasePersistenceContext();
         }
      }
-    public void doPost(HttpServletRequest req,HttpServletResponse resp)throws ServletException, IOException
-    {
-        doGet(req, resp);
-    }
 
-    public Page createPage(String uri)
+
+
+    public ControllerPage createPage(String uri)
     {
         Class pageClass = mapping.get(uri);
         try {
@@ -127,7 +130,7 @@ public class DispatchServlet extends HttpServlet {
                 return null;
             }
 
-            Constructor<Page> ctor = pageClass.getConstructor();
+            Constructor<ControllerPage> ctor = pageClass.getConstructor();
             return ctor.newInstance();
         }
         catch (Exception e) {

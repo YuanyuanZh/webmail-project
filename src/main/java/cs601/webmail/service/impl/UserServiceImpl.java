@@ -1,27 +1,20 @@
 package cs601.webmail.service.impl;
 
 import cs601.webmail.dao.UserDao;
-import cs601.webmail.dao.impl.MailDaoImpl;
+
 import cs601.webmail.dao.impl.UserDAOImpl;
 import cs601.webmail.entity.User;
 import cs601.webmail.service.UserService;
 import org.apache.log4j.Logger;
 
-/**
- * Created by yuanyuan on 10/30/14.
- */
 public class UserServiceImpl implements UserService {
 
     private static final Logger LOGGER = Logger.getLogger(MailServiceImpl.class);
 
+    UserDao userDao= new UserDAOImpl();
 
-
-     UserDao userDao= new UserDAOImpl();
-     //UserService userService= new UserServiceImpl();
-
-
-    public boolean verifyUser(String loginid,String password){
-        if(userDao.LoginIDExist(loginid)&& userDao.getPassword(loginid).equals(password)){
+    public boolean verifyUser(String logId,String password){
+        if(userDao.LoginIDExist(logId)&& userDao.getPassword(logId).equals(password)){
             return true;
         }
         return false;

@@ -8,57 +8,64 @@ import cs601.webmail.util.Strings;
 import java.sql.*;
 
 /**
- * Created by yuanyuan on 11/6/14.
+ * Created by yuanyuan on 10/31/14.
  */
 public final class DBUtils {
-    public static Connection generateConnection(){
-        Configuration configuration= Configuration.getDefault();
-        String dbFile=configuration.getString(Configuration.DB_PATH);
 
-        if(!Strings.haveLength(dbFile)){
-            dbFile= ResourceUtils.getClassPath()+"webmail.db";
+    public static Connection generateConnection() {
+
+        Configuration configuration = Configuration.getDefault();
+
+        String dbFile = configuration.getString(Configuration.DB_PATH);
+
+        if (!Strings.haveLength(dbFile)) {
+            dbFile = ResourceUtils.getClassPath() + "webmail.db";
         }
-        if(Constants.DEBUG_MODE){
-            System.out.println("\"[DEBUG] DBUtils: DB file is \" + dbFile");
-        }
-        try{
+
+        if (Constants.DEBUG_MODE)
+            System.out.println("[DEBUG] DBUtils: DB file is " + dbFile);
+
+        try {
             Class.forName("org.sqlite.JDBC");
-        }catch (ClassNotFoundException e){
-            throw new IllegalArgumentException("JDBC driver missed",e);
+        } catch (ClassNotFoundException e) {
+            throw new IllegalStateException("JDBC driver missed", e);
         }
-        try{
+        try {
             return DriverManager.getConnection("jdbc:sqlite:" + dbFile);
-
-        }catch (SQLException e){
-            throw new IllegalArgumentException("create connection failed.");
+        } catch (SQLException e) {
+            throw new IllegalStateException("create connection failed.", e);
         }
     }
 
-    public static void closeConnectionQuietly(Connection connection){
-        if(connection!=null){
-            try{
-                if(!connection.isClosed()){
+    public static void closeConnectionQuietly(Connection connection) {
+        if (connection != null) {
+            try {
+                if (!connection.isClosed()) {
                     connection.close();
+
                     if (Constants.DEBUG_MODE)
                         System.out.println("[DEBUG] DBUtils: close connection invoked");
                 }
-            }catch (SQLException e){
-
+            } catch (SQLException e) {
+                // ignore
             }
         }
     }
 
-    public static void closeResultSetQuietly(ResultSet rs){
-        if(rs !=null){
-            try{
-                if(!rs.isClosed()){
+    // To close ResultSet
+    public static void closeResultSetQuietly(ResultSet rs) {
+        if (rs != null) {
+            try {
+                if (!rs.isClosed()) {
                     rs.close();
                 }
-            }catch (SQLException e){
-
+            } catch (SQLException e) {
+                // ignore
             }
         }
     }
+
+    // To close Statement
     public static void closeStatementQuietly(Statement statement) {
         if (statement != null) {
             try {
@@ -70,4 +77,5 @@ public final class DBUtils {
             }
         }
     }
+
 }

@@ -10,7 +10,9 @@ import java.security.Key;
 import java.security.NoSuchAlgorithmException;
 
 /**
- * Created by yuanyuan on 11/13/14.
+ * Encrypt and Decrypt utils. Use AES as the default algorithm.
+ *
+ * Created by yuanyuan on 11/10/14.
  */
 public class EncryptUtils {
 
@@ -144,4 +146,3 @@ public class EncryptUtils {
     }
 
 }
-

@@ -6,7 +6,10 @@ import java.io.InputStream;
 import java.io.PushbackInputStream;
 
 /**
- * Created by yuanyuan on 11/13/14.
+ * This class is to support reading CRLF terminated lines that
+ * contain only US-ASCII characters from an input stream.
+ *
+ * Created by yuanyuan on 11/9/14.
  */
 public class LineInputStream extends FilterInputStream {
 
@@ -98,4 +101,3 @@ public class LineInputStream extends FilterInputStream {
         return String.copyValueOf(buf, 0, offset);
     }
 }
-

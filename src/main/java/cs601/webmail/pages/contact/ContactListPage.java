@@ -7,7 +7,7 @@ import cs601.webmail.frameworks.db.page.Order;
 import cs601.webmail.frameworks.db.page.PageRequest;
 import cs601.webmail.frameworks.web.PageTemplate;
 import cs601.webmail.frameworks.web.RequestContext;
-import cs601.webmail.pages.Page;
+import cs601.webmail.pages.ControllerPage;
 import cs601.webmail.service.AccountService;
 import cs601.webmail.service.ContactService;
 import cs601.webmail.service.impl.AccountServiceImpl;
@@ -24,10 +24,12 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * Created by yuanyuan on 11/20/14.
+ * Created by yuanyuan on 11/17/14.
  */
-public class ContactListPage extends Page{
+public class ContactListPage extends ControllerPage {
+
     public static final String EMPTY_STRING = "";
+
     @Override
     public void body() throws Exception {
         RequestContext context = RequestContext.getCurrentInstance();
@@ -97,6 +99,7 @@ public class ContactListPage extends Page{
             resp.setHeader("x-exception", e.getMessage());
         }
     }
+
     private void doListContacts(HttpServletRequest req, HttpServletResponse resp,
                                 ContactService contactService, User user) {
 
@@ -138,7 +141,7 @@ public class ContactListPage extends Page{
             StringWriter writer = new StringWriter();
             template.merge(writer);
 
-            resp.addHeader("x-state", "ok");
+            resp.addHeader("x-state", "ok");  // careful: we're using HTTP headers instead of JSON to pass info.
             resp.addHeader("x-total", pageResult.getTotal() + EMPTY_STRING);
             resp.addHeader("x-position", pageResult.getPosition() + EMPTY_STRING);
             resp.addHeader("x-page", pageRequest.page + EMPTY_STRING);

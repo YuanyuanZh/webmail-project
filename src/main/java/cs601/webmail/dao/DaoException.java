@@ -1,7 +1,7 @@
 package cs601.webmail.dao;
 
 /**
- * Created by yuanyuan on 10/26/14.
+ * Created by yuanyuan on 10/27/14.
  */
 public class DaoException extends RuntimeException {
 

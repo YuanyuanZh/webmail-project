@@ -8,7 +8,7 @@ import java.util.Map;
 import java.util.ServiceLoader;
 
 /**
- * Created by yuanyuan on 11/13/14.
+ * Created by yuanyuan on 11/10/14.
  */
 public abstract class MimeCodec implements Codec {
 
@@ -64,4 +64,3 @@ public abstract class MimeCodec implements Codec {
 
 
 }
-

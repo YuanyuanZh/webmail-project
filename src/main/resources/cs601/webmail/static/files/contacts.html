@@ -36,210 +36,241 @@
 </head>
 <body class="">
 
+
+<!-- <div class="header">
+  <img  class="" width="120" height="30" src="/resources/img/webmail-logo.png" />
+
+  <button class="btn btn-primary btn-sm pull-right" onclick="location.href='/login.html'">Login</button>
+</div> -->
+
 <div class="wrapper">
-<aside class="left-side x-col">
-    <div id="profile" class="profile column-header">
-        <img src="/resources/img/avatar/avatar_2x.png" height="40" width="40" class="profile-avatar img-circle img-thumbnail" alt="Avatar" />
-        <span class="profile-name"></span>
+    <aside class="left-side x-col">
+        <div id="profile" class="profile column-header">
+            <img src="/resources/img/avatar/avatar_2x.png" height="40" width="40" class="profile-avatar img-circle img-thumbnail" alt="Avatar" />
+            <span class="profile-name"></span>
 
-        <!--<div class="profile-dropdown dropdown" >-->
-            <!--<span class="glyphicon glyphicon-collapse-down dropdown-trigger" data-toggle="dropdown"></span>-->
+            <!--<div class="profile-dropdown dropdown" >-->
+                <!--<span class="glyphicon glyphicon-collapse-down dropdown-trigger" data-toggle="dropdown"></span>-->
 
-        <!-- <ul class="dropdown-menu" role="menu">
-             <li><a href="#">Foo</a></li>
-             <li><a href="#">Bar</a></li>
-         </ul>-->
-     <!--</div>-->
-    </div>
-
-    <div class="left-side-tabs">
-        <ul class="nav nav-tabs nav-justified">
-            <li role="presentation"><a href="/">Mail</a></li>
-            <li role="presentation" class="active"><a href="#">Contacts</a></li>
-        </ul>
-    </div>
-
-    <div style="padding: 1.4em 1em;">
-        <button class="btn btn-primary btn-block compose-btn"><i class="fa fa-plus"></i>&nbsp;&nbsp; New</button>
-    </div>
-
-    <div style="padding: 0;">
-        <ul id="mainMenu" class="nav nav-stacked mail-menu">
-            <li data-name="all" class="active"><a href="#"><i class="fa fa-inbox"></i> <span>All Contacts</span>
-                <!--<small class="badge pull-right bg-green">192</small>-->
-            </a></li>
-
-            <li data-name="starred"><a href="#"><i class="fa fa-star-o"></i> <span>Starred</span></a></li>
-            <li data-name="disabled"><a href="#"><i class="fa fa-eye-slash"></i> <span>Disabled</span></a></li>
-        </ul>
-
-        <!-- <h5 class="h5">TAGS</h5> -->
-    </div>
-
-    <div class="toolbar toolbar-bottom">
-        <div class="btn-group" style="position: absolute; bottom: 1.4em; left: 50%; margin-left: -34px;">
-            <button class="btn btn-default"><i class="fa fa-power-off"></i></button>
-            <button class="btn btn-default"><i class="fa fa-cog"></i></button>
-        </div>
-    </div>
-
-</aside>
-
-<!-- contact list -->
-<aside id="contactlist" class="second-left-side x-col">
-
-    <div class="column-header">
-        <div class="search-box pull-right">
-            <input placeholder="Search Contact..." type="text" />
-            <span class="search-icon"><i class="fa fa-search"></i></span>
+                <!--<ul class="dropdown-menu" role="menu">-->
+                    <!--<li><a href="#">Foo</a></li>-->
+                    <!--<li><a href="#">Bar</a></li>-->
+                <!--</ul>-->
+            <!--</div>-->
         </div>
 
-        <h2 id="lblFolderName" class="folder-name">All</h2>
-    </div>
-
-    <header class="toolbar">
-        <div class="select-btn btn-group">
-            <button class="select-all-btn btn btn-default  btn-sm">
-                <i class="fa fa-square-o"></i>
-            </button>
-            <button type="button" class="btn btn-default  btn-sm dropdown-toggle" data-toggle="dropdown">
-                <span class="caret"></span>
-                <span class="sr-only">Toggle Dropdown</span>
-            </button>
-            <ul class="dropdown-menu" role="menu">
-                <li class="select-all-menu"><a href="#">All</a></li>
-                <li class="select-none-menu"><a href="#">None</a></li>
-                <li class="select-star-menu"><a href="#">Starred</a></li>
-                <li class="select-unstar-menu"><a href="#">Unstarred</a></li>
+        <div class="left-side-tabs">
+            <ul class="nav nav-tabs nav-justified">
+                <li role="presentation"><a href="/">Mail</a></li>
+                <li role="presentation" class="active"><a href="#">Contacts</a></li>
             </ul>
         </div>
 
-        <div class="btn-group">
-            <button class="btn btn-default refresh-btn btn-sm"
-                    title="Reload the list"><i class="fa fa-refresh"></i></button>
+        <div style="padding: 1.4em 1em;">
+            <button class="btn btn-primary btn-block compose-btn"><i class="fa fa-plus"></i>&nbsp;&nbsp; New</button>
         </div>
 
-        <button type="button" class="btn btn-default delete-btn btn-sm"
-                title="Remove select"><i class="fa fa-trash"></i></button>
-        <button type="button" class="btn btn-default enable-btn btn-sm"
-                title="Enable selected"><i class="fa fa-eye"></i></button>
-        <button type="button" class="btn btn-default disable-btn btn-sm"
-                title="Disable selected"><i class="fa fa-eye-slash"></i></button>
-
-        <div class="toolbar-right">
-            <small class="page-indicator">1-100 of 1024</small>
-            <br/>
-            <i class="prev-btn fa fa-chevron-left"></i>&nbsp;&nbsp;&nbsp;
-            <i class="next-btn fa fa-chevron-right"></i>
-
-            <!-- <div class="btn-group">
-              <button type="button" class="btn btn-default"><i class="fa fa-chevron-left"></i></button>
-              <button type="button" class="btn btn-default"><i class="fa fa-chevron-right"></i></button>
-            </div> -->
-
-        </div>
-    </header>
-
-    <div id="contactlistWrapper" data-layout="fill-parent">
-        <!-- <div class="toolbar-placeholder"></div> -->
-        <dl class="contact-list">
-
-        </dl>
-        <div>
-            <div class="btn-group" style="margin: 0 auto;">
-                <button type="button" class="prev-btn btn btn-default btn-sm"><i class="fa fa-chevron-left"></i></button>
-                <button type="button" class="next-btn btn btn-default btn-sm"><i class="fa fa-chevron-right"></i></button>
-            </div>
-            <span class="page-indicator">1-100 of 1024</span>
-        </div>
-    </div>
-
-</aside>
-
-<!-- contact content -->
-<aside class="right-side x-col">
-
-    <div class="column-header">
-
-
-    </div>
-
-    <header class="toolbar">
-
-        <div class="btn-group">
-            <button type="button" class="edit-btn btn btn-default btn-sm"><i class="fa fa-pencil"></i> Edit</button>
-            <button type="button" class="enable-btn btn btn-default btn-sm"><i class="fa fa-eye"></i> Enable</button>
-            <button type="button" class="disable-btn btn btn-default btn-sm"><i class="fa fa-eye-slash"></i> Disable</button>
-            <button type="button" class="delete-btn btn btn-default btn-sm"><i class="fa fa-trash"></i> Delete</button>
+        <div style="padding: 0;">
+            <ul id="mainMenu" class="nav nav-stacked mail-menu">
+                <li data-name="all" class="active"><a href="#"><i class="fa fa-inbox"></i> <span>All</span>
+                    <!--<small class="badge pull-right bg-green">192</small>-->
+                </a></li>
+                <li data-name="starred"><a href="#"><i class="fa fa-star-o"></i> <span>Starred</span></a></li>
+                <li data-name="disabled"><a href="#"><i class="fa fa-eye-slash"></i> <span>Disabled</span></a></li>
+            </ul>
+            <!-- <h5 class="h5">TAGS</h5> -->
         </div>
 
-
-        <button type="button" class="star-btn btn btn-default btn-sm"><i class="fa fa-star-o"></i></button>
-        <button type="button" class="unstar-btn btn btn-default btn-sm"><i class="fa fa-star"></i></button>
-
-        <!--<div class="btn-group">-->
-        <!-- <button type="button" class="btn btn-default btn-sm"><i class="fa fa-tag"></i></button> -->
+        <!-- TODO finish this -->
+        <!--<div class="toolbar toolbar-bottom">-->
+            <!--<div class="btn-group" style="position: absolute; bottom: 1.4em; left: 50%; margin-left: -34px;">-->
+                <!--<button class="btn btn-default"><i class="fa fa-power-off"></i></button>-->
+                <!--<button class="btn btn-default"><i class="fa fa-cog"></i></button>-->
+            <!--</div>-->
         <!--</div>-->
 
-    </header>
+    </aside>
 
-    <div id="viewport" data-layout="fill-parent" style="height: 600px; overflow-y:auto; padding-bottom: 80px;">
+    <!-- Contact list -->
+    <aside id="contactlist" class="second-left-side x-col">
 
-        <article class="contact-entry">
-            <div class="contact-info">
-                <h3>Tom Hanks</h3>
-                <p><i class="fa fa-envelope-o"></i> <span>openshift-email@redhat.com</span></p>
+        <div class="column-header">
+            <div class="search-box pull-right">
+                <input placeholder="Search Contact..." type="text" />
+                <span class="search-icon"><i class="fa fa-search"></i></span>
             </div>
 
-            <hr/>
+            <h2 id="lblFolderName" class="folder-name">All</h2>
+        </div>
 
-            <div class="contact-body">
+        <header class="toolbar">
 
-                <form class="form-horizontal" role="form">
-                    <div class="form-group">
-                        <label for="" class="col-sm-3 control-label">Full Name</label>
-                        <div class="col-sm-9">
-                            <p class="form-control-static">Beyoncé Gisselle Knowles</p>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="" class="col-sm-3 control-label">Email</label>
-                        <div class="col-sm-9">
-                            <p class="form-control-static">beyonce@aixmail.com</p>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="" class="col-sm-3 control-label">Phone</label>
-                        <div class="col-sm-9">
-                            <p class="form-control-static">+1 202-456-1111</p>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="" class="col-sm-3 control-label">Address</label>
-                        <div class="col-sm-9">
-                            <p class="form-control-static">
-                                1600 Pennsylvania Ave NW, Washington, DC</p>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="" class="col-sm-3 control-label">ZIP Code</label>
-                        <div class="col-sm-9">
-                            <p class="form-control-static">20500</p>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="col-sm-offset-3 col-sm-9">
-                            <button type="submit" class="btn btn-primary">Save</button>
-                        </div>
-                    </div>
-                </form>
+            <div class="select-btn btn-group">
+                <button class="select-all-btn btn btn-default  btn-sm">
+                    <i class="fa fa-square-o"></i>
+                </button>
+                <button type="button" class="btn btn-default  btn-sm dropdown-toggle" data-toggle="dropdown">
+                    <span class="caret"></span>
+                    <span class="sr-only">Toggle Dropdown</span>
+                </button>
+                <ul class="dropdown-menu" role="menu">
+                    <li class="select-all-menu"><a href="#">All</a></li>
+                    <li class="select-none-menu"><a href="#">None</a></li>
+                    <li class="select-star-menu"><a href="#">Starred</a></li>
+                    <li class="select-unstar-menu"><a href="#">Unstarred</a></li>
+                </ul>
+            </div>
 
-            </div><!-- end .mail-body -->
+            <div class="btn-group">
+                <button class="btn btn-default refresh-btn btn-sm"
+                        title="Reload the list"><i class="fa fa-refresh"></i></button>
+            </div>
 
-        </article>
+            <button type="button" class="btn btn-default delete-btn btn-sm"
+                    title="Remove selected"><i class="fa fa-trash"></i></button>
+            <button type="button" class="btn btn-default enable-btn btn-sm"
+                    title="Enable selected"><i class="fa fa-eye"></i></button>
+            <button type="button" class="btn btn-default disable-btn btn-sm"
+                    title="Disable selected"><i class="fa fa-eye-slash"></i></button>
 
-    </div>
-</aside>
+
+            <div class="toolbar-right">
+                <small class="page-indicator">1-100 of 1024</small>
+                <br/>
+                <i class="prev-btn fa fa-chevron-left"></i>&nbsp;&nbsp;&nbsp;
+                <i class="next-btn fa fa-chevron-right"></i>
+
+                <!-- <div class="btn-group">
+                  <button type="button" class="btn btn-default"><i class="fa fa-chevron-left"></i></button>
+                  <button type="button" class="btn btn-default"><i class="fa fa-chevron-right"></i></button>
+                </div> -->
+
+            </div>
+        </header>
+
+        <div id="contactlistWrapper" data-layout="fill-parent">
+            <!-- <div class="toolbar-placeholder"></div> -->
+            <dl class="contact-list">
+
+                <!--<dd class="contact-list-item">-->
+                    <!--<div class="avatar">-->
+                        <!--<img class="" width=50 height=50 src="/resources/img/avatar/tom.png" />-->
+                    <!--</div>-->
+                    <!--<div class="info">-->
+                        <!--<p><strong>Tom Hanks</strong></p>-->
+                        <!--<p><i class="fa fa-mobile"></i> (646) 861-2268-->
+                            <!--<span class="space"></span><i class="fa fa-envelope-o"></i> tomhanks@yahoo.com</p>-->
+                        <!--<p><i class="fa fa-location-arrow"></i> 338 West 23th Street New York, NY 10011, USA</p>-->
+                    <!--</div>-->
+                    <!--<div class=action-controls>-->
+                        <!--<p><input type="checkbox" name="chkSelect" value="" /></p>-->
+                        <!--<i class="fa fa-star-o"></i>-->
+                    <!--</div>-->
+                <!--</dd>-->
+
+            </dl>
+
+            <div>
+                <div class="btn-group" style="margin: 0 auto;">
+                    <button type="button" class="prev-btn btn btn-default btn-sm"><i class="fa fa-chevron-left"></i></button>
+                    <button type="button" class="next-btn btn btn-default btn-sm"><i class="fa fa-chevron-right"></i></button>
+                </div>
+                <span class="page-indicator">1-100 of 1024</span>
+            </div>
+
+        </div>
+
+    </aside>
+
+    <!-- Mail content -->
+    <aside class="right-side x-col">
+
+        <div class="column-header">
+            <!--<div class="pull-right">-->
+                <!--<div class="btn-group">-->
+                    <!--<button type="button" class="btn btn-default btn-sm"><i class="fa fa-chevron-left"></i></button>-->
+                    <!--<button type="button" class="btn btn-default btn-sm"><i class="fa fa-chevron-right"></i></button>-->
+                <!--</div>-->
+            <!--</div>-->
+            <!--<h2 class="contact-title">Announcing Dedicated Node Services</h2>-->
+        </div>
+
+        <header class="toolbar">
+
+            <div class="btn-group">
+                <button type="button" class="edit-btn btn btn-default btn-sm"><i class="fa fa-pencil"></i> Edit</button>
+                <button type="button" class="enable-btn btn btn-default btn-sm"><i class="fa fa-eye"></i> Enable</button>
+                <button type="button" class="disable-btn btn btn-default btn-sm"><i class="fa fa-eye-slash"></i> Disable</button>
+                <button type="button" class="delete-btn btn btn-default btn-sm"><i class="fa fa-trash"></i> Delete</button>
+            </div>
+
+
+            <button type="button" class="star-btn btn btn-default btn-sm"><i class="fa fa-star-o"></i></button>
+            <button type="button" class="unstar-btn btn btn-default btn-sm"><i class="fa fa-star"></i></button>
+
+            <!--<div class="btn-group">-->
+                <!-- <button type="button" class="btn btn-default btn-sm"><i class="fa fa-tag"></i></button> -->
+            <!--</div>-->
+
+        </header>
+
+        <div id="viewport" data-layout="fill-parent" style="height: 600px; overflow-y:auto; padding-bottom: 80px;">
+
+            <article class="contact-entry">
+                <div class="contact-info hidden">
+                    <h3>Tom Hanks</h3>
+                    <p><i class="fa fa-envelope-o"></i> <span>openshift-email@redhat.com</span></p>
+                </div>
+
+                <hr/>
+
+                <div class="contact-body hidden">
+
+                    <form class="form-horizontal" role="form">
+                        <div class="form-group">
+                            <label for="" class="col-sm-3 control-label">Full Name</label>
+                            <div class="col-sm-9">
+                                <p class="form-control-static">Beyoncé Gisselle Knowles</p>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="" class="col-sm-3 control-label">Email</label>
+                            <div class="col-sm-9">
+                                <p class="form-control-static">beyonce@aixmail.com</p>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="" class="col-sm-3 control-label">Phone</label>
+                            <div class="col-sm-9">
+                                <p class="form-control-static">+1 202-456-1111</p>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="" class="col-sm-3 control-label">Address</label>
+                            <div class="col-sm-9">
+                                <p class="form-control-static">
+                                    1600 Pennsylvania Ave NW, Washington, DC</p>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="" class="col-sm-3 control-label">ZIP Code</label>
+                            <div class="col-sm-9">
+                                <p class="form-control-static">20500</p>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-offset-3 col-sm-9">
+                                <button type="submit" class="btn btn-primary">Save</button>
+                            </div>
+                        </div>
+                    </form>
+
+                </div><!-- end .contact-body -->
+
+            </article>
+
+        </div>
+    </aside>
 </div>
 
 <div id="dlgProgress" class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog"
@@ -266,6 +297,7 @@
         </div>
     </div>
 </div>
+
 
 <div id="dlgEdit" class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog"
      aria-labelledby="mySmallModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
@@ -304,10 +336,12 @@
     </div>
 </div>
 
+
 <script src="/resources/js/jquery-2.1.1.js"></script>
 <script src="/resources/js/bootstrap.js"></script>
 <script src="/resources/js/underscore-min.js"></script>
 <script src="/resources/js/backbone-min.js"></script>
+<script src="/resources/js/notify.min.js"></script>
 <script src="/resources/js/webmail.js"></script>
 
 <script>

@@ -10,7 +10,7 @@ import cs601.webmail.service.MailService;
 import cs601.webmail.service.impl.AccountServiceImpl;
 import cs601.webmail.service.impl.MailServiceImpl;
 import cs601.webmail.util.DateTimeUtils;
-
+import cs601.webmail.util.MimeUtils;
 import org.codehaus.jackson.map.ObjectMapper;
 
 import javax.servlet.http.HttpServletRequest;
@@ -21,9 +21,11 @@ import java.util.*;
 
 /**
  * Created by yuanyuan on 10/20/14.
+ *
+ * @see cs601.webmail.pages.mail.MailListPage
  */
 @Deprecated
-public class InboxPage extends Page {
+public class InboxPage extends ControllerPage {
 
     public void verify() {
         // no-op
@@ -56,7 +58,7 @@ public class InboxPage extends Page {
         Map model = new HashMap();
 
         // TODO just for demo
-        Account currentAccount = accountService.findById(-1l);
+        Account currentAccount = accountService.findSingleByUserId(-1l);
 
         String curPage = req.getParameter("page");
 
@@ -125,9 +127,9 @@ public class InboxPage extends Page {
         boolean hasQuote = ss[0].startsWith("\"");
 
         if (hasQuote) {
-            sender = "\"" + sender.replace("\"", "") + "\"";
+            sender = "\"" + MimeUtils.decodeText(sender.replace("\"", "")) + "\"";
         } else {
-            sender = sender;
+            sender = MimeUtils.decodeText(sender);
         }
 
         return sender + " " + ss[1];

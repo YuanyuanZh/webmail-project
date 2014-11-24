@@ -12,7 +12,7 @@ import cs601.webmail.util.Strings;
 import java.util.List;
 
 /**
- * Created by yuanyuan on 11/19/14.
+ * Created by yuanyuan on 11/17/14.
  */
 public class ContactServiceImpl implements ContactService {
 
@@ -38,20 +38,20 @@ public class ContactServiceImpl implements ContactService {
 
         if ("all".equalsIgnoreCase(folder)) {
             // include DISABLED and Starred
-            String sql = String.format("flag_del = " + Contact.FLAG_NO,
-                    Contact.FLAG_DISABLED);
+            String sql = String.format("user_id=%d and flag_del = " + Contact.FLAG_NO,
+                    user.getId(), Contact.FLAG_DISABLED);
             return contactDao.findPageByConditions(pageRequest, sql);
         }
         else if ("starred".equals(folder)) {
             // include Starred only
-            String sql = String.format("flag_del = %d and flag_fav = %d",
-                    Contact.FLAG_NO, Contact.FLAG_YES);
+            String sql = String.format("user_id=%d and flag_del = %d and flag_fav = %d",
+                    user.getId(), Contact.FLAG_NO, Contact.FLAG_YES);
             return contactDao.findPageByConditions(pageRequest, sql);
         }
         else if ("disabled".equals(folder)) {
             // include Disabled only
-            String sql = String.format("flag_del = %d",
-                    Contact.FLAG_DISABLED);
+            String sql = String.format("user_id=%d and flag_del = %d",
+                    user.getId(), Contact.FLAG_DISABLED);
             return contactDao.findPageByConditions(pageRequest, sql);
         }
 

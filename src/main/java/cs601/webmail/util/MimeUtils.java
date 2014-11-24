@@ -9,7 +9,7 @@ import java.util.Hashtable;
 import java.util.Locale;
 
 /**
- * Created by yuanyuan on 11/12/14.
+ * Created by yuanyuan on 10/24/14.
  */
 public class MimeUtils {
 
@@ -336,4 +336,3 @@ public class MimeUtils {
     }
 
 }
-

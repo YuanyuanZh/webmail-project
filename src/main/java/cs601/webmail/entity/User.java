@@ -1,15 +1,18 @@
 package cs601.webmail.entity;
 
 import cs601.webmail.frameworks.db.annotation.Column;
+import cs601.webmail.frameworks.db.annotation.Entity;
 import cs601.webmail.frameworks.db.annotation.Id;
 import cs601.webmail.frameworks.db.annotation.Table;
+
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Created by yuanyuan on 10/26/14.
+ * Created by yuanyuan on 10/27/14.
  */
+@Entity
 @Table(tableName = "users")
 public class User implements Serializable {
 
@@ -80,4 +83,3 @@ public class User implements Serializable {
         return propAndColMap;
     }
 }
-

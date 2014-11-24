@@ -1,12 +1,14 @@
 package cs601.webmail.entity;
+
 import cs601.webmail.frameworks.db.annotation.Column;
 import cs601.webmail.frameworks.db.annotation.Entity;
 import cs601.webmail.frameworks.db.annotation.Id;
 import cs601.webmail.frameworks.db.annotation.Table;
+
 import java.io.Serializable;
 
 /**
- * Created by yuanyuan on 11/19/14.
+ * Created by yuanyuan on 11/17/14.
  */
 @Entity
 @Table(tableName = "contacts")

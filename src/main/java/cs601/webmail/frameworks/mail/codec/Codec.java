@@ -1,7 +1,7 @@
 package cs601.webmail.frameworks.mail.codec;
 
 /**
- * Created by yuanyuan on 11/13/14.
+ * Created by yuanyuan on 11/10/14.
  */
 public interface Codec {
 

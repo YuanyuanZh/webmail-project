@@ -3,7 +3,7 @@ package cs601.webmail.entity;
 import java.io.Serializable;
 
 /**
- * Created by yuanyuan on 10/26/14.
+ * Created by yuanyuan on 10/24/14.
  */
 public class MailSummary implements Serializable {
 
@@ -57,4 +57,3 @@ public class MailSummary implements Serializable {
         this.to = to;
     }
 }
-

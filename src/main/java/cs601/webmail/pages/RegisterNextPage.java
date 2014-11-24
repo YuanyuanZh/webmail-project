@@ -19,7 +19,7 @@ import java.io.IOException;
 /**
  * Created by yuanyuan on 11/11/14.
  */
-public class RegisterNextPage extends Page {
+public class RegisterNextPage extends ControllerPage {
     @Override
     public void body() throws Exception {
 
@@ -83,3 +83,4 @@ public class RegisterNextPage extends Page {
         }
     }
 }
+

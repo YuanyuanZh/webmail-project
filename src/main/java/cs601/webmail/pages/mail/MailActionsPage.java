@@ -2,7 +2,7 @@ package cs601.webmail.pages.mail;
 
 import cs601.webmail.entity.Mail;
 import cs601.webmail.frameworks.web.RequestContext;
-import cs601.webmail.pages.Page;
+import cs601.webmail.pages.ControllerPage;
 import cs601.webmail.service.MailService;
 import cs601.webmail.service.impl.MailServiceImpl;
 import cs601.webmail.util.Strings;
@@ -10,10 +10,13 @@ import cs601.webmail.util.Strings;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+
 /**
- * Created by yuanyuan on 11/15/14.
+ * Delete or Favorite mail
+ *
+ * Created by yuanyuan on 11/13/14.
  */
-public class MailActionsPage extends Page {
+public class MailActionsPage extends ControllerPage {
 
     @Override
     public void body() throws Exception {

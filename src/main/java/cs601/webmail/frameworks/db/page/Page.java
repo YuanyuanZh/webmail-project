@@ -3,7 +3,7 @@ package cs601.webmail.frameworks.db.page;
 import java.util.List;
 
 /**
- * Created by yuanyuan on 10/29/14.
+ * Created by yuanyuan on 10/28/14.
  */
 public class Page<T> {
 
@@ -47,4 +47,3 @@ public class Page<T> {
         this.total = total;
     }
 }
-

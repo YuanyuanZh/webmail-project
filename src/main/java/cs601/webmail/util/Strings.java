@@ -4,7 +4,7 @@ import java.util.Collection;
 import java.util.Iterator;
 
 /**
- * Created by yuanyuan on 11/9/14.
+ * Created by yuanyuan on 10/30/14.
  */
 public abstract class Strings {
 
@@ -49,5 +49,7 @@ public abstract class Strings {
         return sb.toString();
     }
 
+    public static String trim(String rcpt) {
+        return rcpt != null ? rcpt.trim() : rcpt;
+    }
 }
-

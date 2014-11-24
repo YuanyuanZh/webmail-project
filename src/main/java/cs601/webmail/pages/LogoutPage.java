@@ -3,7 +3,6 @@ package cs601.webmail.pages;
 import cs601.webmail.Constants;
 import cs601.webmail.auth.AuthenticationCheckFilter;
 import cs601.webmail.frameworks.web.RequestContext;
-import cs601.webmail.pages.Page;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -11,9 +10,9 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 /**
- * Created by yuanyuan on 11/5/14.
+ * Created by yuanyuan on 10/22/14.
  */
-public class LogoutPage extends Page {
+public class LogoutPage extends ControllerPage {
 
     @Override
     public void body() throws Exception {
@@ -45,4 +44,3 @@ public class LogoutPage extends Page {
     }
 
 }
-

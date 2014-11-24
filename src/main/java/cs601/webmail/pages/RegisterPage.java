@@ -15,7 +15,7 @@ import java.io.IOException;
 /**
  * Created by yuanyuan on 11/10/14.
  */
-public class RegisterPage extends Page {
+public class RegisterPage extends ControllerPage {
     public static final String REGISTERING_USER_ATTR = "user.registering";
     public static final String REGISTER_STEP_ATTR = "user.register.step";
     public static final String REGISTER_STEP_ONE = "1";
@@ -64,7 +64,7 @@ public class RegisterPage extends Page {
 
                 response.sendRedirect("/registerNext?logId=" + username);
 
-                response.sendRedirect("/registerNext");
+                //response.sendRedirect("/registerNext");
 
             }else {
                 response.sendRedirect("/register?error=202");

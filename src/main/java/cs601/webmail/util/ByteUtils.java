@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 /**
- * Created by yuanyuan on 11/12/14.
+ * Created by yuanyuan on 11/8/14.
  */
 public class ByteUtils {
 
@@ -41,4 +41,3 @@ public class ByteUtils {
         return bytes;
     }
 }
-

@@ -3,7 +3,7 @@ package cs601.webmail.frameworks.mail.util;
 import java.util.Properties;
 
 /**
- * Created by yuanyuan on 11/13/14.
+ * Created by yuanyuan on 11/9/14.
  */
 public class PropUtils {
 
@@ -68,4 +68,3 @@ public class PropUtils {
     }
 
 }
-

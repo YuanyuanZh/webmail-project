@@ -3,9 +3,8 @@ package cs601.webmail.frameworks.mail.impl;
 import cs601.webmail.frameworks.mail.ParseException;
 
 /**
- * Created by yuanyuan on 11/12/14.
+ * Created by yuanyuan on 11/8/14.
  */
-
 public class HeaderTokenizer {
 
     /**
@@ -150,7 +149,7 @@ public class HeaderTokenizer {
      * tokens until an EOF Token is returned.
      *
      * @return		the next Token
-     * @exception cs601.webmail.frameworks.mail.ParseException if the parse fails
+     * @exception	ParseException if the parse fails
      */
     public Token next() throws ParseException {
         return next('\0', false);

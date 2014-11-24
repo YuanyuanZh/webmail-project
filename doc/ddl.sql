@@ -20,3 +20,14 @@ alter table emails add column `FLAG_DEL` integer default 0;
 alter table accounts add column 'POP_SERVER' varchar;
 alter table accounts add column 'POP_SERVER_PORT' int;
 alter table accounts add column 'ENABLE_SSL' boolean;
+-- Nov 19, 2014
+alter table accounts add column 'SMTP_SERVER' varchar(200);
+alter table accounts add column 'SMTP_SERVER_PORT' int;
+alter table accounts add column 'ENABLE_SMTP_SSL' boolean;
+alter table accounts add column 'DISPLAY_NAME' varchar(200);
+alter table accounts add column 'MAIL_SIGNATURE' varchar(250);
+
+
+-- Nov 21, 2014
+
+alter table emails add column 'OWNER_ADDRESS' VARCHAR(200);

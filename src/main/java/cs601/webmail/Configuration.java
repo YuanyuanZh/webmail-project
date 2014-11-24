@@ -1,6 +1,6 @@
 package cs601.webmail;
-import cs601.webmail.exception.ConfigurationException;
 
+import cs601.webmail.exception.ConfigurationException;
 import cs601.webmail.util.PropertyExpander;
 
 import java.io.File;
@@ -9,17 +9,19 @@ import java.io.IOException;
 import java.util.Properties;
 
 /**
- * Created by yuanyuan on 10/29/14.
+ * Created by yuanyuan on 10/27/14.
  */
-
 public class Configuration {
 
     private static Configuration instance;
 
     public static final ConfigurationItem DB_PATH = new ConfigurationItem("db.path", "webmail.db");
 
+    @Deprecated
     public static final ConfigurationItem SCAN_PACKAGE = new ConfigurationItem("scan.package", "cs601.webmail") ;
+
     public static final ConfigurationItem WORK_DIR = new ConfigurationItem("work.dir", "${user.home}/webmail") ;
+
 
     public static Configuration getDefault() {
 
@@ -49,6 +51,9 @@ public class Configuration {
         File file = null;
 
         for (String cfg : _config) {
+            if (Constants.DEBUG_MODE)
+                System.out.println(String.format("[DEBUG] Trying load config from [%s]", cfg));
+
             file = new File(cfg);
 
             if (file.exists()) {

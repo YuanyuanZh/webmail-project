@@ -25,6 +25,9 @@
         <module name="webmail" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="webmail" target="1.7" />
+    </bytecodeTargetLevel>
   </component>
 </project>
 

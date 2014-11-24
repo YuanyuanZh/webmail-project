@@ -16,7 +16,7 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.sql.*;
 
-
+@Deprecated
 public class popMail {
     private String popServer;
     private int port = 995;
@@ -38,7 +38,7 @@ public class popMail {
     public String getTo(){return To;}
     public String getSubject(){return Subject;}
     public String getEDate(){return EDate;}
-    //public String getBody(){return body;}
+    //public String getContent(){return body;}
     public String getContent(){return content.toString();}
 
 
@@ -92,7 +92,6 @@ public class popMail {
     }
 
     private void close()throws IOException{
-        logout();
         os.close();
         in.close();
         client.close();
@@ -110,12 +109,6 @@ public class popMail {
         System.out.println(pass);
 
     }
-    private void logout()throws IOException{
-        sendCommand("QUIT"+enter);
-        System.out.println("QUIT"+enter);
-        close();
-    }
-
 
     private int getMailNumber()throws IOException{
         String auth=sendCommand("STAT "+enter);
@@ -196,11 +189,16 @@ public class popMail {
         System.out.println(reply);
     }
 
+    private void logout()throws IOException{
+        sendCommand("QUIT"+enter);
+        System.out.println("QUIT"+enter);
+        close();
+    }
 
     public static void main(String args[])throws IOException,SQLException{
         popMail mailReceive=new popMail();
 //        mailReceive.setMailServer("pop.gmail.com");
-        mailReceive.setMailServer("pop.gmail.com");
+        mailReceive.setMailServer("pop.163.com");
         mailReceive.connect();
         mailReceive.login("yuanyuantest2014@gmail.com","zyy638708");
         System.out.println("login successfully");
@@ -209,8 +207,6 @@ public class popMail {
         for(int i=1;i<=mailNumbers;i++)
         {
             mailReceive.getMailContent(i);
-
-            System.out.println("\r\n");
 
             System.out.println(String.format("%s , Subject: %s", mailReceive.getMsgID() , mailReceive.getSubject()));
 

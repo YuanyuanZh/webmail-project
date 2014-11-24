@@ -2,6 +2,7 @@ package cs601.webmail;
 
 import cs601.webmail.auth.AuthenticationCheckFilter;
 import cs601.webmail.util.PropertyExpander;
+import org.apache.commons.lang3.ClassPathUtils;
 import org.apache.log4j.BasicConfigurator;
 import cs601.webmail.pages.DispatchServlet;
 import org.eclipse.jetty.server.NCSARequestLog;
@@ -11,31 +12,38 @@ import org.eclipse.jetty.servlet.DefaultServlet;
 import org.eclipse.jetty.servlet.FilterHolder;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
+import org.tanukisoftware.wrapper.WrapperListener;
+import org.tanukisoftware.wrapper.WrapperManager;
 
 import javax.servlet.DispatcherType;
 import java.util.EnumSet;
 
 /**
- * Created by yuan on 10/22/14.
+ * Created by yuanyuan on 10/22/14.
  */
-public class WebMailServer {
+public class WebMailServer implements WrapperListener{
 
     public static void main(String[] args) throws Exception {
 
         BasicConfigurator.configure();
 
-        String classPath = WebMailServer.class.getResource("/").getPath();
+        String classPath = "";
 
-//        if ( args.length<2 ) {
-//            System.err.println("java cs601.webmail.Server static-files-dir log-dir");
-//            System.exit(1);
-//        }
-//
-//        String staticFilesDir = args[0];
-//        String logDir = args[1];
+        try {
+            classPath = WebMailServer.class.getResource("").getPath();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        Configuration configuration = Configuration.getDefault();
 
         String staticFilesDir = classPath + "static";
-        String logDir = PropertyExpander.expandSystemProperties("${user.home}/logs");
+        String logDir = PropertyExpander.expandSystemProperties("${user.home}/webmail/logs");
+
+        // under jsw
+        if (staticFilesDir.indexOf("/jsw") > -1) {
+            staticFilesDir = System.getProperty("user.dir") + "/res/static";
+        }
 
         Server server = new Server(8080);
 
@@ -43,6 +51,8 @@ public class WebMailServer {
         System.out.println("----------------------------------------------------");
         System.out.println("Static Dir: " + staticFilesDir);
         System.out.println("Log Dir: " + logDir);
+        System.out.println("User Dir: " + System.getProperty("user.dir"));
+        System.out.println("Application Work Dir: " + configuration.get(Configuration.WORK_DIR));
         System.out.println("----------------------------------------------------");
 
         ServletContextHandler context = new
@@ -94,5 +104,36 @@ public class WebMailServer {
         server.start();
         server.join();
     }
+
+        @Override
+        public Integer start(String[] strings) {
+                System.out.println("wrapper: starting...");
+
+                try {
+                        main(strings);
+                } catch (Exception e) {
+                        e.printStackTrace();
+                        System.out.println("Error staring sever, " + e.getMessage());
+                        return -1;
+                }
+
+                return 0;
+        }
+
+        @Override
+        public int stop(int i) {
+                System.out.println("wrapper: stopping... code=" + i);
+                return 0;
+        }
+
+        @Override
+        public void controlEvent(int event) {
+                System.out.println("wrapper: control event, code=" + event);
+                if ((event == WrapperManager.WRAPPER_CTRL_LOGOFF_EVENT) &&
+                        (WrapperManager.isLaunchedAsService())) {
+                } else {
+                        WrapperManager.stop(0);
+                }
+        }
 }
 

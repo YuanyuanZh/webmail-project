@@ -3,7 +3,7 @@ package cs601.webmail.util;
 import java.util.Collection;
 
 /**
- * Created by yuanyuan on 11/12/14.
+ * Created by yuanyuan on 11/7/14.
  */
 public class CollectionUtils {
 

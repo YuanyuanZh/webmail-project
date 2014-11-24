@@ -39,6 +39,8 @@ Mail.parseQuery = function(query) {
     }
     return params;
 };
+
+
 // http://notifyjs.com/
 var Noty = {
     error : function(msg) {
