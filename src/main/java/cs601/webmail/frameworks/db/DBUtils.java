@@ -4,6 +4,7 @@ import cs601.webmail.Constants;
 import cs601.webmail.Configuration;
 import cs601.webmail.util.ResourceUtils;
 import cs601.webmail.util.Strings;
+import cs601.webmail.util.Logger;
 
 import java.sql.*;
 
@@ -11,6 +12,8 @@ import java.sql.*;
  * Created by yuanyuan on 10/31/14.
  */
 public final class DBUtils {
+
+    private static final Logger LOGGER = Logger.getLogger(DBUtils.class);
 
     public static Connection generateConnection() {
 
@@ -23,7 +26,7 @@ public final class DBUtils {
         }
 
         if (Constants.DEBUG_MODE)
-            System.out.println("[DEBUG] DBUtils: DB file is " + dbFile);
+            LOGGER.debug("DB file is " + dbFile);
 
         try {
             Class.forName("org.sqlite.JDBC");
@@ -44,7 +47,7 @@ public final class DBUtils {
                     connection.close();
 
                     if (Constants.DEBUG_MODE)
-                        System.out.println("[DEBUG] DBUtils: close connection invoked");
+                        LOGGER.debug("connection closed.");
                 }
             } catch (SQLException e) {
                 // ignore

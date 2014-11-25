@@ -6,6 +6,7 @@ deployments/
 target/
 .idea/
 *.iml
+*.log
 
 *.pydevproject
 .project

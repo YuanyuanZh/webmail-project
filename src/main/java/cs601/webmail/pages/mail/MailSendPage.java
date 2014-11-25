@@ -16,7 +16,13 @@ import cs601.webmail.service.impl.AccountServiceImpl;
 import cs601.webmail.service.impl.ContactServiceImpl;
 import cs601.webmail.util.Strings;
 import org.apache.commons.codec.binary.Base64;
-
+import cs601.webmail.Constants;
+import cs601.webmail.frameworks.mail.pop3.ClientListener;
+import cs601.webmail.util.DigestUtils;
+import cs601.webmail.util.Logger;
+import cs601.webmail.util.ResourceUtils;
+import org.apache.commons.io.FileUtils;
+import java.io.File;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -25,6 +31,8 @@ import java.util.Date;
 import java.util.concurrent.atomic.AtomicLong;
 
 public class MailSendPage extends ControllerPage {
+
+    private static final Logger LOGGER=Logger.getLogger(MailSendPage.class);
 
     private static final AtomicLong MESSAGE_SEED = new AtomicLong(0);
 
@@ -62,6 +70,7 @@ public class MailSendPage extends ControllerPage {
                 resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                 resp.addHeader("x-state", "error");
                 resp.addHeader("x-exception", e.getMessage());
+                LOGGER.error(e);
             }
         }
     }
@@ -153,9 +162,12 @@ public class MailSendPage extends ControllerPage {
         msg.setSubject(subject, "utf-8");
 
         SMTPClient client = prepareSender(account);
+        SentMailSavingListener listener=new SentMailSavingListener();
+        client.addListener(listener);
 
         try {
             client.send(msg);
+            client.removeListener(listener);
         } catch (Exception e) {
             throw new MessagingException(e);
         } finally {
@@ -163,6 +175,37 @@ public class MailSendPage extends ControllerPage {
                 client.close();
             }
         }
+
+        //save sent mail to its folder
+        //    /Users/foobar/webmail/mails/5897fe8711774cde9fae5af5bd39b1a4a42d6828/sent/{Message-ID}.mx
+        String rawPath=ResourceUtils.resolveMailFolderPath(account.getEmailUsername(), "sent");
+        File rawFile = new File(rawPath + File.separator + msg.getHeader(Message.HeaderNames.MessageID, null) + ".mx.txt");
+        FileUtils.writeByteArrayToFile(rawFile, listener.getByteContent());
+    }
+
+    static class SentMailSavingListener implements ClientListener{
+        private StringBuilder buf;
+        private static final String CR="\r\n";
+
+        SentMailSavingListener(){
+            buf=new StringBuilder();
+        }
+        @Override
+        public void onEvent(EventType eventType,Object eventData){
+            if(eventData!=null){
+                buf.append(eventData.toString()).append(CR);
+            }
+        }
+        @Override
+        public boolean isAccepted(EventType eventType){
+            return eventType==EventType.LineWrite;
+        }
+        public byte[] getByteContent(){
+            if (buf.length()==0)
+                return null;
+            return buf.toString().getBytes();
+        }
+
     }
 
     private Address getFromAddress(Account account) throws UnsupportedEncodingException {

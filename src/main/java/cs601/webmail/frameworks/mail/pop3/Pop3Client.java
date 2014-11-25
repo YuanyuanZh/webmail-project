@@ -1,13 +1,14 @@
 package cs601.webmail.frameworks.mail.pop3;
 
 import cs601.webmail.frameworks.mail.Header;
-import org.apache.log4j.Logger;
-
 import javax.net.ssl.SSLSocketFactory;
 import java.io.*;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.util.*;
+
+import cs601.webmail.frameworks.mail.SocketClient;
+import cs601.webmail.util.Logger;
 
 /**
  * ref: https://www.ietf.org/rfc/rfc1939.txt
@@ -16,33 +17,22 @@ import java.util.*;
  *
  * Created by yuanyuan on 10/24/14.
  */
-public class Pop3Client {
+public class Pop3Client extends SocketClient{
 
     private final static Logger LOGGER = Logger.getLogger(Pop3Client.class);
 
     public Pop3Client(boolean sslEnabled) {
-        this.sslEnabled = sslEnabled;
+        super(sslEnabled);
     }
 
     public Pop3Client() {
+        super(false);
     }
-
-    private Socket socket;
-
-    private BufferedReader reader;
-    private BufferedWriter writer;
-
-    private boolean debug = false;
-    private boolean sslEnabled = false;
 
     private final static int DEFAULT_PORT = 110;
 
     private final static String OK = "+OK";
     private final static String ERR = "+ERR";
-
-    public void setDebug(boolean debug) {
-        this.debug = debug;
-    }
 
     public void connect(String host, int port) throws IOException {
 
@@ -57,51 +47,20 @@ public class Pop3Client {
         reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
         if (debug)
-            System.out.println("Connected to the host");
+            LOGGER.debug("Connected to the host");
 
         readResponseLine();
     }
-
-    public void connect(String host) throws IOException {
-        connect(host, DEFAULT_PORT);
+    @Override
+    protected int getPort(){
+        return DEFAULT_PORT;
     }
-
-    public boolean isConnected() {
-        return socket != null && socket.isConnected();
+    @Override
+    protected void doResponseCheck(String responseLine){
+        if (responseLine != null && responseLine.startsWith("-ERR"))
+        throw new RuntimeException("Server has returned an error: " + responseLine.replaceFirst("-ERR ", ""));
     }
-
-    public void disconnect() throws IOException {
-        if (!isConnected())
-            throw new IllegalStateException("Not connected to a host");
-        socket.close();
-        reader = null;
-        writer = null;
-        if (debug)
-            System.out.println("Disconnected from the host");
-    }
-
-    protected String readResponseLine() throws IOException{
-        String response = reader.readLine();
-        if (debug) {
-            System.out.println("DEBUG [in] : " + response);
-        }
-
-        fireEvent(ClientListener.Event.LineReceived, response);
-
-        if (response != null && response.startsWith("-ERR"))
-            throw new RuntimeException("Server has returned an error: " + response.replaceFirst("-ERR ", ""));
-        return response;
-    }
-
-    protected String sendCommand(String command) throws IOException {
-        if (debug) {
-            System.out.println("DEBUG [out]: " + command);
-        }
-        writer.write(command + "\n");
-        writer.flush();
-        return readResponseLine();
-    }
-
+@Override
     public boolean login(String username, String password) throws IOException {
         sendCommand("USER " + username);
         String answer=sendCommand("PASS " + password);
@@ -110,19 +69,15 @@ public class Pop3Client {
             return false;
         }
         if (debug) {
-            System.out.println("[DEBUG] login with " + username);
+            LOGGER.debug("[DEBUG] login with " + username);
         }
         return true;
     }
-
+@Override
     public void logout() throws IOException {
         sendCommand("QUIT");
     }
 
-    public void close() throws IOException {
-        logout();
-        disconnect();
-    }
 
     //------------------------- POP3 details
 
@@ -134,19 +89,19 @@ public class Pop3Client {
 
     public Pop3Message getMessageTop(int messageId, int topCount) throws IOException {
 
-        String response = sendCommand("TOP " + messageId + " " + topCount);
+        sendCommand("TOP " + messageId + " " + topCount);
+
+        String response;
+        String headerName;
         Map<String, List<String>> headers = new HashMap<String, List<String>>();
-        String headerName = null;
 
         Map<String, List<Header>> _headers = new HashMap<String, List<Header>>();
         Header lastHeader = null;
 
         // process headers
         while ((response = readResponseLine()).length() != 0) {
-            System.out.println(">" + response);
 
             if (response.startsWith(" ") || response.startsWith("\t")) {
-                System.out.println(">> <with space>" + response);
                 if (lastHeader != null) {
                     lastHeader.setValue(lastHeader.getValue() + response);
                 }
@@ -410,29 +365,4 @@ public class Pop3Client {
         client.connect(host, port);
         return client;
     }
-
-
-    // ----------------------------- Listeners
-
-    private List<ClientListener> listeners = new ArrayList<ClientListener>();
-
-    public synchronized void addListener(ClientListener listener) {
-        listeners.add(listener);
-    }
-
-    public synchronized void removeListener(ClientListener listener) {
-        listeners.remove(listener);
-    }
-
-    protected synchronized void fireEvent(ClientListener.Event event, Object eventData) {
-        if (listeners != null && listeners.size() > 0) {
-            for (int i = 0, l = listeners.size(); i < l; i++) {
-                ClientListener listener = listeners.get(i);
-                if (event == ClientListener.Event.LineReceived) {
-                    listener.onLineReceived(eventData.toString());
-                }
-            }
-        }
-    }
-
 }

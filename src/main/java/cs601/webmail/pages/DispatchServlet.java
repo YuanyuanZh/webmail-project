@@ -17,13 +17,13 @@ import cs601.webmail.frameworks.web.RequestContext;
 import cs601.webmail.frameworks.web.RequestContextFactory;
 import cs601.webmail.pages.contact.*;
 import cs601.webmail.pages.mail.*;
-import org.apache.log4j.Logger;
-import z.managers.ErrorManager;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import cs601.webmail.ErrorManager;
+import cs601.webmail.util.Logger;
 
 public class DispatchServlet extends HttpServlet {
 
@@ -84,7 +84,7 @@ public class DispatchServlet extends HttpServlet {
     {
 
         if (Constants.DEBUG_MODE)
-            System.out.println("[DEBUG] request URI " + request.getRequestURI());
+            LOGGER.debug("[DEBUG] request URI " + request.getRequestURI());
 
         String uri = request.getRequestURI();
         ControllerPage p = createPage(uri);

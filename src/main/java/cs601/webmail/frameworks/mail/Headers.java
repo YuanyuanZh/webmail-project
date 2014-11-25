@@ -2,7 +2,7 @@ package cs601.webmail.frameworks.mail;
 
 import cs601.webmail.frameworks.mail.util.LineInputStream;
 import cs601.webmail.util.Strings;
-import org.apache.log4j.Logger;
+import cs601.webmail.util.Logger;
 
 import java.io.IOException;
 import java.io.InputStream;

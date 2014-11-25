@@ -7,7 +7,7 @@ import cs601.webmail.frameworks.mail.util.LineInputStream;
 import cs601.webmail.frameworks.mail.util.LineOutputStream;
 import cs601.webmail.util.DateTimeUtils;
 import cs601.webmail.util.Strings;
-import org.apache.log4j.Logger;
+import cs601.webmail.util.Logger;
 
 import javax.mail.internet.MimeUtility;
 import java.io.*;

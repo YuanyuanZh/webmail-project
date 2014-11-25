@@ -93,7 +93,7 @@ public class UserDAOImpl extends BaseDao implements UserDao {
         QueryRunner qr = getQueryRunner();
         try {
 
-            int row = qr.update("UPDATE USERS SET PASS = '?' WHERE ID = ?", new Object[]{id, password});
+            int row = qr.update("UPDATE USERS SET PASS = ? WHERE UID = ?", new Object[]{password, id});
 
             if (row != 1) {
                 //return false;

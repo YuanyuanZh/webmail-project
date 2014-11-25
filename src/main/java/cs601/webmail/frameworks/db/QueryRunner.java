@@ -7,11 +7,14 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import cs601.webmail.util.Logger;
 
 /**
  * Created by yuanyuan on 10/31/14.
  */
 public class QueryRunner {
+
+    private static final Logger LOGGER = Logger.getLogger(QueryRunner.class);
 
     private static final String[] EMPTY_STRINGS = new String[0];
 
@@ -41,7 +44,7 @@ public class QueryRunner {
         ResultSet rs = null;
 
         if (Constants.DEBUG_MODE)
-            System.out.println("[DEBUG] execute sql > " + sql);
+            LOGGER.debug("[DEBUG] execute sql > " + sql);
 
         try {
             connection.setAutoCommit(true);
@@ -93,7 +96,7 @@ public class QueryRunner {
         PreparedStatement statement = null;
 
         if (Constants.DEBUG_MODE)
-            System.out.println("[DEBUG] execute sql > " + sql);
+            LOGGER.debug("[execute sql] " + sql);
 
         try {
             connection.setAutoCommit(true);

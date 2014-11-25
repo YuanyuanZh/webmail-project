@@ -34,38 +34,32 @@
     <![endif]-->
 
     <style>
-        html,body{height: 100%;}
-        body{background-color: #eaeaea;}
+        body{
+        background-color: #eaeaea;
+        }
         .container{
         margin-left: auto;
         margin-right: auto;
         }
-        .copyright{
-            text-align: center;
-            font-size: 0.9em;
-            color: #ccc;
-        }
-        .login{
-        /*background-color: #fff;*/
-        height: 100%;
-        position: relative;
-        }
         .login-panel{
-            background-color: #fff;
+        background-color: #fff;
         border: 1px solid #ccc;
+        width: 340px;
+        box-shadow: 1px 1px 1px #333;
+        margin: 20px auto 40px;
+        }
+        .login-panel-fixed{
         position: absolute;
         left: 50%;
-        top: 130px;
-        width: 340px;
+        top: 210px;
         min-height: 200px;
         margin-left: -170px;
-        box-shadow: 1px 1px 1px #333;
         }
         .login-body{
+        /*background-color: #EAEAEA;*/
         padding: 30px 30px 20px;
         }
-        .login-body > .control-group{padding: 10px 0;}
-        .login-body > .control-group label{font-weight: normal;}
+        .login-body > div{padding: 10px 0;}
         .login-panel-header{padding: 25px 0 20px;}
         .login-footer{padding: 15px 30px 15px;}
 
@@ -98,7 +92,6 @@
         color: #fff;
         padding: .2em;
         }
-
         .full-screen{
         position: absolute;
         width: 100%;
@@ -175,6 +168,10 @@
             }
         }
 
+        // keep `username` from previous request
+        if (params['username']) {
+            $('[name=username]').val(params['username']);
+        }
     })
 
 </script>

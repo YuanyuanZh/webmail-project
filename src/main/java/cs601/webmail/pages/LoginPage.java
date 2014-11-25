@@ -65,7 +65,7 @@ public class LoginPage extends ControllerPage {
             response.sendRedirect(Constants.DEFAULT_HOME);
         }
         else {
-            response.sendRedirect("/login?error=101");
+            response.sendRedirect("/login?error=101&username=" + username);
         }
     }
     private void writeRememberMe(HttpServletResponse response, HttpSession session, String username) {

@@ -1,7 +1,7 @@
-package z.managers;
+package cs601.webmail;
 
 /**
- * Created by yuanyuan on 10/15/14.
+ * Created by yuanyuan on 11/25/14.
  */
 public class ErrorManager {
     private static ErrorManager instance;

@@ -1,6 +1,5 @@
 package cs601.webmail.service.impl;
 
-import cs601.webmail.Constants;
 import cs601.webmail.dao.MailDao;
 import cs601.webmail.dao.impl.MailDaoImpl;
 import cs601.webmail.entity.Account;
@@ -12,9 +11,8 @@ import cs601.webmail.service.MailService;
 import cs601.webmail.service.ServiceException;
 import cs601.webmail.util.DigestUtils;
 import cs601.webmail.util.ResourceUtils;
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.io.FileUtils;
-import org.apache.log4j.Logger;
+import cs601.webmail.util.Logger;
 
 import java.io.File;
 import java.io.IOException;
@@ -214,7 +212,7 @@ public class MailServiceImpl implements MailService {
         }
 
         // To remove local mail which was deleted from remote server
-        Collection<String> localDeleteUIDs = CollectionUtils.subtract(localUIDs,
+        /*Collection<String> localDeleteUIDs = CollectionUtils.subtract(localUIDs,
                 CollectionUtils.intersection(localUIDs, remoteUIDs));
 
         if (localDeleteUIDs.size() > 0) {
@@ -225,7 +223,7 @@ public class MailServiceImpl implements MailService {
                     LOGGER.debug("MAIL removed, UID=" + uid);
                 }
             }
-        }
+        }*/
 
         if (client != null) {
             client.close();
@@ -280,8 +278,14 @@ public class MailServiceImpl implements MailService {
         }
 
         @Override
-        public void onLineReceived(String line) {
-            buf.append(line).append(CR);
+        public void onEvent(EventType eventType,Object eventData){
+            if(eventData!=null){
+                buf.append(eventData.toString());
+            }
+        }
+        @Override
+        public boolean isAccepted(EventType eventType){
+            return eventType==EventType.LineRead;
         }
 
         public byte[] getByteContent() {
@@ -292,3 +296,4 @@ public class MailServiceImpl implements MailService {
         }
     }
 }
+

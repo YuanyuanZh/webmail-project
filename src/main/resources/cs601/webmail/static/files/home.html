@@ -32,7 +32,7 @@
 <div class="wrapper">
 <aside class="left-side x-col">
     <div id="profile" class="profile column-header">
-        <img src="/resources/img/avatar/avatar_2x.png" height="40" width="40" class="profile-avatar img-circle img-thumbnail" alt="Avatar" />
+        <!--<img src="/resources/img/avatar/avatar_2x.png" height="40" width="40" class="profile-avatar img-circle img-thumbnail" alt="Avatar" />-->
         <span class="profile-name"></span>
     </div>
 
@@ -1188,7 +1188,7 @@
 
             $.post('/rest/mail/send', $form.serialize(), function(data, status, xhr){
                 var state = xhr.getResponseHeader("x-state");
-                var msg = xhr.getResponseHeader("x-msg") || xhr.getResponseHeader("x-exception") || '';
+                var msg = xhr.getResponseHeader("x-exception") || xhr.getResponseHeader("x-msg") || '';
 
                 $dlgProgress.modal('hide');
 
@@ -1246,29 +1246,17 @@
         $(dialogId).on('click', '.yes-btn', function() {
             var $form = $(dialogId + ' form');
             var params = $form.serialize();
-//            var id = $form.find('[name=id]').val();
-//
-//            if ($form.find('[name=fullName]').val() == '') {
-//                Noty.error('Full Name is required');
-//                return;
-//            }
-//
-//            if ($form.find('[name=email]').val() == '') {
-//                Noty.error('Email is required');
-//                return;
-//            }
 
             $.post('/rest/user/settings', params, function(data, status, xhr){
                 var state = xhr.getResponseHeader('x-state');
-                var error = xhr.getResponseHeader('x-msg');
-                var exception = xhr.getResponseHeader('x-exception');
+                var msg = xhr.getResponseHeader("x-msg") || xhr.getResponseHeader("x-exception") || '';
 
                 if ('ok' == state) {
                     $(dialogId).modal('hide');
 
                     Noty.info("Changes of settings saved.");
                 } else {
-                    Noty.error("Failed to save. [" + error || exception || '' + ']');
+                    Noty.error("Failed to save. [" + msg + ']');
                 }
             });
         })
@@ -1279,7 +1267,16 @@
         var $tb = $('.right-side .toolbar');
 
         $tb.on('click', '.delete-btn', function(e){
-            //TODO delete mail
+            var $mailInfo = $('.mail-info');
+            var mailId = $mailInfo.find('[name=mail_id]').val();
+            var ctl = currentFolder == 'trash' ? 'delete' : 'trash';
+
+            ctrlMail(mailId, ctl, function() {
+               $('.mail-list-item[data-id=' + mailId + ']').fadeOut(function(){
+                   $(this).remove();
+                   updateUI();
+               });
+            });
         });
 
         // replay directly

@@ -8,27 +8,26 @@ import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
+import cs601.webmail.util.Logger;
 
 /**
  * Created by yuanyuan on 11/16/14.
  */
 public abstract class SocketClient {
 
-    private Socket socket;
+    private static final Logger LOGGER = Logger.getLogger(SocketClient.class);
+    public static final String CLRF="\r\n";
+
+    protected Socket socket;
 
     protected BufferedReader reader;
     protected BufferedWriter writer;
 
-    private InputStream inputStream;
-    private OutputStream outputStream;
+    protected InputStream inputStream;
+    protected OutputStream outputStream;
 
-    private boolean debug = false;
-    private boolean sslEnabled = false;
-
-    private final static int DEFAULT_PORT = 110;
-
-    private final static String OK = "+OK";
-    private final static String ERR = "+ERR";
+    protected boolean debug = false;
+    protected boolean sslEnabled = false;
 
     protected SocketClient(boolean sslEnabled) {
         this.sslEnabled = sslEnabled;
@@ -59,14 +58,15 @@ public abstract class SocketClient {
         writer = new BufferedWriter(new OutputStreamWriter(outputStream));
 
         if (debug)
-            System.out.println("Connected to the host");
+            LOGGER.debug("Connected to the host");
 
         readResponseLine();
     }
 
     public void connect(String host) throws IOException {
-        connect(host, DEFAULT_PORT);
+        connect(host,getPort() );
     }
+    protected abstract int getPort();
 
     public boolean isConnected() {
         return socket != null && socket.isConnected();
@@ -79,32 +79,46 @@ public abstract class SocketClient {
         reader = null;
         writer = null;
         if (debug)
-            System.out.println("Disconnected from the host");
+            LOGGER.debug("Disconnected from the host");
     }
 
     protected String sendCommand(String command) throws IOException {
         if (debug) {
-            System.out.println("DEBUG [out]: " + command);
+            LOGGER.debug("DEBUG [out]: " + command);
         }
-        writer.write(command + "\r\n");
-        writer.flush();
+        writerLine(command,true);
         return readResponseLine();
+    }
+
+    protected void writeLine(String line) throws IOException{
+        writerLine(line,false);
+    }
+    protected void writerLine(String line, boolean flush)throws IOException{
+        writer.write(line);
+        writer.write(CLRF);
+        if(flush)
+            writer.flush();
+        fireEvent(ClientListener.EventType.LineWrite, line);
     }
 
     protected String readResponseLine() throws IOException{
         String response = reader.readLine();
         if (debug) {
-            System.out.println("DEBUG [in] : " + response);
+            LOGGER.debug("DEBUG [in] : " + response);
         }
 
-        fireEvent(ClientListener.Event.LineReceived, response);
+        fireEvent(ClientListener.EventType.LineRead, response);
 
-        if (response != null && response.startsWith("-ERR"))
-            throw new RuntimeException("Server has returned an error: " + response.replaceFirst("-ERR ", ""));
+        doResponseCheck(response);
+
         return response;
     }
 
-    public abstract void login(String username, String password) throws IOException ;
+    protected void doResponseCheck(String responseLine){
+        //sub-class maybe need to impl this
+    }
+
+    public abstract boolean login(String username, String password) throws IOException ;
 
     public abstract void logout() throws IOException;
 
@@ -126,12 +140,12 @@ public abstract class SocketClient {
         listeners.remove(listener);
     }
 
-    protected synchronized void fireEvent(ClientListener.Event event, Object eventData) {
+    protected synchronized void fireEvent(ClientListener.EventType eventType, Object eventData) {
         if (listeners != null && listeners.size() > 0) {
             for (int i = 0, l = listeners.size(); i < l; i++) {
                 ClientListener listener = listeners.get(i);
-                if (event == ClientListener.Event.LineReceived) {
-                    listener.onLineReceived(eventData.toString());
+                if(listener.isAccepted(eventType)){
+                    listener.onEvent(eventType,eventData);
                 }
             }
         }

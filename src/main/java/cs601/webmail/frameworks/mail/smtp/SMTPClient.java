@@ -12,13 +12,15 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Iterator;
+import cs601.webmail.util.Logger;
 
 /**
  * Created by yuanyuan on 11/16/14.
  */
 public class SMTPClient extends SocketClient{
 
-    static final String newLine = "\r\n";
+    public static final String EMPTY_STRING="";
+    private static Logger LOGGER = Logger.getLogger(SMTPClient.class);
 
     private static final String SUCCESS = "250";
 
@@ -26,8 +28,11 @@ public class SMTPClient extends SocketClient{
         super(sslEnabled);
     }
 
+    protected int getPort(){
+        return 25;
+    }
     @Override
-    public void login(String username, String password) throws IOException {
+    public boolean login(String username, String password) throws IOException {
 
         String domain = username;
 
@@ -50,7 +55,7 @@ public class SMTPClient extends SocketClient{
         } while ((line = readResponseLine()) != "" && line.startsWith(SUCCESS));
 
         if (isDebug())
-            System.out.println("[DEBUG] starting login...");
+            LOGGER.debug("[DEBUG] starting login...");
 
         line = sendCommand("AUTH LOGIN");
 
@@ -73,6 +78,7 @@ public class SMTPClient extends SocketClient{
         }
 
         // if reached here, that means authentication was passed. Go ahead to send mail.
+        return  true;
     }
 
     @Override
@@ -80,6 +86,8 @@ public class SMTPClient extends SocketClient{
         sendCommand("QUIT");
     }
 
+    //for test
+    @Deprecated
     public void send(String mailFrom, String rcptTo, Iterator<String> headers, Iterator<String> msgContent) throws IOException {
 
         String respLine = sendCommand("MAIL From:<" + mailFrom + ">");
@@ -103,21 +111,17 @@ public class SMTPClient extends SocketClient{
         // start to sending
 
         while (headers.hasNext()) {
-            writer.write(headers.next());
-            writer.write(newLine);
+            writeLine(headers.next());
         }
 
         // message headers end
         // message body begin
-        writer.write(newLine);
+        writeLine(EMPTY_STRING);
 
         while (msgContent.hasNext()) {
-            writer.write(msgContent.next());
-            writer.write(newLine);
+            writeLine(msgContent.next());
         }
-
-        writer.write(newLine);
-        writer.write(newLine);
+        writeLine(EMPTY_STRING);
 
         // finish content sending with dot
         respLine = sendCommand(".");
@@ -150,22 +154,6 @@ public class SMTPClient extends SocketClient{
         if (!respLine.startsWith(SUCCESS)) {
             throw new IOException("Can't send mail. echo back:" + respLine);
         }
-
-//        // we could have multi receivers
-//        String rcptTo = smtpMessage.getRcptTo();
-//        String[] rcpts = rcptTo.indexOf(",") > -1 ?
-//                rcptTo.split(",") :
-//                new String[] {rcptTo};
-//
-//        for (String rcpt : rcpts) {
-//            respLine = sendCommand("RCPT To:<" + Strings.trim(rcpt) + ">");
-//
-//            if (!respLine.startsWith(SUCCESS)) {
-//                throw new IOException("Can't send mail. echo back:" + respLine);
-//            }
-//        }
-
-
 
         // deal with <code>RCPT To</code>
 
@@ -222,14 +210,12 @@ public class SMTPClient extends SocketClient{
 
         LineInputStream lin = new LineInputStream(new ByteArrayInputStream(encodedMail.toByteArray()));
 
-        String cline = null;
+        String cline;
         while ((cline = lin.readLine()) != null) {
-            writer.write(cline);
-            writer.write(newLine);
+            writeLine(cline);
         }
-
-        writer.write(newLine);
-        writer.write(newLine);
+        writeLine(EMPTY_STRING);
+        writeLine(EMPTY_STRING);
 
         // finish content sending with dot
         respLine = sendCommand(".");

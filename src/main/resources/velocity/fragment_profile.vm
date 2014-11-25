@@ -1,5 +1,5 @@
-<img src="/resources/img/avatar/avatar_2x.png" height="40" width="40"
-     class="profile-avatar img-circle img-thumbnail" alt="Avatar" />
+##<img src="/resources/img/avatar/avatar_2x.png" height="40" width="40"
+##     class="profile-avatar img-circle img-thumbnail" alt="Avatar" />
 <span class="profile-name">${fullName}</span>
 
 ##<div class="profile-dropdown dropdown" >

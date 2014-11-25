@@ -6,25 +6,30 @@ import cs601.webmail.exception.NotAuthenticatedException;
 import cs601.webmail.frameworks.web.PageTemplate;
 import cs601.webmail.frameworks.web.RequestContext;
 import cs601.webmail.service.AccountService;
-import cs601.webmail.service.ContactService;
+import cs601.webmail.service.UserService;
 import cs601.webmail.service.impl.AccountServiceImpl;
-import cs601.webmail.service.impl.ContactServiceImpl;
+import cs601.webmail.service.impl.UserServiceImpl;
+import cs601.webmail.util.DigestUtils;
+import cs601.webmail.util.Strings;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.StringWriter;
+import cs601.webmail.util.Logger;
 
 /**
  * Created by yuanyuan on 11/19/14.
  */
 public class SettingsPage extends ControllerPage {
 
+    private static final Logger LOGGER = Logger.getLogger(SettingsPage.class);
+
     @Override
     public void body() throws Exception {
 
         RequestContext context = RequestContext.getCurrentInstance();
 
-        ContactService contactService = new ContactServiceImpl();
+        UserService userService = new UserServiceImpl();
         AccountService accountService = new AccountServiceImpl();
 
         HttpServletRequest req = context.getRequest();
@@ -67,10 +72,12 @@ public class SettingsPage extends ControllerPage {
 
             try {
                 accountService.save(account);
+                processPasswordChanging(req, userService, user);
                 resp.setHeader("x-state", "ok");
             } catch (Exception e) {
                 resp.setHeader("x-state", "error");
                 resp.setHeader("x-exception", e.getMessage());
+                LOGGER.error(e);
             }
             return;
         }
@@ -78,6 +85,38 @@ public class SettingsPage extends ControllerPage {
         resp.setHeader("x-state", "error");
         resp.setHeader("x-msg", "METHOD not support");
     }
+
+    private void processPasswordChanging(HttpServletRequest req, UserService userService, User user) {
+
+        String curPwd = req.getParameter("currentPassword");
+        String newPwd = req.getParameter("newPassword");
+        String newPwd2 = req.getParameter("newPassword2");
+
+        if (!Strings.haveLength(curPwd) &&
+                !Strings.haveLength(newPwd) &&
+                !Strings.haveLength(newPwd2)) {
+            // no current password means user won't change it.
+            // just return to ignore.
+            return;
+        }
+
+        if (!userService.verifyUser(user.getLoginId(), DigestUtils.digestToSHA(curPwd))) {
+            throw new IllegalStateException("Current password not correct.");
+        }
+
+        if (!Strings.haveLength(newPwd)) {
+            throw new IllegalStateException("New password can't be empty");
+        }
+
+        if (!newPwd.equals(newPwd2)) {
+            throw new IllegalStateException("Confirm password failed.");
+        }
+
+        userService.updatePass(user.getId(), DigestUtils.digestToSHA(newPwd));
+
+        LOGGER.debug("Password has been changed for the user [" + user.getLoginId() + "]");
+    }
+
 
     private Account restoreEntity(HttpServletRequest req) {
 

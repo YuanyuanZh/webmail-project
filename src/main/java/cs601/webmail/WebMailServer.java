@@ -1,6 +1,8 @@
 package cs601.webmail;
 
 import cs601.webmail.auth.AuthenticationCheckFilter;
+import cs601.webmail.auth.AccessAuditFilter;
+import cs601.webmail.util.Logger;
 import cs601.webmail.util.PropertyExpander;
 import org.apache.commons.lang3.ClassPathUtils;
 import org.apache.log4j.BasicConfigurator;
@@ -60,6 +62,11 @@ public class WebMailServer implements WrapperListener{
         context.setContextPath("/");
         server.setHandler(context);
 
+        // Audit all the request. Log their path and more information to log file.
+        FilterHolder auditFilter = new FilterHolder(AccessAuditFilter.class);
+        context.addFilter(auditFilter, "/*", EnumSet.of(DispatcherType.INCLUDE, DispatcherType.REQUEST));
+
+        // Login checking.
         FilterHolder loginFilter = new FilterHolder(AuthenticationCheckFilter.class);
         context.addFilter(loginFilter, "/*", EnumSet.of(DispatcherType.INCLUDE, DispatcherType.REQUEST));
 

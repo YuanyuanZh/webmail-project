@@ -21,6 +21,7 @@ public class Configuration {
     public static final ConfigurationItem SCAN_PACKAGE = new ConfigurationItem("scan.package", "cs601.webmail") ;
 
     public static final ConfigurationItem WORK_DIR = new ConfigurationItem("work.dir", "${user.home}/webmail") ;
+    public static final ConfigurationItem LOG_DIR = new ConfigurationItem("log.dir", "${user.home}/webmail/logs");
 
 
     public static Configuration getDefault() {

@@ -10,7 +10,7 @@ import cs601.webmail.frameworks.web.AjaxResponse;
 import cs601.webmail.frameworks.web.PageTemplate;
 import cs601.webmail.frameworks.web.RequestContext;
 import org.codehaus.jackson.map.ObjectMapper;
-import z.managers.ErrorManager;
+import cs601.webmail.ErrorManager;
 import cs601.webmail.exception.VerifyException;
 
 import javax.servlet.http.HttpServletRequest;

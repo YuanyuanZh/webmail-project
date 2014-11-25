@@ -5,7 +5,7 @@ import cs601.webmail.dao.UserDao;
 import cs601.webmail.dao.impl.UserDAOImpl;
 import cs601.webmail.entity.User;
 import cs601.webmail.service.UserService;
-import org.apache.log4j.Logger;
+import cs601.webmail.util.Logger;
 
 public class UserServiceImpl implements UserService {
 
@@ -34,12 +34,12 @@ public class UserServiceImpl implements UserService {
         userDao.save(user);
 
     }
-    public void updatePass(long id,String password){
+    public void updatePass(long userId,String password){
 
         if(password==null){
             throw new IllegalStateException("password missed");
         }
-        userDao.updatePass(id,password);
+        userDao.updatePass(userId,password);
     }
     public boolean LoginIDExist(String LOGID){
         return userDao.LoginIDExist(LOGID);

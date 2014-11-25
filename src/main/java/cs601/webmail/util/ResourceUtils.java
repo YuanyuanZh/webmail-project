@@ -31,5 +31,24 @@ public final class ResourceUtils {
 
         return sb.toString();
     }
+    // e.g.
+    //  ${user.home}/webmail/mails/abdda123434245152151243412444/sent
+    //  ${user.home}/webmail/mails/abdda123434245152151243412444/inbox
+
+    public static String resolveMailFolderPath(String mailAddress, String folder) {
+
+        StringBuilder sb = new StringBuilder(getWorkDir());
+
+        sb.append(File.separator).append("mails");
+        sb.append(File.separator);
+
+        String usernameMD = DigestUtils.digestToSHA(mailAddress);
+        sb.append(usernameMD);
+
+        sb.append(File.separator);
+        sb.append(folder);
+
+        return sb.toString();
+    }
 
 }
