@@ -1,6 +1,7 @@
 package cs601.webmail.pages;
 
 
+import cs601.webmail.Constants;
 import cs601.webmail.entity.Account;
 
 import cs601.webmail.frameworks.web.RequestContext;
@@ -10,6 +11,8 @@ import cs601.webmail.service.UserService;
 import cs601.webmail.service.impl.AccountServiceImpl;
 import cs601.webmail.service.impl.UserServiceImpl;
 import cs601.webmail.entity.User;
+import cs601.webmail.util.EncryptUtils;
+
 import javax.servlet.http.HttpSession;
 
 import javax.servlet.http.HttpServletRequest;
@@ -57,17 +60,23 @@ public class RegisterNextPage extends ControllerPage {
         String emailPassword=request.getParameter("emailPassword");
         String popServer=request.getParameter("popServer");
         int popPort=Integer.parseInt(request.getParameter("popPort"));
+        String SMTPServer=request.getParameter("SMTPServer");
+        int SMTPPort=Integer.parseInt(request.getParameter("SMTPPort"));
 
         if(userService.LoginIDExist(registeringUser.getLoginId())){
 
-            if(accountService.verifyAccount(emailAccount,emailPassword,popServer,popPort)){
+            if(accountService.verifyAccount(emailAccount,emailPassword,popServer,popPort)
+                    &&accountService.verifySMTPAccount(emailAccount,emailPassword,SMTPServer,SMTPPort)){
 
                 account.setUserId(registeringUser.getId());
                 account.setEmailUsername(emailAccount);
-                account.setEmailPassword(emailPassword);
+                account.setEmailPassword(EncryptUtils.encryptToHex(emailPassword, Constants.DEFAULT_AES_CIPHER_KEY));
                 account.setPopServer(popServer);
                 account.setPopServerPort(popPort);
                 account.setEnableSsl(true);
+                account.setSmtpServer(SMTPServer);
+                account.setSmtpServerPort(SMTPPort);
+                account.setEnableSmtpSsl(true);
                 accountService.addAccount(account);
 
                 HttpSession session = request.getSession(true);

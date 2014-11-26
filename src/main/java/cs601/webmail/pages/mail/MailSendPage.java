@@ -15,6 +15,7 @@ import cs601.webmail.service.AccountService;
 import cs601.webmail.service.MailService;
 import cs601.webmail.service.impl.AccountServiceImpl;
 import cs601.webmail.service.impl.MailServiceImpl;
+import cs601.webmail.util.EncryptUtils;
 import cs601.webmail.util.Strings;
 import org.apache.commons.codec.binary.Base64;
 import cs601.webmail.Constants;
@@ -251,7 +252,7 @@ public class MailSendPage extends ControllerPage {
         boolean ssl = account.isEnableSmtpSsl();
 
         String username = account.getEmailUsername();
-        String password = account.getEmailPassword();
+        String password = EncryptUtils.decryptFromHex(account.getEmailPassword(), Constants.DEFAULT_AES_CIPHER_KEY);
 
         SMTPClient client = new SMTPClient(ssl);
         client.setDebug(true);

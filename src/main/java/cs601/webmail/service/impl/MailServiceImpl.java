@@ -1,5 +1,6 @@
 package cs601.webmail.service.impl;
 
+import cs601.webmail.Constants;
 import cs601.webmail.dao.MailDao;
 import cs601.webmail.dao.impl.MailDaoImpl;
 import cs601.webmail.entity.Account;
@@ -10,6 +11,7 @@ import cs601.webmail.frameworks.mail.pop3.*;
 import cs601.webmail.service.MailService;
 import cs601.webmail.service.ServiceException;
 import cs601.webmail.util.DigestUtils;
+import cs601.webmail.util.EncryptUtils;
 import cs601.webmail.util.ResourceUtils;
 import org.apache.commons.io.FileUtils;
 import cs601.webmail.util.Logger;
@@ -156,8 +158,8 @@ public class MailServiceImpl implements MailService {
         boolean sslEnable = account.isEnableSsl();
 
         String username = account.getEmailUsername();
-        // FIXME The password here needs to be decrypt from the encrypted HEX string in production environment
-        String password = account.getEmailPassword();
+
+        String password = EncryptUtils.decryptFromHex(account.getEmailPassword(), Constants.DEFAULT_AES_CIPHER_KEY);
 
         Pop3Client client = Pop3Client.createInstance(popServer, popPort, sslEnable);
 

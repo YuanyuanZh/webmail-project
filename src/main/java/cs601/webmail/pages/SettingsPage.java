@@ -1,5 +1,6 @@
 package cs601.webmail.pages;
 
+import cs601.webmail.Constants;
 import cs601.webmail.entity.Account;
 import cs601.webmail.entity.User;
 import cs601.webmail.exception.NotAuthenticatedException;
@@ -10,6 +11,7 @@ import cs601.webmail.service.UserService;
 import cs601.webmail.service.impl.AccountServiceImpl;
 import cs601.webmail.service.impl.UserServiceImpl;
 import cs601.webmail.util.DigestUtils;
+import cs601.webmail.util.EncryptUtils;
 import cs601.webmail.util.Strings;
 
 import javax.servlet.http.HttpServletRequest;
@@ -129,7 +131,8 @@ public class SettingsPage extends ControllerPage {
         account.setPopServerPort(getIntParam(req, "popServerPort"));
         account.setEnableSsl("on".equalsIgnoreCase(req.getParameter("popSSL")));
         account.setEmailUsername(req.getParameter("popAccount"));
-        account.setEmailPassword(req.getParameter("popPassword"));
+        account.setEmailPassword(EncryptUtils.encryptToHex(req.getParameter("popPassword"), Constants.DEFAULT_AES_CIPHER_KEY));
+
 
         account.setSmtpServer(req.getParameter("smtpServer"));
         account.setSmtpServerPort(getIntParam(req, "smtpServerPort"));

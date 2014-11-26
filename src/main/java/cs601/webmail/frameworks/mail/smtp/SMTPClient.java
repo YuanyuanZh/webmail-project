@@ -226,5 +226,12 @@ public class SMTPClient extends SocketClient{
 
     }
 
+    public static SMTPClient createInstance(String host, int port, boolean sslEnabled) throws IOException {
+        SMTPClient client = new SMTPClient(sslEnabled);
+        client.setDebug(false);
+        client.connect(host, port);
+        return client;
+    }
+
 
 }

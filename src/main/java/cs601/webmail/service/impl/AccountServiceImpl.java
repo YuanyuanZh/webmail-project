@@ -7,6 +7,7 @@ import cs601.webmail.dao.impl.AccountDaoImpl;
 import cs601.webmail.dao.impl.UserDAOImpl;
 import cs601.webmail.entity.Account;
 import cs601.webmail.frameworks.mail.pop3.Pop3Client;
+import cs601.webmail.frameworks.mail.smtp.SMTPClient;
 import cs601.webmail.service.AccountService;
 
 import java.io.IOException;
@@ -50,6 +51,16 @@ public class AccountServiceImpl implements AccountService {
             }
         }catch (IOException e){}
 
+        return true;
+    }
+    public boolean verifySMTPAccount(String emailAddress, String pass,String SMTPServer,int SMTPPort){
+        try{
+            SMTPClient client=SMTPClient.createInstance(SMTPServer,SMTPPort,true);
+            if(!client.login(emailAddress,pass)){
+                return false;
+            }
+        }
+        catch (IOException e){}
         return true;
     }
 
