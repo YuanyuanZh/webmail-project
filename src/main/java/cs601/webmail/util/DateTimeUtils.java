@@ -18,6 +18,11 @@ public class DateTimeUtils {
     static final SimpleDateFormat DF = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss Z (zzz)", Locale.ENGLISH);
     static final SimpleDateFormat DF_WITHOUT_ZZZ = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss Z", Locale.ENGLISH);
     static final SimpleDateFormat DF_WITHOUT_ZZZ_DAY = new SimpleDateFormat("dd MMM yyyy HH:mm:ss Z", Locale.ENGLISH);
+    static final SimpleDateFormat DF_WITHOUT_Z = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.ENGLISH);
+
+
+    static final SimpleDateFormat[] SUPPORTED_DF =
+            new SimpleDateFormat[] {DF, DF_WITHOUT_ZZZ, DF_WITHOUT_ZZZ_DAY, DF_WITHOUT_Z};
 
     static Map<String, SimpleDateFormat> OUT_DF_CACHE;
 
@@ -30,6 +35,29 @@ public class DateTimeUtils {
         OUT_DF_CACHE.put(DF_DATE_AND_TIME, new SimpleDateFormat(DF_DATE_AND_TIME));
     }
 
+    public static Date parse(String source) {
+        if (source == null || source.length() == 0)
+            return null;
+
+        Date ret = null;
+
+        for (SimpleDateFormat df : SUPPORTED_DF) {
+            try {
+                ret = df.parse(source);
+
+                if (ret != null)
+                    break;
+            } catch (Exception e) {
+                continue;
+            }
+        }
+
+        return ret;
+    }
+
+    /**
+     * @see #parse(String source)  Recommended.
+     */
     public static Date parseDate(String dateString) throws ParseException {
 
         if (dateString == null || dateString.length() == 0)

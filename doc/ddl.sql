@@ -31,3 +31,7 @@ alter table accounts add column 'MAIL_SIGNATURE' varchar(250);
 -- Nov 21, 2014
 
 alter table emails add column 'OWNER_ADDRESS' VARCHAR(200);
+
+Nov 26, 2014
+-- Mail folder
+alter table emails add column 'FOLDER' VARCHAR(50) NOT NULL DEFAULT 'inbox';

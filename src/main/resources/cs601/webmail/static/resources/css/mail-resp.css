@@ -10,7 +10,9 @@
   .toolbar-right{right: 6px;}
   #maillist .toolbar,
   #contactlist .toolbar{padding: 20px 6px;}
-}
+
+.profile{padding: 10px 4px; overflow: hidden;}
+ }
 
 @media screen and (max-width:960px){
   .right-side{display: none;}

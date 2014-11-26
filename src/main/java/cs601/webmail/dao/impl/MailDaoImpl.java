@@ -114,6 +114,7 @@ public class MailDaoImpl extends BaseDao implements MailDao {
         mail.setFlagFav(rs.getInt("FLAG_FAV"));
         mail.setFlagDel(rs.getInt("FLAG_DEL"));
         mail.setOwnerAddress(rs.getString("OWNER_ADDRESS"));
+        mail.setFolder(rs.getString("FOLDER"));
 
         return mail;
     }
@@ -202,7 +203,7 @@ public class MailDaoImpl extends BaseDao implements MailDao {
         String sql = "update emails set SUBJECT=?,MFROM=?,MTO=?,CONTENT=?,DATE=?," +
                 "USERSID=?,ACCOUNTID=?,MESSAGE_ID=?,CONTENT_TYPE=?,UID=?," +
                 "FLAG_NEW=?,FLAG_UNREAD=?,FLAG_FAV=?, FLAG_DEL=?," +
-                "OWNER_ADDRESS=? where MSGID=" + mail.getId();
+                "OWNER_ADDRESS=?, FOLDER=? where MSGID=" + mail.getId();
         Object[] params = new Object[]{
                 mail.getSubject(),
                 mail.getFrom(),
@@ -220,7 +221,8 @@ public class MailDaoImpl extends BaseDao implements MailDao {
                 mail.getFlagUnread(),
                 mail.getFlagFav(),
                 mail.getFlagDel(),
-                mail.getOwnerAddress()
+                mail.getOwnerAddress(),
+                mail.getFolder()
         };
 
         try {
@@ -241,8 +243,8 @@ public class MailDaoImpl extends BaseDao implements MailDao {
             statement = conn.prepareStatement("insert into emails" +
                     "(SUBJECT, MFROM, MTO, CONTENT, DATE" +
                     ", USERSID, ACCOUNTID, MESSAGE_ID, CONTENT_TYPE, UID" +
-                    ", FLAG_NEW, FLAG_UNREAD, FLAG_FAV, FLAG_DEL, OWNER_ADDRESS)" +
-                    " values (?, ?, ?, ?, ?,  ?, ?, ?, ?, ?,  ?, ?, ?, ?, ?)");
+                    ", FLAG_NEW, FLAG_UNREAD, FLAG_FAV, FLAG_DEL, OWNER_ADDRESS, FOLDER)" +
+                    " values (?, ?, ?, ?, ?,  ?, ?, ?, ?, ?,  ?, ?, ?, ?, ?, ?)");
 
             statement.setString(1, mail.getSubject());
             statement.setString(2, mail.getFrom());
@@ -261,6 +263,7 @@ public class MailDaoImpl extends BaseDao implements MailDao {
             statement.setInt(13, mail.getFlagFav());
             statement.setInt(14, mail.getFlagDel());
             statement.setString(15, mail.getOwnerAddress());
+            statement.setString(16, mail.getFolder());
 
             int rows = statement.executeUpdate();
 
@@ -331,11 +334,8 @@ public class MailDaoImpl extends BaseDao implements MailDao {
         QueryRunner qr = getQueryRunner();
 
         try {
-            int rows = qr.update("delete from emails where UID=?", new Object[]{uid});
+            qr.update("delete from emails where UID=?", new Object[]{uid});
 
-            if (rows == 0) {
-                throw new IllegalStateException("Operation failed.");
-            }
         } catch (SQLException e) {
             throw new DaoException(e);
         }

@@ -15,10 +15,8 @@ import cs601.webmail.service.AccountService;
 import cs601.webmail.service.MailService;
 import cs601.webmail.service.impl.AccountServiceImpl;
 import cs601.webmail.service.impl.MailServiceImpl;
-import cs601.webmail.util.DigestUtils;
-import cs601.webmail.util.MimeUtils;
-import cs601.webmail.util.ResourceUtils;
-import cs601.webmail.util.Strings;
+import cs601.webmail.util.*;
+import cs601.webmail.Constants;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -28,11 +26,17 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.Map;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * Created by yuanyuan on 11/6/14.
  */
 public class ReadMailPage extends ControllerPage {
+
+    private static final Logger LOGGER = Logger.getLogger(ReadMailPage.class);
+    private static final String[] MX_FILE_SUBFIX = new String[] {".txt", ".mx", ".mx.txt"};
+    private static final SimpleDateFormat MAIL_SDF = new SimpleDateFormat("MM/dd yyyy HH:mm");
 
     @Override
     public void body() throws Exception {
@@ -97,13 +101,26 @@ public class ReadMailPage extends ControllerPage {
             return;
         }
 
+        Mail.VirtualFolder folder=Mail.VirtualFolder.parseFolder(mail.getFolder());
         String uid = mail.getUid();
+        String messageId = mail.getMessageId();
 
-        String rawFilePath = ResourceUtils.getRawMailStorePath(currentAccount.getEmailUsername());
-        File rawFile = new File(rawFilePath + File.separator + DigestUtils.digestToSHA(uid) + ".txt");
+        //try UID(compatible for legacy version)
+        String rawFilePath=ResourceUtils.resolveMailFolderPath(currentAccount.getEmailUsername(), folder);
+        File rawFile=null;
+
+        if (uid!=null){
+            rawFile = findMailFile(rawFilePath + File.separator + DigestUtils.digestToSHA(uid));
+        }
+
+        //try Message-ID
+
+        if(rawFile==null|| !rawFile.exists()){
+            rawFile=findMailFile(rawFilePath+File.separator+cleanMessageID(messageId));
+        }
 
         // raw file can neither be found nor be readable
-        if (!rawFile.exists() || !rawFile.canRead()) {
+        if (rawFile == null || !rawFile.exists() || !rawFile.canRead()) {
             response.addHeader("x-state", "error");
             response.addHeader("x-msg", "Mail raw file not found");
             return;
@@ -124,9 +141,10 @@ public class ReadMailPage extends ControllerPage {
             originalContentType = message.getContentType();
 
             mail.setSubject(MimeUtils.decodeText(message.getSubject()));
-            mail.setFrom(getFromField(message));
+            mail.setFrom(MimeUtils.decodeText(getFromField(message)));
             mail.setUid(uid);
-            mail.setDate(message.getSentDate() != null ? message.getSentDate().toString() : null);
+            Date _date = message.getSentDate();
+            mail.setDate(_date != null ? MAIL_SDF.format(_date) : null);
 
             extraParams.put("mail_from", getPlainAddresses(message.getFrom()));
             extraParams.put("mail_to", getPlainAddresses(message.getRecipients(Message.RecipientType.TO)));
@@ -171,6 +189,7 @@ public class ReadMailPage extends ControllerPage {
         }
 
         template.addParam("mail", mail);
+        template.addParam("folder", folder != null ? folder.getSystemFolder() : "");
         template.addParam("mail_content_type", originalContentType);
         template.addParams(extraParams);
 
@@ -180,6 +199,27 @@ public class ReadMailPage extends ControllerPage {
         response.addHeader("x-state", "ok");
         response.addHeader("x-Content-Type", originalContentType);
         getOut().print(writer.toString());
+    }
+    private String cleanMessageID(String messageId) {
+        if (!Strings.haveLength(messageId)) {
+            return null;
+        }
+        return messageId.replace("<", "").replace(">", "");
+    }
+
+    private File findMailFile(String filename) {
+        File ret = null;
+        for (String subfix : MX_FILE_SUBFIX) {
+            ret = new File(filename + subfix);
+
+            if (Constants.DEBUG_MODE)
+                LOGGER.debug("Testing mx mail @" + ret.getAbsolutePath());
+
+            if (ret.exists() && ret.canRead()) {
+                break;
+            }
+        }
+        return ret;
     }
 
     private String getPlainAddresses(Address[] addresses) {

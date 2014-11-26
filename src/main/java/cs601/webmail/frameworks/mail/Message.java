@@ -13,6 +13,7 @@ import javax.mail.internet.MimeUtility;
 import java.io.*;
 import java.util.Date;
 import java.util.Iterator;
+import java.text.SimpleDateFormat;
 
 /**
  * Created by yuanyuan on 11/11/14.
@@ -35,6 +36,7 @@ public class Message implements MimePart{
     }
 
     private static Logger LOGGER = Logger.getLogger(Message.class);
+    public static SimpleDateFormat SENT_DATE_DF = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss Z (zzz)");
 
     // number of this message in this folder
     protected int msgnum = 0;
@@ -169,6 +171,13 @@ public class Message implements MimePart{
     // from header "Date"
     public Date getSentDate() throws MessagingException {
         return parseDate(getHeader(HeaderNames.Date, null));
+    }
+
+    public void setSendDate(Date date) throws MessagingException {
+        if (date == null) {
+            date = new Date();
+        }
+        setHeader(HeaderNames.Date, SENT_DATE_DF.format(date));
     }
 
     // from header "Sender", return null if not found.
@@ -543,6 +552,7 @@ public class Message implements MimePart{
      *     <li>Mon, 6 Oct 2014 17:10:40 +0800 (CST)</li>
      *     <li>Wed, 10 Aug 2011 01:50:01 +0000</li>
      *     <li>18 Feb 2009 15:48:10 +0800</li>
+     *     <li>Wed Nov 26 18:49:08 CST 2014</li>
      * </ul>
      *
      * @param date Date string from mail header.
@@ -551,11 +561,11 @@ public class Message implements MimePart{
     static Date parseDate(String date) {
         if (null == date || date.length() == 0)
             return null;
-
         try {
-            return DateTimeUtils.parseDate(date);
-        } catch (java.text.ParseException e) {
+            return DateTimeUtils.parse(date);
+        } catch (Exception e) {
             return null;
+
         }
     }
 

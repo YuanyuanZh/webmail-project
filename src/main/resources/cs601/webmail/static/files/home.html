@@ -52,7 +52,7 @@
             <li id="folderInbox" class="active" data-name="inbox"><a href="#/mail/list/inbox"><i class="fa fa-inbox"></i> <span>Inbox</span>
                 <!--<small class="badge pull-right bg-green">192</small>-->
             </a></li>
-            <!--<li data-name="sent"><a href="#/mail/list/sent"><i class="fa fa-archive"></i> <span>Sent</span></a></li>-->
+            <li data-name="sent"><a href="#/mail/list/sent"><i class="fa fa-archive"></i> <span>Sent</span></a></li>
             <li data-name="fav"><a href="#/mail/list/starred"><i class="fa fa-star-o"></i> <span>Starred</span></a></li>
             <!--<li><a href="#"><i class="fa fa-file-o"></i> <span>Drafts</span></a></li>-->
             <li data-name="trash"><a href="#"><i class="fa fa-trash"></i> <span>Trash</span></a></li>
@@ -278,7 +278,7 @@
             </div>
             <!--<div class="modal-footer">-->
                 <!--<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>-->
-                <!--&lt;!&ndash; <button type="button" class="btn btn-primary">Save changes</button> &ndash;&gt;-->
+            <!--<!-- <button type="button" class="btn btn-primary">Save changes</button> -->
             <!--</div>-->
         </div>
     </div>
@@ -432,10 +432,12 @@
 
 
         var xhr = $.get('/rest/mail/list',
-                {'folder': folder, 'page': page},
-                function(data, textStatus, response) {
+                {'folder': folder, 'page': page}, function(data, textStatus, response) {
 
-            if (textStatus == 'success' && response) {
+            var state = response.getResponseHeader('x-state');
+            var msg = response.getResponseHeader('x-exception') || response.getResponseHeader('x-msg') || '';
+
+            if (state == 'ok') {
                 var total = parseInt(response.getResponseHeader('x-total'));
                 var page = parseInt(response.getResponseHeader('x-page'));
                 var pageSize = parseInt(response.getResponseHeader('x-page-size'));
@@ -455,6 +457,8 @@
                 if (!!firstInvoke && total <= 0) {
                     setMailListState(false);
                 }
+            } else {
+                Noty.error('Error to load mail list. ' + msg)
             }
         }).fail(function() {
             Noty.error("Load mail failed, please try it later.")
@@ -1203,6 +1207,11 @@
                         $form[0].reset();
                     } catch(e) {}
 
+                    // reload mail list if we're in `sent` folder.
+                    if (currentFolder == 'sent') {
+                    loadMailList();
+                    }
+
                     Noty.info('Mail send successfully.');
                 } else {
                     Noty.error('Failed to send. Please check your input & try it later. ' + (msg));
@@ -1293,7 +1302,7 @@
             if (/^text\/plain/g.test(cType)) {
                 content = content + '> ' + $('.mail-body pre').text().replace(/\n/g, '\n> ');
             }
-            else if (/^text\/html/g.test(cType)) {
+            else if (/^text\/html/g.test(cType)|| $('.mail-body pre').size() > 0) {
                 content = content + '(HTML content will be attached when sent ...)';
             } else {
                 content = content + '(content will be attached when sent ...)';
@@ -1319,7 +1328,7 @@
             if (/^text\/plain/g.test(cType)) {
                 content = content + '> ' + $('.mail-body pre').text().replace(/\n/g, '\n> ');
             }
-            else if (/^text\/html/g.test(cType)) {
+            else if (/^text\/html/g.test(cType)|| $('.mail-body pre').size() > 0) {
                 content = content + '(HTML content will be attached when sent ...)';
             } else {
                 content = content + '(content will be attached when sent ...)';
@@ -1353,7 +1362,7 @@
             }
             content += 'Subject: ' + subject + '\r\n\r\n\r\n\r\n';
 
-            if (/^text\/plain/g.test(cType)) {
+            if (/^text\/plain/g.test(cType)|| $('.mail-body pre').size() > 0) {
                 content += $('.mail-body pre').text();
             }
             else if (/^text\/html/g.test(cType)) {

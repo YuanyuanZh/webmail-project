@@ -84,37 +84,47 @@ public class MailServiceImpl implements MailService {
 
     @Override
     public Page<Mail> findPage(String folder, Account account, PageRequest pageRequest) {
-        if ("fav".equals(folder)) {
+
+        Mail.VirtualFolder vf = Mail.VirtualFolder.parseFolder(folder);
+
+        if (folder == null || vf == null) {
+            throw new IllegalArgumentException();
+        }
+        return findPage (vf, account, pageRequest);
+    }
+    @Override
+    public Page<Mail> findPage(Mail.VirtualFolder folder, Account account, PageRequest pageRequest) {
+
+        String condition=null;
+        if(folder==Mail.VirtualFolder.fav){
             // return all fav flag mail but FLAG_DEL = FLAG_DELETE
-            String condition = String.format("OWNER_ADDRESS = '%s' and ACCOUNTID = %d and USERSID = %d and FLAG_FAV > 0 and FLAG_DEL <> %d",
+            condition = String.format("OWNER_ADDRESS = '%s' and ACCOUNTID = %d" +
+                    " and USERSID = %d and FLAG_FAV > 0 and FLAG_DEL <> %d",
                     account.getEmailUsername(),
                     account.getId(),
                     account.getUserId(),
                     Mail.FLAG_DELETE);
-
-            return mailDao.findPageByConditions(pageRequest, condition);
         }
-        else if ("trash".equals(folder)) {
+        else if (folder==Mail.VirtualFolder.trash) {
 
-            String condition = String.format("OWNER_ADDRESS = '%s' and ACCOUNTID = %d and USERSID = %d and FLAG_DEL = %d",
+            condition = String.format("OWNER_ADDRESS = '%s' and ACCOUNTID = %d" +
+                            " and USERSID = %d and FLAG_DEL = %d",
                     account.getEmailUsername(),
                     account.getId(),
                     account.getUserId(),
                     Mail.FLAG_TRASH);
-
-            return mailDao.findPageByConditions(pageRequest, condition);
         }
         // 'inbox' as default.
         // of course, excluded those who's FLAG_DEL not equals FLAG_NO
         else {
-            String condition = String.format("OWNER_ADDRESS = '%s' and ACCOUNTID = %d and USERSID = %d and FLAG_DEL = %d",
+            condition = String.format("OWNER_ADDRESS = '%s' and ACCOUNTID = %d and USERSID = %d and FLAG_DEL = %d",
                     account.getEmailUsername(),
                     account.getId(),
                     account.getUserId(),
                     Mail.FLAG_NO);
-
-            return mailDao.findPageByConditions(pageRequest, condition);
         }
+        condition += " and FOLDER like '" + folder.getSystemFolder() + "'";
+        return mailDao.findPageByConditions(pageRequest, condition);
     }
 
     @Override
@@ -198,14 +208,15 @@ public class MailServiceImpl implements MailService {
             mail.setFlagNew(Mail.FLAG_YES);
             mail.setFlagUnread(Mail.FLAG_YES);
             mail.setOwnerAddress(account.getEmailUsername());
+            mail.setFolder("inbox");
 
             LOGGER.debug("save mail to DB: " + mail);
-            mail = mailDao.save(mail);
+            mailDao.save(mail);
 
             // save raw content to {WorkDir}/raw/SHA-1(mailAddress)/uid.dat
             // for example: /Users/foobar/webmail/raw/5897fe8711774cde9fae5af5bd39b1a4a42d6828/cDebdfdafd0122.dat
-            String rawPath = ResourceUtils.getRawMailStorePath(username);
-            File rawFile = new File(rawPath + File.separator + DigestUtils.digestToSHA(rmtUID) + ".txt");
+            String rawPath = ResourceUtils.resolveMailFolderPath(username, Mail.VirtualFolder.inbox);
+            File rawFile = new File(rawPath + File.separator + DigestUtils.digestToSHA(rmtUID) + ".mx.txt");
             FileUtils.writeByteArrayToFile(rawFile, listener.getByteContent());
 
             updatedCount++;
@@ -280,7 +291,7 @@ public class MailServiceImpl implements MailService {
         @Override
         public void onEvent(EventType eventType,Object eventData){
             if(eventData!=null){
-                buf.append(eventData.toString());
+                buf.append(eventData.toString()).append(CR);
             }
         }
         @Override
@@ -296,4 +307,5 @@ public class MailServiceImpl implements MailService {
         }
     }
 }
+
 

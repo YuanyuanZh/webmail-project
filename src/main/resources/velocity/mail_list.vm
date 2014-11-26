@@ -12,8 +12,12 @@
             </div>
         </div>
         <div class="writer">
-            <strong>$esc.html($item.from)</strong>
-            <span class="pull-right">$item.date</span>
+             #if($folder != 'sent')
+                 <strong>$esc.html($item.from)</strong>
+             #else
+                 <strong>$esc.html($item.to)</strong>
+             #end
+             <span class="pull-right">$item.date</span>
         </div>
         <h4>$item.subject</h4>
         <p>

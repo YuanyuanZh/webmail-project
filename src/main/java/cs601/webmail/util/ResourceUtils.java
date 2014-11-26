@@ -3,6 +3,7 @@ package cs601.webmail.util;
 import cs601.webmail.Configuration;
 
 import java.io.File;
+import cs601.webmail.entity.Mail;
 
 /**
  * Created by yuanyuan on 10/25/14.
@@ -50,5 +51,10 @@ public final class ResourceUtils {
 
         return sb.toString();
     }
+    public static String resolveMailFolderPath(String mailAddress, Mail.VirtualFolder folder) {
+        return resolveMailFolderPath(mailAddress, folder.getSystemFolder());
+        }
 
 }
+
+

@@ -6,6 +6,7 @@ import cs601.webmail.frameworks.db.annotation.Id;
 import cs601.webmail.frameworks.db.annotation.Table;
 
 import java.io.Serializable;
+import cs601.webmail.util.Strings;
 
 /**
  * Created by yuanyuan on 10/25/14.
@@ -24,6 +25,60 @@ public class Mail implements Serializable{
 
     public static final int FLAG_YES = 1;
     public static final int FLAG_NO = 0;
+
+    public static enum VirtualFolder {
+
+        inbox("inbox"),
+
+        // alias of fav
+        starred("inbox", "fav"),
+
+        fav("inbox", "fav"),
+
+        trash("inbox", "trash"),
+
+        sent("sent");
+
+        private String sys_folder;
+        private String v_folder;
+        private boolean is_virtual = true;
+
+        VirtualFolder(String folder) {
+            this(folder, folder);
+            this.is_virtual = false;
+        }
+
+        VirtualFolder(String sys_folder, String virtual_folder) {
+            this.sys_folder = sys_folder;
+            this.v_folder = virtual_folder;
+        }
+
+        public String getSystemFolder() {
+            return sys_folder;
+        }
+
+        public String getVirtualFolder() {
+            return v_folder;
+        }
+
+        public boolean isVirtualFolder() {
+            return is_virtual;
+        }
+
+        public static VirtualFolder parseFolder(String fn) {
+            if (!Strings.haveLength(fn)) {
+                return null;
+            }
+
+            for (VirtualFolder f : VirtualFolder.values()) {
+                if (f.toString().equalsIgnoreCase(fn)) {
+                    return f;
+                }
+            }
+
+            return null;
+        }
+    }
 
     @Id
     @Column(columnName = "MSGID", propertyName = "id")
@@ -86,6 +141,17 @@ public class Mail implements Serializable{
     // this belongs to which email address
     @Column(columnName = "OWNER_ADDRESS", propertyName = "ownerAddress")
     private String ownerAddress;
+
+    @Column(columnName = "FOLDER", propertyName = "folder")
+    private String folder;
+
+    public String getFolder() {
+        return folder;
+    }
+
+    public void setFolder(String folder) {
+        this.folder = folder;
+    }
 
     public String getOwnerAddress() {
         return ownerAddress;

@@ -1,6 +1,7 @@
 package cs601.webmail.pages.mail;
 
 import cs601.webmail.entity.Account;
+import cs601.webmail.entity.Mail;
 import cs601.webmail.entity.User;
 import cs601.webmail.exception.NotAuthenticatedException;
 import cs601.webmail.frameworks.mail.Address;
@@ -11,14 +12,13 @@ import cs601.webmail.frameworks.mail.smtp.SMTPMessage;
 import cs601.webmail.frameworks.web.RequestContext;
 import cs601.webmail.pages.ControllerPage;
 import cs601.webmail.service.AccountService;
-import cs601.webmail.service.ContactService;
+import cs601.webmail.service.MailService;
 import cs601.webmail.service.impl.AccountServiceImpl;
-import cs601.webmail.service.impl.ContactServiceImpl;
+import cs601.webmail.service.impl.MailServiceImpl;
 import cs601.webmail.util.Strings;
 import org.apache.commons.codec.binary.Base64;
 import cs601.webmail.Constants;
 import cs601.webmail.frameworks.mail.pop3.ClientListener;
-import cs601.webmail.util.DigestUtils;
 import cs601.webmail.util.Logger;
 import cs601.webmail.util.ResourceUtils;
 import org.apache.commons.io.FileUtils;
@@ -43,8 +43,6 @@ public class MailSendPage extends ControllerPage {
     public void body() throws Exception {
 
         RequestContext context = RequestContext.getCurrentInstance();
-
-        ContactService contactService = new ContactServiceImpl();
 
         HttpServletRequest req = context.getRequest();
         HttpServletResponse resp = context.getResponse();
@@ -80,6 +78,7 @@ public class MailSendPage extends ControllerPage {
         AccountService accountService = new AccountServiceImpl();
 
         Account account = accountService.findSingleByUserId(user.getId());
+        MailService mailService=new MailServiceImpl();
 
         if (account == null) {
             throw new IllegalStateException("Account not available.");
@@ -155,7 +154,7 @@ public class MailSendPage extends ControllerPage {
         }
 
         // plain UTC date string
-        msg.setHeader(Message.HeaderNames.Date, new Date().toString());
+        msg.setSendDate(new Date());
 
         msg.setHeader(Message.HeaderNames.MessageID, generateMessageID(account.getEmailUsername()));
 
@@ -179,8 +178,25 @@ public class MailSendPage extends ControllerPage {
         //save sent mail to its folder
         //    /Users/foobar/webmail/mails/5897fe8711774cde9fae5af5bd39b1a4a42d6828/sent/{Message-ID}.mx
         String rawPath=ResourceUtils.resolveMailFolderPath(account.getEmailUsername(), "sent");
-        File rawFile = new File(rawPath + File.separator + msg.getHeader(Message.HeaderNames.MessageID, null) + ".mx.txt");
+        File rawFile = new File(rawPath + File.separator + cleanMessageID(msg.getHeader(Message.HeaderNames.MessageID, null)) + ".mx.txt");
         FileUtils.writeByteArrayToFile(rawFile, listener.getByteContent());
+
+        if(Constants.DEBUG_MODE)
+            LOGGER.debug(String.format("Mail has been wrote to file done. Location: (%s)",rawFile.getAbsoluteFile()));
+        Mail sentMail=new Mail();
+        sentMail.setAccountId(account.getId());
+        sentMail.setUserId(user.getId());
+        sentMail.setFolder(Mail.VirtualFolder.sent.getSystemFolder());
+        sentMail.setOwnerAddress(account.getEmailUsername());
+        sentMail.setContentType(msg.getContentType());
+        sentMail.setDate(msg.getSentDate()!=null?msg.getSentDate().toString():(new Date().toString()));
+        sentMail.setFrom(Address.toString(msg.getFrom()));
+        sentMail.setMessageId(cleanMessageID(msg.getMessageID()));
+        sentMail.setSubject(msg.getSubject());
+        sentMail.setTo(Address.toString(msg.getRecipients(Message.RecipientType.TO)));
+        mailService.save(sentMail);
+        if (Constants.DEBUG_MODE)
+            LOGGER.debug(("Mail has been wrote to DB. "));
     }
 
     static class SentMailSavingListener implements ClientListener{
@@ -206,6 +222,13 @@ public class MailSendPage extends ControllerPage {
             return buf.toString().getBytes();
         }
 
+    }
+
+    private String cleanMessageID(String messageId){
+        if(!Strings.haveLength(messageId)){
+            return null;
+        }
+        return messageId.replace("<","").replace(">","");
     }
 
     private Address getFromAddress(Account account) throws UnsupportedEncodingException {
