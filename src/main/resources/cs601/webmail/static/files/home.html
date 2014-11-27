@@ -70,7 +70,7 @@
 </aside>
 
 <!-- Mail list -->
-<aside id="maillist" class="second-left-side x-col">
+<aside id="maillist" class="second-left-side x-col" style="overflow: visible;">
 
     <div class="column-header">
         <!--<div class="search-box pull-right">-->
@@ -125,6 +125,21 @@
             </ul>
         </div>
 
+        <div class="sort-btn btn-group">
+            <button type="button" class="sortit-btn btn btn-default btn-sm">
+                <i class="fa fa-sort-amount-desc"></i> <span class="sort-field">Date</span>
+            </button>
+            <button type="button" class="btn btn-default  btn-sm dropdown-toggle" data-toggle="dropdown">
+                <span class="caret"></span>
+                <span class="sr-only">Toggle Dropdown</span>
+            </button>
+            <ul class="dropdown-menu" role="menu">
+                <li class="sort-menu" data-sort="Sender" data-dir="asc"><a href="#">Sort by sender</a></li>
+                <li class="sort-menu" data-sort="Subject" data-dir="asc"><a href="#">Sort by subject</a></li>
+                <li class="sort-menu" data-sort="Date" data-dir="desc"><a href="#">Sort by date</a></li>
+            </ul>
+        </div>
+
         <div class="more-btn btn-group">
             <button type="button" class="btn btn-default  btn-sm dropdown-toggle" data-toggle="dropdown">
                 More
@@ -138,22 +153,21 @@
             </ul>
         </div>
 
-        <div class="pull-right" style="display:inline-block; margin-left: 15px; vertical-align: top; text-align: right;">
+       <!-- <div class="pull-right" style="display:inline-block; margin-left: 15px; vertical-align: top; text-align: right;">
             <small class="page-indicator">1-100 of 1024</small>
             <br/>
             <i class="prev-btn fa fa-chevron-left"></i>&nbsp;&nbsp;&nbsp;
-            <i class="next-btn fa fa-chevron-right"></i>
+            <i class="next-btn fa fa-chevron-right"></i>-->
 
             <!-- <div class="btn-group">
               <button type="button" class="btn btn-default"><i class="fa fa-chevron-left"></i></button>
               <button type="button" class="btn btn-default"><i class="fa fa-chevron-right"></i></button>
-            </div> -->
+            </div> -
 
-        </div>
+        </div>-->
     </header>
 
     <div id="maillistWrapper" data-layout="fill-parent">
-        <!-- <div class="toolbar-placeholder"></div> -->
 
         <div id="mailListState" class="hidden alert alert-info" role="alert">
             Oops! No mail found. Try to sync it.
@@ -163,7 +177,7 @@
 
         </dl>
 
-        <div>
+        <div class="pagination">
             <div class="btn-group" style="margin: 0 auto;">
                 <button type="button" class="prev-btn btn btn-default btn-sm"><i class="fa fa-chevron-left"></i></button>
                 <button type="button" class="next-btn btn btn-default btn-sm"><i class="fa fa-chevron-right"></i></button>
@@ -375,7 +389,12 @@
 
 <script>
 
-    var currentFolder = 'inbox';
+    var WM_RUNTIME = {
+        currentFolder: 'inbox',
+        currentSortField: 'Date',
+        currentSortDirection: 'desc'
+    }
+
     var pagination = new Pagination();
 
     function isArray(obj) {
@@ -424,15 +443,21 @@
 
     function loadMailList(folder, page, firstInvoke) {
 
-        folder = folder || currentFolder || 'inbox';
+        folder = folder || WM_RUNTIME.currentFolder || 'inbox';
         page = page || pagination.page() || '1'; // page 1 as default
 
         // clean container firstly
         var listContainer = $('#maillist .mail-list').empty();
 
+        var params = {
+            'folder': folder,
+            'page': page,
+            'sort': WM_RUNTIME.currentSortField || 'Date',
+            'sort_dir': WM_RUNTIME.currentSortDirection
+        }
 
         var xhr = $.get('/rest/mail/list',
-                {'folder': folder, 'page': page}, function(data, textStatus, response) {
+                params, function(data, textStatus, response) {
 
             var state = response.getResponseHeader('x-state');
             var msg = response.getResponseHeader('x-exception') || response.getResponseHeader('x-msg') || '';
@@ -584,7 +609,7 @@
 
 
         // update the tip of delete button
-        if (currentFolder == 'inbox' || currentFolder == 'fav') {
+        if (WM_RUNTIME.currentFolder == 'inbox' || WM_RUNTIME.currentFolder == 'fav') {
             removeButton.attr('title', 'Move to trash');
         }
         else {
@@ -614,16 +639,24 @@
 
         // mail view port context toolbar
         ;(function() {
-            var selected = $('#maillist .mail-list-item').filter('.active');
+            var actived = $('#maillist .mail-list-item').filter('.active');
             var tb = $('.right-side .toolbar');
 
-            if (selected[0]) {
+            if (actived[0]) {
                 tb.find('.delete-btn,.reply').toggleClass('hidden', false);
             } else {
                 tb.find('.delete-btn,.reply').toggleClass('hidden', true);
                 $('#mailViewport article').empty();
             }
         })();
+
+        // update sort button
+        ;(function() {
+            var selected = $('#maillist .mail-list-item').filter('.selected');
+            var $maillist = $('#maillist');
+            $maillist.find('.sort-btn').toggleClass('hidden', selected.size() > 0);
+        })();
+
 
         // ------------------------- pagination buttons
         if (!pagination.hasPrev()) {
@@ -750,15 +783,17 @@
      */
     function bindMailListMenu() {
 
+        var $maillist = $('#maillist');
+
         // customize event 'select' and 'unselect', and delegate to #maillist
-        $('#maillist').on('select', '.mail-list-item', function() {
+        $maillist.on('select', '.mail-list-item', function() {
             $(this).addClass('selected').find('.action-controls :checkbox').prop('checked', 'checked');
         }).on('unselect', '.mail-list-item', function() {
             $(this).removeClass('selected').find('.action-controls :checkbox:checked').removeAttr('checked');
         });
 
         //Delete mail or mails async.
-        $('#maillist').on('click', '.delete-btn', function(e) {
+        $maillist.on('click', '.delete-btn', function(e) {
 
             var chks = $('.mail-list-item [name=chkSelected]:checked');
 
@@ -772,7 +807,7 @@
                 ids[ids.length] = $(this).val();
             })
 
-            var ctrl = currentFolder == 'trash' ? 'delete' : 'trash';
+            var ctrl = WM_RUNTIME.currentFolder == 'trash' ? 'delete' : 'trash';
 
             ctrlMail(ids.join(','), ctrl, function() {
                 chks.parents('.mail-list-item').fadeOut(function(){
@@ -825,7 +860,7 @@
         }
 
         // select or un-select all directly
-        $('#maillist').on('click', '.select-btn button.select-all-btn', function() {
+        $maillist.on('click', '.select-btn button.select-all-btn', function() {
             var isSelectAll = $(this).find('.fa-square-o').size() > 0;
             toggleMailSelection(isSelectAll, function(mail) {
                 return true; // bingo, that means ALL are accepted
@@ -834,35 +869,35 @@
 
         // --------------------- menus
         //select-all-menu
-        $('#maillist').on('click', '.select-btn .select-all-menu', function(e){
+        $maillist.on('click', '.select-btn .select-all-menu', function(e){
             toggleMailSelection(true, function(mail) {
                 return true;
             });
         });
         //select-none-menu
-        $('#maillist').on('click', '.select-btn .select-none-menu', function(e){
+        $maillist.on('click', '.select-btn .select-none-menu', function(e){
             toggleMailSelection(false, function(mail) {
                 return true;
             });
         });
         //select-star-menu
-        $('#maillist').on('click', '.select-btn .select-star-menu', function(e){
+        $maillist.on('click', '.select-btn .select-star-menu', function(e){
             toggleMailSelection(true, function(mail) {
                 return $(mail).find('i.fa-star').size() > 0;
             });
         });
         //select-unstar-menu
-        $('#maillist').on('click', '.select-btn .select-unstar-menu', function(e){
+        $maillist.on('click', '.select-btn .select-unstar-menu', function(e){
             toggleMailSelection(true, function(mail) {
                 return $(mail).find('i.fa-star-o').size() > 0;
             });
         });
-        $('#maillist').on('click', '.select-btn .select-read-menu', function(e){
+        $maillist.on('click', '.select-btn .select-read-menu', function(e){
             toggleMailSelection(true, function(mail) {
                 return !$(mail).hasClass('unread');
             });
         });
-        $('#maillist').on('click', '.select-btn .select-unread-menu', function(e){
+        $maillist.on('click', '.select-btn .select-unread-menu', function(e){
             toggleMailSelection(true, function(mail) {
                 return $(mail).hasClass('unread');
             });
@@ -872,7 +907,7 @@
         // --------------------- move-to button
 
         var MoveSelectedTo = function(folder) {
-            if (currentFolder == folder) {
+            if (WM_RUNTIME.currentFolder == folder) {
                 return;
             }
 
@@ -906,12 +941,12 @@
         };
 
         // move selected mail or mails to <b>INBOX</b> folder.
-        $('#maillist').on('click', '.moveto-btn .moveto-inbox-menu', function() {
+        $maillist.on('click', '.moveto-btn .moveto-inbox-menu', function() {
             MoveSelectedTo('inbox');
         });
 
         // move selected mail or mails to <b>TRASH</b> folder.
-        $('#maillist').on('click', '.moveto-btn .moveto-trash-menu', function() {
+        $maillist.on('click', '.moveto-btn .moveto-trash-menu', function() {
             MoveSelectedTo('trash');
         });
 
@@ -919,7 +954,7 @@
         // --------------------- more button
 
         // mark all that all unread mails in current page as read
-        $('#maillist').on('click', '.more-btn .mark-allread-menu', function() {
+        $maillist.on('click', '.more-btn .mark-allread-menu', function() {
             // get all unread
             var items = filterMails(function(mail){
                 return $(mail).hasClass('unread');
@@ -939,7 +974,7 @@
         });
 
         // mark all that selected mails in current page as read
-        $('#maillist').on('click', '.more-btn .mark-read-menu', function() {
+        $maillist.on('click', '.more-btn .mark-read-menu', function() {
             // get all selected
             var items = filterMails(function(mail){
                 return $(mail).hasClass('selected');
@@ -959,7 +994,7 @@
         });
 
         // mark all that selected mails in current page as unread
-        $('#maillist').on('click', '.more-btn .mark-unread-menu', function() {
+        $maillist.on('click', '.more-btn .mark-unread-menu', function() {
             // get all selected
             var items = filterMails(function(mail){
                 return $(mail).hasClass('selected');
@@ -978,20 +1013,57 @@
             });
         });
 
+        // --------------------- sort menu
+
+        $maillist.on('click', '.sort-btn .sort-menu', function(e) {
+
+            var p = $(this).parents('.sort-btn');
+            var sort = $(this).data('sort');
+            var dir = $(this).data('dir') || 'asc';
+
+            var sortit = p.find('.sortit-btn');
+
+            p.find('.sort-field').text(sort);
+            sortit.find('i.fa')
+                    .toggleClass('fa-sort-amount-desc', dir == 'desc')
+                    .toggleClass('fa-sort-amount-asc', dir == 'asc');
+
+            WM_RUNTIME.currentSortField = sort;
+            WM_RUNTIME.currentSortDirection = dir;
+
+            // reload mail list once sort changed
+            loadMailList();
+        });
+
+        $maillist.on('click', '.sort-btn .sortit-btn', function(e) {
+
+            var dir = WM_RUNTIME.currentSortDirection == 'asc' ? 'desc' : 'asc';
+
+            WM_RUNTIME.currentSortDirection = dir;
+
+            $(this).find('i.fa')
+                    .toggleClass('fa-sort-amount-desc', dir == 'desc')
+                    .toggleClass('fa-sort-amount-asc', dir == 'asc');
+
+            // reload mail list once sort changed
+            loadMailList();
+        });
+
+
 
         // --------------------- pagination handler
 
         $('#maillistWrapper').on('click', '.prev-btn', function() {
-            loadMailList(currentFolder, pagination.prev());
+            loadMailList(WM_RUNTIME.currentFolder, pagination.prev());
         });
         $('#maillistWrapper').on('click', '.next-btn', function() {
-            loadMailList(currentFolder, pagination.next());
+            loadMailList(WM_RUNTIME.currentFolder, pagination.next());
         });
-        $('#maillist').on('click', '.toolbar .prev-btn', function() {
-            loadMailList(currentFolder, pagination.prev());
+        $maillist.on('click', '.toolbar .prev-btn', function() {
+            loadMailList(WM_RUNTIME.currentFolder, pagination.prev());
         });
-        $('#maillist').on('click', '.toolbar .next-btn', function() {
-            loadMailList(currentFolder, pagination.next());
+        $maillist.on('click', '.toolbar .next-btn', function() {
+            loadMailList(WM_RUNTIME.currentFolder, pagination.next());
         });
     }
 
@@ -1009,7 +1081,7 @@
 
             var folder = $(this).data('name');
 
-            currentFolder = folder;
+            WM_RUNTIME.currentFolder = folder;
 
             $(this).siblings().removeClass('active')
                     .end().addClass('active');
@@ -1208,7 +1280,7 @@
                     } catch(e) {}
 
                     // reload mail list if we're in `sent` folder.
-                    if (currentFolder == 'sent') {
+                    if (WM_RUNTIME.currentFolder == 'sent') {
                     loadMailList();
                     }
 
@@ -1278,7 +1350,7 @@
         $tb.on('click', '.delete-btn', function(e){
             var $mailInfo = $('.mail-info');
             var mailId = $mailInfo.find('[name=mail_id]').val();
-            var ctl = currentFolder == 'trash' ? 'delete' : 'trash';
+            var ctl = WM_RUNTIME.currentFolder == 'trash' ? 'delete' : 'trash';
 
             ctrlMail(mailId, ctl, function() {
                $('.mail-list-item[data-id=' + mailId + ']').fadeOut(function(){
@@ -1420,6 +1492,8 @@
         bindMailContextToolbar();
 
         updateUI();
+
+        adjustColumnsHeight();
     })
 </script>
 

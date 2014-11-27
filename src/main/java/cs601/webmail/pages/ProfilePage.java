@@ -5,10 +5,6 @@ import cs601.webmail.entity.User;
 import cs601.webmail.exception.VerifyException;
 import cs601.webmail.frameworks.web.PageTemplate;
 import cs601.webmail.frameworks.web.RequestContext;
-import cs601.webmail.service.AccountService;
-import cs601.webmail.service.MailService;
-import cs601.webmail.service.impl.AccountServiceImpl;
-import cs601.webmail.service.impl.MailServiceImpl;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -28,10 +24,6 @@ public class ProfilePage extends ControllerPage {
     public void body() throws Exception {
 
         RequestContext context = RequestContext.getCurrentInstance();
-
-        MailService mailService = new MailServiceImpl();
-        AccountService accountService = new AccountServiceImpl();
-
         HttpServletRequest req = context.getRequest();
         HttpServletResponse resp = context.getResponse();
 

@@ -7,9 +7,9 @@
   #contactlist{width: 320px; left: 160px;}
   .left-side{width: 160px;}
   .right-side{margin-left: 480px;}
-  .toolbar-right{right: 6px;}
-  #maillist .toolbar,
-  #contactlist .toolbar{padding: 20px 6px;}
+  .toolbar-right{right: 6px; top: .4em;}
+  .second-left-side .toolbar{padding-left: 6px; padding-right: 6px;}
+  .toolbar{padding-top: 10px;padding-bottom: 10px;}
 
 .profile{padding: 10px 4px; overflow: hidden;}
  }

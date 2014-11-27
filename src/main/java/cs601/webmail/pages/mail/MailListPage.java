@@ -89,9 +89,32 @@ public class MailListPage extends ControllerPage {
 
         String curPage = req.getParameter("page");
         String folder = req.getParameter("folder");
+        String sort=req.getParameter("sort");
+        String sortDir=req.getParameter("sort_dir");
 
-        PageRequest pageRequest = new PageRequest(Order.desc("MSGID"));
-        pageRequest.pageSize = 15; // PageRequest.DEFAULT_PAGE_SIZE;
+        //default sort
+        Order order=Order.desc("MSGID");
+
+        if(Strings.haveLength(sort)){
+            if("Date".equalsIgnoreCase(sort)){
+                sort="MSGID";
+            }
+            else if("Sender".equalsIgnoreCase(sort)){
+                sort="MFROM";
+            }
+            else if("Subject".equalsIgnoreCase(sort)){
+                sort="SUBJECT";
+            }
+            else {
+                sort="MSGID";
+                sortDir="desc";
+            }
+
+            order=("desc".equalsIgnoreCase(sortDir))? Order.desc(sort) : Order.asc(sort);
+        }
+
+        PageRequest pageRequest=new PageRequest(order);
+        pageRequest.pageSize=getIntParam(req, "page_size", 15);  // PageRequest.DEFAULT_PAGE_SIZE;
         pageRequest.page = curPage != null ? Integer.parseInt(curPage) : 1;
 
         try {
@@ -102,10 +125,6 @@ public class MailListPage extends ControllerPage {
 
             cs601.webmail.frameworks.db.page.Page<Mail> pageResult =
                     mailService.findPage(fd, currentAccount, pageRequest);
-
-//            cs601.webmail.frameworks.db.page.Page<Mail> pageResult
-//                    = mailService.findByAccountAndPage(currentAccount, pageRequest);
-
 
             if (pageResult == null || !CollectionUtils.notEmpty(pageResult.getPageList())) {
                 resp.addHeader("x-state", "ok");

@@ -20,6 +20,7 @@ import org.tanukisoftware.wrapper.WrapperManager;
 import javax.servlet.DispatcherType;
 import java.util.EnumSet;
 
+
 /**
  * Created by yuanyuan on 10/22/14.
  */
@@ -46,8 +47,8 @@ public class WebMailServer implements WrapperListener{
         if (staticFilesDir.indexOf("/jsw") > -1) {
             staticFilesDir = System.getProperty("user.dir") + "/res/static";
         }
-
         Server server = new Server(8080);
+
 
         System.out.println("Server starting...");
         System.out.println("----------------------------------------------------");
