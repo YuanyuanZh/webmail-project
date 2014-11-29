@@ -94,7 +94,7 @@ public class MailSendPage extends ControllerPage {
         // append text from request
         contentBuf.append(content);
 
-        // append mail signature if requested & have
+        //TODO need delete, append mail signature if requested & have
         if (getStringParam(req, "appendSignature", "off").equalsIgnoreCase("on") &&
                 Strings.haveLength(account.getMailSignature())) {
             contentBuf.append(CLRF).append(CLRF);
@@ -263,7 +263,7 @@ public class MailSendPage extends ControllerPage {
     }
 
     /**
-     * Detail about Message-Id, plz see RFC822
+     * Detail about Message-Id, see RFC822
      *
      * @param senderAddress Supposed to be a email format string. Such as 'foo@bar.com'
      * @return A string in this format "<" + nanoTime + "." + seed + "@" + domain + ">"

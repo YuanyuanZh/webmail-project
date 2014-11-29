@@ -12,13 +12,15 @@ import cs601.webmail.service.AccountService;
 
 import java.io.IOException;
 import java.util.List;
+import cs601.webmail.util.Logger;
 /**
  * Created by yuanyuan on 10/26/14.
  */
 public class AccountServiceImpl implements AccountService {
+
+    private static final Logger LOGGER = Logger.getLogger(AccountServiceImpl.class);
     private AccountDao accountDao =new AccountDaoImpl();
-    //private UserDao userDao=new UserDAOImpl();
-    //Account account = new Account();
+    private UserDao userDao=new UserDAOImpl();
 
     public Account findById(Long id) {
 
@@ -44,14 +46,25 @@ public class AccountServiceImpl implements AccountService {
     }
 
     public boolean verifyAccount(String emailAddress, String pass,String popServer,int popPort){
-        try{
-            Pop3Client client = Pop3Client.createInstance(popServer,popPort,true);
-            if(!client.login(emailAddress, pass)){
-                return false;
-            }
-        }catch (IOException e){}
 
-        return true;
+        Pop3Client client = null;
+        boolean ssl = popPort != 110; // 110 is the default port for plain socket
+        try{
+            client = Pop3Client.createInstance(popServer,popPort, ssl);
+            return client.login(emailAddress, pass);
+        } catch (Exception e){
+            // any error occurred, return FALSE.
+            LOGGER.error(e);
+            return false;
+        } finally {
+            if (client != null) {
+                try {
+                    client.close();
+                } catch (IOException e) {
+                    // ignore
+                }
+            }
+        }
     }
     public boolean verifySMTPAccount(String emailAddress, String pass,String SMTPServer,int SMTPPort){
         try{

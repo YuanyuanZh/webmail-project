@@ -7,7 +7,8 @@ Mail.errors = {
     '201': 'passwords doesn\'t match',
     '202': 'username already exist',
     '301': 'username does not exist',
-    '302': 'emailAddress or password invalid'
+    '302': 'emailAddress or password invalid',
+    '400': 'Service not available'
 };
 
 /**

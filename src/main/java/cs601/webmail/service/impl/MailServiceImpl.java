@@ -79,6 +79,7 @@ public class MailServiceImpl implements MailService {
         return mailDao.findById(id);
     }
 
+    @Deprecated
     @Override
     public Page<Mail> findByAccountAndPage(Account account, PageRequest pageRequest) {
         return mailDao.findByPage(pageRequest, account.getId(), account.getUserId());
@@ -130,6 +131,7 @@ public class MailServiceImpl implements MailService {
     }
 
     @Override
+    //TODO need delete
     public List<Mail> findByFolder(String folder) {
         throw new IllegalStateException("Not impl yet");
     }
@@ -210,7 +212,7 @@ public class MailServiceImpl implements MailService {
             mail.setFlagNew(Mail.FLAG_YES);
             mail.setFlagUnread(Mail.FLAG_YES);
             mail.setOwnerAddress(account.getEmailUsername());
-            mail.setFolder("inbox");
+            mail.setFolder(Mail.VirtualFolder.inbox.getSystemFolder());
 
             LOGGER.debug("save mail to DB: " + mail);
             mailDao.save(mail);

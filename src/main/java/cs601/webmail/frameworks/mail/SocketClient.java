@@ -84,7 +84,11 @@ public abstract class SocketClient {
 
     protected String sendCommand(String command) throws IOException {
         if (debug) {
-            LOGGER.debug("DEBUG [out]: " + command);
+            if (command.startsWith("PASS ")) {
+                LOGGER.debug("[out]: PASS ******");
+            }else {
+                LOGGER.debug("DEBUG [out]: " + command);
+            }
         }
         writerLine(command,true);
         return readResponseLine();

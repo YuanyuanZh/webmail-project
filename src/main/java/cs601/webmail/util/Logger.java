@@ -116,6 +116,7 @@ public class Logger {
         fh.setFormatter(new MyLogFormatter());
 
         ConsoleHandler ch = new ConsoleHandler();
+        ch.setLevel(Level.ALL);
         ch.setFormatter(new MyLogFormatter());
 
         rtLogger.addHandler(ch);

@@ -197,6 +197,15 @@
         if (params['logId']) {
             $('#logId').text(params['logId']);
         }
+        if (params['EA']) {
+            $('[name=emailAddress]').val(decodeURIComponent(params['EA'] || ''));
+        }
+        if (params['POP_SVR']) {
+            $('[name=popServer]').val(params['POP_SVR']);
+        }
+        if (params['POP_PORT']) {
+            $('[name=popPort]').val(params['POP_PORT']);
+        }
 
     })
 

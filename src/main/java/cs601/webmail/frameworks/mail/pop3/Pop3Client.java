@@ -64,14 +64,17 @@ public class Pop3Client extends SocketClient{
     public boolean login(String username, String password) throws IOException {
         sendCommand("USER " + username);
         String answer=sendCommand("PASS " + password);
-        if(answer.startsWith("+OK")){
+        if (debug)
+
+            LOGGER.debug("login with " + username);
+
+        if(answer.startsWith("+OK"))
+        {
+            return true;
         }else{
             return false;
         }
-        if (debug) {
-            LOGGER.debug("[DEBUG] login with " + username);
-        }
-        return true;
+
     }
 @Override
     public void logout() throws IOException {
@@ -361,7 +364,7 @@ public class Pop3Client extends SocketClient{
 
     public static Pop3Client createInstance(String host, int port, boolean sslEnabled) throws IOException {
         Pop3Client client = new Pop3Client(sslEnabled);
-        client.setDebug(false);
+        client.setDebug(true);
         client.connect(host, port);
         return client;
     }

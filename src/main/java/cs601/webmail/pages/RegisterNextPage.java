@@ -18,11 +18,17 @@ import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import cs601.webmail.util.Logger;
+import java.net.URLEncoder;
 
 /**
  * Created by yuanyuan on 11/11/14.
  */
 public class RegisterNextPage extends ControllerPage {
+
+    private static final Logger LOGGER = Logger.getLogger(RegisterNextPage.class);
+    public static final int POP_PLAIN_PORT = 110;
+
     @Override
     public void body() throws Exception {
 
@@ -46,50 +52,70 @@ public class RegisterNextPage extends ControllerPage {
                 response.sendRedirect("/register?error=103");
                 return;
             }
+            try {
 
-            doRegister(request, response, (User) session.getAttribute(RegisterPage.REGISTERING_USER_ATTR));
+                doRegister(request, response, (User) session.getAttribute(RegisterPage.REGISTERING_USER_ATTR));
+            } catch (Exception e) {
+                LOGGER.error("error to finish register", e);
+                response.sendRedirect("/registerNext?error=400");
+            }
         }
     }
 
     private void doRegister(HttpServletRequest request, HttpServletResponse response, User registeringUser) throws IOException {
-        Account account=new Account();
+        Account account = new Account();
         AccountService accountService = new AccountServiceImpl();
-        UserService userService=new UserServiceImpl();
+        UserService userService = new UserServiceImpl();
 
-        String emailAccount=request.getParameter("emailAddress");
-        String emailPassword=request.getParameter("emailPassword");
-        String popServer=request.getParameter("popServer");
-        int popPort=Integer.parseInt(request.getParameter("popPort"));
-        String SMTPServer=request.getParameter("SMTPServer");
-        int SMTPPort=Integer.parseInt(request.getParameter("SMTPPort"));
+        String emailAccount = request.getParameter("emailAddress");
+        String emailPassword = request.getParameter("emailPassword");
+        String popServer = request.getParameter("popServer");
+        int popPort = getIntParam(request, "popPort", POP_PLAIN_PORT);
+        String SMTPServer = request.getParameter("SMTPServer");
+        int SMTPPort = Integer.parseInt(request.getParameter("SMTPPort"));
 
-        if(userService.LoginIDExist(registeringUser.getLoginId())){
+        StringBuilder params = new StringBuilder();
+        params.append("?EA=").append(URLEncoder.encode(emailAccount)); // email address
+        params.append("&POP_SVR=").append(URLEncoder.encode(popServer)); // POP server
+        params.append("&POP_PORT=").append(popPort); // POP port
+        params.append("&logId=").append(registeringUser.getLoginId());
 
-            if(accountService.verifyAccount(emailAccount,emailPassword,popServer,popPort)
-                    &&accountService.verifySMTPAccount(emailAccount,emailPassword,SMTPServer,SMTPPort)){
-
-                account.setUserId(registeringUser.getId());
-                account.setEmailUsername(emailAccount);
-                account.setEmailPassword(EncryptUtils.encryptToHex(emailPassword, Constants.DEFAULT_AES_CIPHER_KEY));
-                account.setPopServer(popServer);
-                account.setPopServerPort(popPort);
-                account.setEnableSsl(true);
-                account.setSmtpServer(SMTPServer);
-                account.setSmtpServerPort(SMTPPort);
-                account.setEnableSmtpSsl(true);
-                accountService.addAccount(account);
-
-                HttpSession session = request.getSession(true);
-                session.removeAttribute(RegisterPage.REGISTER_STEP_ATTR);
-                session.removeAttribute(RegisterPage.REGISTERING_USER_ATTR);
-                response.sendRedirect("/login?logId=" + registeringUser.getLoginId());
-
-            }else {
-                response.sendRedirect("/registerNext?error=302");
-            }
-        }else {
-            response.sendRedirect("/registerNext?error=301");
+        if (!userService.LoginIDExist(registeringUser.getLoginId())) {
+            params.append("&error=301");
+            response.sendRedirect("/registerNext" + params.toString());
+            return;
         }
+
+        // try to login to POP server
+        if (!accountService.verifyAccount(emailAccount, emailPassword, popServer, popPort)) {
+            params.append("&error=302");
+            response.sendRedirect("/registerNext" + params.toString());
+            return;
+        }
+
+        // try to login to SMTP server
+        if (!accountService.verifySMTPAccount(emailAccount, emailPassword, SMTPServer, SMTPPort)) {
+            params.append("&error=302");
+            response.sendRedirect("/registerNext" + params.toString());
+            return;
+        }
+
+        account.setUserId(registeringUser.getId());
+        account.setEmailUsername(emailAccount);
+        account.setEmailPassword(EncryptUtils.encryptToHex(emailPassword, Constants.DEFAULT_AES_CIPHER_KEY));
+        account.setPopServer(popServer);
+        account.setPopServerPort(popPort);
+        account.setEnableSsl(true);
+        account.setSmtpServer(SMTPServer);
+        account.setSmtpServerPort(SMTPPort);
+        account.setEnableSmtpSsl(true);
+        accountService.addAccount(account);
+
+        HttpSession session = request.getSession(true);
+        session.removeAttribute(RegisterPage.REGISTER_STEP_ATTR);
+        session.removeAttribute(RegisterPage.REGISTERING_USER_ATTR);
+
+        response.sendRedirect("/login?logId=" + registeringUser.getLoginId());
     }
 }
 
