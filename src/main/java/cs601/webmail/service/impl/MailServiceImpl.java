@@ -10,11 +10,8 @@ import cs601.webmail.frameworks.db.page.PageRequest;
 import cs601.webmail.frameworks.mail.pop3.*;
 import cs601.webmail.service.MailService;
 import cs601.webmail.service.ServiceException;
-import cs601.webmail.util.DigestUtils;
-import cs601.webmail.util.EncryptUtils;
-import cs601.webmail.util.ResourceUtils;
+import cs601.webmail.util.*;
 import org.apache.commons.io.FileUtils;
-import cs601.webmail.util.Logger;
 
 import java.io.File;
 import java.io.IOException;
@@ -77,6 +74,48 @@ public class MailServiceImpl implements MailService {
     @Override
     public Mail findById(long id) {
         return mailDao.findById(id);
+    }
+
+    @Override
+    public List<Mail> searchByTerm(Account account,String term,String keyword){
+
+        if (!Strings.haveLength(term)) {
+            throw new IllegalArgumentException("'term' incorrect");
+        }
+        if (!Strings.haveLength(keyword)) {
+            throw new IllegalArgumentException("'keyword' incorrect");
+        }
+
+        StringBuilder sb=new StringBuilder();
+
+        //search scope: Normal, Trash
+        sb.append(String.format("OWNER_ADDRESS = '%s' and ACCOUNTID = %d" +
+                        " and USERSID = %d and FLAG_DEL <= %d",
+                account.getEmailUsername(),
+                account.getId(),
+                account.getUserId(),
+                Mail.FLAG_TRASH));
+
+        if ("subject".equalsIgnoreCase(term)) {
+            sb.append(" and SUBJECT like '%").append(keyword).append("%'");
+        }
+        else if ("from".equalsIgnoreCase(term)) {
+            sb.append(" and MFROM like '%").append(keyword).append("%'");
+        }
+        else {
+            throw new ServiceException("Not supported search term:" + term);
+        }
+
+        // only search INBOX
+        sb.append(" and FOLDER like '").append(
+                Mail.VirtualFolder.inbox.getSystemFolder()).append("'");
+
+        PageRequest pr = new PageRequest();
+        pr.page = 1;
+        pr.pageSize = Integer.MAX_VALUE;
+        Page<Mail> page = mailDao.findPageByConditions(pr, sb.toString());
+
+        return page != null ? page.getPageList() : new ArrayList<Mail>();
     }
 
     @Deprecated

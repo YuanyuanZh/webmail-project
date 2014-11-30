@@ -51,6 +51,7 @@ public class DispatchServlet extends HttpServlet {
         mapping.put("/rest/mail/sync", SyncMailsPage.class);
         mapping.put("/rest/mail/control", MailActionsPage.class);
         mapping.put("/rest/mail/send", MailSendPage.class);
+        mapping.put("/rest/mail/search", MailSearchPage.class);
 
         mapping.put("/rest/contact/list", ContactListPage.class);
         mapping.put("/rest/contact/read", ContactReadPage.class);

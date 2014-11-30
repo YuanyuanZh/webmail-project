@@ -193,7 +193,35 @@
 <aside class="right-side x-col">
 
     <div class="column-header">
-        <h2 class="mail-title"></h2>
+        <!--<div class="pull-right">-->
+        <!--<div class="btn-group">-->
+        <!--<button type="button" class="btn btn-default btn-sm"><i class="fa fa-chevron-left"></i></button>-->
+        <!--<button type="button" class="btn btn-default btn-sm"><i class="fa fa-chevron-right"></i></button>-->
+        <!--</div>-->
+        <!--</div>-->
+        <!--<h2 class="mail-title"></h2>-->
+
+        <div class="search-box" style="max-width: 500px;">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="input-group">
+                        <div class="input-group-btn">
+                            <button type="button" class="term-btn btn btn-sm btn-default dropdown-toggle"
+                                    data-toggle="dropdown" aria-expanded="false"><span class="term">From</span> <span class="caret"></span></button>
+                            <ul class="dropdown-menu" role="menu">
+                                <li><a href="#">From</a></li>
+                                <li><a href="#">Subject</a></li>
+                            </ul>
+                        </div><!-- /btn-group -->
+                        <input type="text" class="form-control input-sm search-kw" />
+                        <div class="input-group-btn">
+                            <button class="btn btn-default btn-success btn-sm search-btn"><i class="fa fa-search"></i> Search</button>
+                        </div>
+                    </div><!-- /input-group -->
+                </div>
+            </div>
+        </div> <!-- /.search-box -->
+
     </div>
 
     <header class="toolbar">
@@ -1451,6 +1479,75 @@
         })
     }
 
+    /** initialize search box */
+    function bindSearchBox() {
+        var $s = $('.search-box');
+
+        var doSearch = function(kw) {
+
+            if (!kw) {
+                Noty.info('Type some keywords first.');
+                return;
+            }
+
+            var params = {
+                'term': $s.find('.term-btn > .term').text(),
+                'kw': kw
+            };
+
+            $.post('/rest/mail/search', params, function(data, status, xhr){
+                var state = xhr.getResponseHeader('x-state');
+                var msg = xhr.getResponseHeader('x-exception') ||
+                        xhr.getResponseHeader('x-msg') || '';
+                var total = xhr.getResponseHeader('x-total') || 0;
+
+                if (state == 'ok') {
+
+                    if (total == 0) {
+                        Noty.info('Oops! Nothing found.');
+                        return;
+                    }
+
+                    var listContainer = $('#maillist .mail-list').empty();
+                    listContainer.append(data);
+
+                    pagination.reset();
+
+                    $('#mainMenu > li.active').removeClass('active');
+
+                    updateUI();
+                }
+                else {
+                    Noty.error('Oops, nothing matched.' + msg)
+                }
+            }).fail(function(){
+                Noty.error('Oops, Failed. Try later.')
+            });
+        }
+
+        $s.on('click', '.search-btn', function() {
+            var kw = $s.find('.search-kw').val();
+            doSearch(kw);
+        });
+
+        // enter to trigger SEARCH in text box
+        $s.on('keydown', '.search-kw', function(e) {
+            var which = e.which || e.keyCode;
+
+            if (which == 13) {
+                doSearch($(this).val());
+                e.stopPropagation();
+                return false;
+            }
+        });
+
+        // Term switching
+        $s.on('click', '.dropdown-menu > li', function(e) {
+            var term = $(this).text();
+            $s.find('.term').text(term);
+        });
+    }
+
     $(window).resize(function(){
         adjustColumnsHeight();
     });
@@ -1490,6 +1587,7 @@
         loadMailList('inbox', 1, true);
 
         bindMailContextToolbar();
+        bindSearchBox();
 
         updateUI();
 

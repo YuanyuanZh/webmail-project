@@ -168,7 +168,7 @@ public class MailListPage extends ControllerPage {
         }
     }
 
-    private String formatTo(String to) {
+    static String formatTo(String to) {
         if (!Strings.haveLength(to)) {
             return to;
         }
@@ -186,7 +186,7 @@ public class MailListPage extends ControllerPage {
         }
     }
 
-    private String formatFrom(String from) {
+    static String formatFrom(String from) {
         if (!Strings.haveLength(from)) {
             return from;
         }
@@ -199,7 +199,7 @@ public class MailListPage extends ControllerPage {
         }
     }
 
-    private String formatDate(String date) {
+    static String formatDate(String date) {
         if (null == date || date.length() == 0)
             return date;
 
