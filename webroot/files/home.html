@@ -57,6 +57,7 @@
             <!--<li><a href="#"><i class="fa fa-file-o"></i> <span>Drafts</span></a></li>-->
             <li data-name="trash"><a href="#"><i class="fa fa-trash"></i> <span>Trash</span></a></li>
         </ul>
+
     </div>
 
     <div id="tbSystem" class="toolbar toolbar-bottom">
@@ -146,6 +147,15 @@
                 <li class="mark-unread-menu"><a href="#">Mark as unread</a></li>
                 <li class="mark-read-menu"><a href="#">Mark as read</a></li>
             </ul>
+        </div>
+
+
+        <div class="a a-0">
+            <div class="a a-1">
+                <p>
+                    <span></span>
+                </p>
+            </div>
         </div>
 
     </header>
@@ -1375,10 +1385,10 @@
 
             var content = '\r\nOn ' + date + ', ' + mFrom + ' wrote:\r\n';
 
-            if (/^text\/plain/g.test(cType)|| $('.mail-body pre').size() > 0) {
+            if (/^text\/plain/g.test(cType)) {
                 content = content + '> ' + $('.mail-body pre').text().replace(/\n/g, '\n> ');
             }
-            else if (/^text\/html/g.test(cType)) {
+            else if (/^text\/html/g.test(cType)|| $('.mail-body pre').size() > 0) {
                 content = content + '(HTML content will be attached when sent ...)';
             } else {
                 content = content + '(content will be attached when sent ...)';
@@ -1401,10 +1411,10 @@
 
             var content = '\r\nOn ' + date + ', ' + mFrom + ' wrote:\r\n';
 
-            if (/^text\/plain/g.test(cType)|| $('.mail-body pre').size() > 0) {
+            if (/^text\/plain/g.test(cType)) {
                 content = content + '> ' + $('.mail-body pre').text().replace(/\n/g, '\n> ');
             }
-            else if (/^text\/html/g.test(cType)) {
+            else if (/^text\/html/g.test(cType)|| $('.mail-body pre').size() > 0) {
                 content = content + '(HTML content will be attached when sent ...)';
             } else {
                 content = content + '(content will be attached when sent ...)';

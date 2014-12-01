@@ -1,18 +1,15 @@
 package cs601.webmail.frameworks.mail.impl;
 
 import cs601.webmail.frameworks.mail.*;
-import cs601.webmail.frameworks.mail.codec.QuotedPrintable;
 import cs601.webmail.frameworks.mail.util.QuotePrintableEncoderStream;
 import cs601.webmail.util.Base64;
 import cs601.webmail.util.IOUtils;
-import org.apache.commons.codec.DecoderException;
-import org.apache.commons.codec.net.QuotedPrintableCodec;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
+
 import java.util.List;
 
 /**
