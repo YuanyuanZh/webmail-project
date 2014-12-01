@@ -6,10 +6,7 @@ package cs601.webmail.pages;
 import cs601.webmail.auth.AuthenticationCheckFilter;
 import cs601.webmail.entity.User;
 import cs601.webmail.exception.NotAuthenticatedException;
-import cs601.webmail.frameworks.web.AjaxResponse;
-import cs601.webmail.frameworks.web.PageTemplate;
 import cs601.webmail.frameworks.web.RequestContext;
-import org.codehaus.jackson.map.ObjectMapper;
 import cs601.webmail.ErrorManager;
 import cs601.webmail.exception.VerifyException;
 
@@ -18,7 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.io.StringWriter;
+
 
 public abstract class ControllerPage {
 
@@ -91,23 +88,10 @@ public abstract class ControllerPage {
         getOut().println(text);
     }
 
+    @Deprecated
     protected void renderJson(Object respObject) {
 
-        getResponse().setContentType("application/json;charset=UTF-8");
-        getResponse().setCharacterEncoding("UTF-8");
 
-        AjaxResponse ajaxResponse = AjaxResponse.OK;
-
-        if (respObject != null) {
-            ajaxResponse.setData(respObject);
-        }
-
-        ObjectMapper om = new ObjectMapper();
-        try {
-            om.writeValue(getOut(), ajaxResponse);
-        } catch (IOException e) {
-            // ignore
-        }
     }
 
     private HttpServletResponse getResponse() {

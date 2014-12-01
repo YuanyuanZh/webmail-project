@@ -21,6 +21,7 @@ public final class ResourceUtils {
     // Calculate path to store raw file.<p>
     // save raw content to {WorkDir}/raw/accountId/MD5-16(mailAccount)/uid.dat
     // for example: /Users/foobar/webmail/raw/2/abcdef12345467890/cDebdfdafd0122.dat
+    @Deprecated
     public static String getRawMailStorePath(String username) {
 
         StringBuilder sb = new StringBuilder(getWorkDir());

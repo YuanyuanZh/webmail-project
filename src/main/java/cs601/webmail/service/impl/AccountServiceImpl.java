@@ -22,6 +22,7 @@ public class AccountServiceImpl implements AccountService {
     private AccountDao accountDao =new AccountDaoImpl();
     private UserDao userDao=new UserDAOImpl();
 
+    @Deprecated
     public Account findById(Long id) {
 
         return accountDao.findById(id);
@@ -82,11 +83,4 @@ public class AccountServiceImpl implements AccountService {
         accountDao.save(account);
     }
 
-    public List<String> emailAccount(Account account){
-
-        return accountDao.listEmails(account.getUserId());
-    }
-    public  void deleteAccount(Account account){
-
-    }
 }

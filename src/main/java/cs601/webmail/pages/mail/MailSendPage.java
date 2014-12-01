@@ -94,13 +94,6 @@ public class MailSendPage extends ControllerPage {
         // append text from request
         contentBuf.append(content);
 
-        //TODO need delete, append mail signature if requested & have
-        if (getStringParam(req, "appendSignature", "off").equalsIgnoreCase("on") &&
-                Strings.haveLength(account.getMailSignature())) {
-            contentBuf.append(CLRF).append(CLRF);
-            contentBuf.append(account.getMailSignature());
-        }
-
         byte[] contentBytes = null;
 
         try {

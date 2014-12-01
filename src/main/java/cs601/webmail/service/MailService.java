@@ -11,6 +11,7 @@ import java.util.List;
  * Created by yuanyuan on 10/26/14.
  */
 public interface MailService {
+
     void save(Mail mail);
 
     void save(List<Mail> mails);
@@ -22,8 +23,6 @@ public interface MailService {
     void delete(Mail mail);
 
     Mail findById(long id);
-
-    List<Mail> findByFolder(String folder);
 
     // pull remote mails, and delete locals if necessary
     int syncMails(Account account);

@@ -9,18 +9,19 @@ import cs601.webmail.service.AccountService;
 import cs601.webmail.service.MailService;
 import cs601.webmail.service.impl.AccountServiceImpl;
 import cs601.webmail.service.impl.MailServiceImpl;
-import org.codehaus.jackson.map.ObjectMapper;
+
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.util.HashMap;
-import java.util.Map;
+import cs601.webmail.util.Logger;
 
 /**
  * Created by yuanyuan on 10/28/14.
  */
 public class SyncMailsPage extends ControllerPage {
+
+    private static Logger LOGGER = Logger.getLogger(SyncMailsPage.class);
 
     public void verify() {
         // no-op
@@ -48,22 +49,20 @@ public class SyncMailsPage extends ControllerPage {
 
 
         Account currentAccount = accountService.findSingleByUserId(user.getId());
-        Map model = new HashMap();
+        response.setContentType("text/html; charset=utf-8");
 
         try {
             int updatedCount = mailService.syncMails(currentAccount);
 
-            model.put("state", "ok");
-            model.put("update", updatedCount);
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-            model.put("state", "err");
-            model.put("msg", e.getMessage());
+            response.setHeader("x-state", "ok");
+            response.setHeader("x-update", updatedCount + "");
         }
 
-        ObjectMapper om = new ObjectMapper();
-        om.writeValue(getOut(), model);
+        catch (Exception e) {
+            LOGGER.error(e);
+            response.setHeader("x-state", "error");
+            response.setHeader("x-exception", e.getMessage());
+        }
     }
 
 }

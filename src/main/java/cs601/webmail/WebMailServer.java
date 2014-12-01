@@ -2,9 +2,7 @@ package cs601.webmail;
 
 import cs601.webmail.auth.AuthenticationCheckFilter;
 import cs601.webmail.auth.AccessAuditFilter;
-import cs601.webmail.util.Logger;
 import cs601.webmail.util.PropertyExpander;
-import org.apache.commons.lang3.ClassPathUtils;
 import org.apache.log4j.BasicConfigurator;
 import cs601.webmail.pages.DispatchServlet;
 import org.eclipse.jetty.server.NCSARequestLog;
@@ -14,8 +12,6 @@ import org.eclipse.jetty.servlet.DefaultServlet;
 import org.eclipse.jetty.servlet.FilterHolder;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
-import org.tanukisoftware.wrapper.WrapperListener;
-import org.tanukisoftware.wrapper.WrapperManager;
 
 import javax.servlet.DispatcherType;
 import java.util.EnumSet;
@@ -24,7 +20,7 @@ import java.util.EnumSet;
 /**
  * Created by yuanyuan on 10/22/14.
  */
-public class WebMailServer implements WrapperListener{
+public class WebMailServer{
 
     public static void main(String[] args) throws Exception {
 
@@ -47,8 +43,10 @@ public class WebMailServer implements WrapperListener{
         if (staticFilesDir.indexOf("/jsw") > -1) {
             staticFilesDir = System.getProperty("user.dir") + "/res/static";
         }
+        else if (staticFilesDir.indexOf("/target") == -1) {
+            staticFilesDir = System.getProperty("user.dir") + "/../webroot";
+        }
         Server server = new Server(8080);
-
 
         System.out.println("Server starting...");
         System.out.println("----------------------------------------------------");
@@ -113,35 +111,5 @@ public class WebMailServer implements WrapperListener{
         server.join();
     }
 
-        @Override
-        public Integer start(String[] strings) {
-                System.out.println("wrapper: starting...");
-
-                try {
-                        main(strings);
-                } catch (Exception e) {
-                        e.printStackTrace();
-                        System.out.println("Error staring sever, " + e.getMessage());
-                        return -1;
-                }
-
-                return 0;
-        }
-
-        @Override
-        public int stop(int i) {
-                System.out.println("wrapper: stopping... code=" + i);
-                return 0;
-        }
-
-        @Override
-        public void controlEvent(int event) {
-                System.out.println("wrapper: control event, code=" + event);
-                if ((event == WrapperManager.WRAPPER_CTRL_LOGOFF_EVENT) &&
-                        (WrapperManager.isLaunchedAsService())) {
-                } else {
-                        WrapperManager.stop(0);
-                }
-        }
 }
 

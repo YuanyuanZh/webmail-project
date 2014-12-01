@@ -2,14 +2,12 @@ package cs601.webmail.service;
 
 import cs601.webmail.entity.Account;
 
-import java.util.List;
-
 /**
  * Created by yuanyuan on 10/26/14.
  */
 public interface AccountService {
-    Account findById(Long id);
 
+    Account findById(Long id);
     /**
      * Find single account for user, cause user could have
      * more than one account by the original design.<p>
@@ -24,9 +22,9 @@ public interface AccountService {
     Account findSingleByUserId (Long userId);
 
     void addAccount(Account account);
-    List<String> emailAccount(Account account);
-    void deleteAccount(Account account);
+
     boolean verifyAccount(String emailAddress, String pass,String popServer,int popPort);
+
     boolean verifySMTPAccount(String emailAddress, String pass,String SMTPServer,int SMTPPort);
 
     void save(Account account);

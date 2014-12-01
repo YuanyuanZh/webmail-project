@@ -33,7 +33,6 @@ public class DispatchServlet extends HttpServlet {
 
     static {
         mapping.put("/", HomePage.class);
-        mapping.put("/inbox", InboxPage.class);
         mapping.put("/contacts", ContactsPage.class);
 
         mapping.put("/register", RegisterPage.class);

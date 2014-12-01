@@ -5,6 +5,7 @@ import java.util.Properties;
 /**
  * Created by yuanyuan on 11/9/14.
  */
+@Deprecated
 public class PropUtils {
 
     // get property from system as a Boolean

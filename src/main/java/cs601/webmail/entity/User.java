@@ -76,6 +76,7 @@ public class User implements Serializable {
 
     private static Map propAndColMap;
 
+    @Deprecated
     public static Map generatePropertiesColumnsMap() {
         if (propAndColMap == null) {
             propAndColMap = new HashMap();

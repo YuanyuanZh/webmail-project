@@ -23,11 +23,6 @@ public class ContactServiceImpl implements ContactService {
     }
 
     @Override
-    public Page<Contact> findByUser(User user, PageRequest pageRequest) {
-        throw new IllegalStateException("not impl yet"); // TODO
-    }
-
-    @Override
     public Page<Contact> findByUserAndFolder(String folder, User user, PageRequest pageRequest) {
         if (!Strings.haveLength(folder)) {
             throw new IllegalArgumentException("folder incorrect");
@@ -68,11 +63,4 @@ public class ContactServiceImpl implements ContactService {
         contactDao.save(contact);
     }
 
-    @Override
-    public List<Contact> findByUser(User user) {
-        if (user == null)
-            throw new IllegalArgumentException();
-
-        return contactDao.findAll(user.getId());
-    }
 }

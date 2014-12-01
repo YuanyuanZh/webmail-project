@@ -125,6 +125,7 @@ public class MailServiceImpl implements MailService {
     }
 
     @Override
+    @Deprecated
     public Page<Mail> findPage(String folder, Account account, PageRequest pageRequest) {
 
         Mail.VirtualFolder vf = Mail.VirtualFolder.parseFolder(folder);
@@ -169,11 +170,11 @@ public class MailServiceImpl implements MailService {
         return mailDao.findPageByConditions(pageRequest, condition);
     }
 
-    @Override
+    /*@Override
     //TODO need delete
     public List<Mail> findByFolder(String folder) {
         throw new IllegalStateException("Not impl yet");
-    }
+    }*/
 
     /**
      * 1. read local UID list

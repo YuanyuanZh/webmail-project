@@ -3,6 +3,7 @@ package cs601.webmail.frameworks.web;
 /**
  * Created by yuanyuan on 10/28/14.
  */
+@Deprecated
 public class AjaxResponse {
 
     public static final String _OK = "ok";

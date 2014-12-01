@@ -41,14 +41,8 @@ public class AuthenticationCheckFilter implements Filter {
 
         } catch (UnauthenticatedException e) {
 
-            String rememberMe = readRememberMe(req);
+            resp.sendRedirect("/login");
 
-            if (Strings.haveLength(rememberMe))
-                resp.sendRedirect("/login?username=" + rememberMe);
-            else
-                resp.sendRedirect("/login");
-
-            return;
         }
     }
 

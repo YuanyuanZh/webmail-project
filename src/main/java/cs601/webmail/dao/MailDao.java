@@ -13,22 +13,13 @@ public interface MailDao {
 
     public Mail findById(Long id);
 
-    public Mail findByUID(String uid);
-
-    public List<Mail> findAll();
-
     public Page<Mail> findByPage(PageRequest pageRequest, Long accountId, Long userId);
 
     public Mail save(Mail mail);
 
-    // UID
-    public List<String> findAllMailUIDs();
+    Mail findByUID(String uid);
 
     public List<String> findMailUIDs(Long accountId);
-
-//    void insertMail(String MSGID,String SUBJECT,String MFROM,String MTO,String CONTENT,String DATE,Integer uid,Integer aid);
-
-    public void removeByUID(String uid);
 
     /**
      * Find a page result with an extra condition.

@@ -71,7 +71,7 @@ public class MailDaoImpl extends BaseDao implements MailDao {
         }
     }
 
-    @Override
+    @Deprecated
     public List<Mail> findAll() {
 
         QueryRunner qr = getQueryRunner();
@@ -281,7 +281,7 @@ public class MailDaoImpl extends BaseDao implements MailDao {
         return findByUID(mail.getUid());
     }
 
-    @Override
+   @Deprecated
     public List<String> findAllMailUIDs() {
 
         QueryRunner qr = getQueryRunner();
@@ -328,7 +328,7 @@ public class MailDaoImpl extends BaseDao implements MailDao {
         }
     }
 
-    @Override
+    @Deprecated
     public void removeByUID(String uid) {
 
         QueryRunner qr = getQueryRunner();

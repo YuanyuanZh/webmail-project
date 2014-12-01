@@ -5,6 +5,7 @@ import java.io.Serializable;
 /**
  * Created by yuanyuan on 10/24/14.
  */
+@Deprecated
 public class MailSummary implements Serializable {
 
     private String subject;

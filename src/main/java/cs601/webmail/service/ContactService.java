@@ -12,10 +12,6 @@ import java.util.List;
  */
 public interface ContactService {
 
-    public List<Contact> findByUser(User user);
-
-    public Page<Contact> findByUser(User user, PageRequest pageRequest);
-
     /**
      *
      * @param folder all | starred | disabled

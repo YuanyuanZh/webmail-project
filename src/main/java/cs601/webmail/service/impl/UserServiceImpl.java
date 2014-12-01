@@ -14,26 +14,30 @@ public class UserServiceImpl implements UserService {
     UserDao userDao= new UserDAOImpl();
 
     public boolean verifyUser(String logId,String password){
-        if(userDao.LoginIDExist(logId)&& userDao.getPassword(logId).equals(password)){
+        if(userDao.LoginIDExist(logId)&& userDao.getPassword(logId).equals(password))
+        {
             return true;
         }
         return false;
     }
+
     public User findUserByLogId(String logId){
         return userDao.findUserByLogId(logId);
     }
 
+    @Deprecated
     public User findByID(long id){
 
         return userDao.findByID(id);
     }
+
     public void addUser(User user){
         if(user==null){
             throw new IllegalStateException("userDao missed");
         }
         userDao.save(user);
-
     }
+
     public void updatePass(long userId,String password){
 
         if(password==null){
@@ -41,6 +45,7 @@ public class UserServiceImpl implements UserService {
         }
         userDao.updatePass(userId,password);
     }
+
     public boolean LoginIDExist(String LOGID){
         return userDao.LoginIDExist(LOGID);
     }
