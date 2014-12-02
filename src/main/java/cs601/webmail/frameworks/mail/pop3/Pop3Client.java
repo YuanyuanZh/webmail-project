@@ -55,12 +55,14 @@ public class Pop3Client extends SocketClient{
     protected int getPort(){
         return DEFAULT_PORT;
     }
+
     @Override
     protected void doResponseCheck(String responseLine){
         if (responseLine != null && responseLine.startsWith("-ERR"))
         throw new RuntimeException("Server has returned an error: " + responseLine.replaceFirst("-ERR ", ""));
     }
-@Override
+
+    @Override
     public boolean login(String username, String password) throws IOException {
         sendCommand("USER " + username);
         String answer=sendCommand("PASS " + password);
@@ -76,13 +78,14 @@ public class Pop3Client extends SocketClient{
         }
 
     }
-@Override
+
+    @Override
     public void logout() throws IOException {
         sendCommand("QUIT");
     }
 
 
-    //------------------------- POP3 details
+    //----------- POP3 details-------------
 
     public int getNumberOfNewMessages() throws IOException {
         String response = sendCommand("STAT");
@@ -90,69 +93,6 @@ public class Pop3Client extends SocketClient{
         return Integer.parseInt(values[1]);
     }
 
-    public Pop3Message getMessageTop(int messageId, int topCount) throws IOException {
-
-        sendCommand("TOP " + messageId + " " + topCount);
-
-        String response;
-        String headerName;
-        Map<String, List<String>> headers = new HashMap<String, List<String>>();
-
-        Map<String, List<Header>> _headers = new HashMap<String, List<Header>>();
-        Header lastHeader = null;
-
-        // process headers
-        while ((response = readResponseLine()).length() != 0) {
-
-            if (response.startsWith(" ") || response.startsWith("\t")) {
-                if (lastHeader != null) {
-                    lastHeader.setValue(lastHeader.getValue() + response);
-                }
-                continue; //no process of multiline headers
-            }
-
-            int colonPosition = response.indexOf(":");
-
-            // no colon
-            if (colonPosition == -1) {
-                LOGGER.debug("ignore header line: " + response);
-                continue;
-            }
-
-            headerName = response.substring(0, colonPosition);
-            String headerValue;
-            if (response.length() > colonPosition + 2) {
-                headerValue = response.substring(colonPosition + 2);
-            } else {
-                headerValue = "";
-            }
-            List<String> headerValues = headers.get(headerName);
-            if (headerValues == null) {
-                headerValues = new ArrayList<String>();
-                headers.put(headerName, headerValues);
-            }
-            headerValues.add(headerValue);
-
-            lastHeader = new Header(headerName, headerValue);
-            List<Header> _headerValues = _headers.get(headerName);
-            if (_headerValues == null) {
-                _headerValues = new ArrayList<Header>();
-                _headers.put(headerName, _headerValues);
-            }
-            _headerValues.add(lastHeader);
-        }
-
-        // process body
-        StringBuilder bodyBuilder = new StringBuilder();
-        while (!(response = readResponseLine()).equals(".")) {
-            bodyBuilder.append(response + "\n");
-        }
-        return new Pop3Message(_headers);
-    }
-
-    private Pop3Message __parseTOP(String substring) {
-        return null;
-    }
 
     public Pop3MessageInfo listUniqueIdentifier(int messageId) throws IOException {
         String response = sendCommand("UIDL " + messageId);
@@ -217,40 +157,6 @@ public class Pop3Client extends SocketClient{
         }
 
         return new Pop3MessageInfo(num, line);
-    }
-
-    public Pop3MessageInfo listMessage(int messageId) throws IOException {
-        String response = sendCommand("LIST " + messageId);
-
-        if (response != null && response.startsWith(OK)) {
-            return __parseStatus(response.substring(3));
-        }
-
-        return null;
-    }
-
-    public Pop3MessageInfo[] listMessages() throws IOException {
-        String response = sendCommand("LIST");
-
-        if (response != null && response.startsWith(OK)) {
-
-            List<String> lines = new ArrayList<String>();
-
-            while (!(response = readResponseLine()).equals(".")) {
-                lines.add(response);
-            }
-
-            Pop3MessageInfo[] messageInfos = new Pop3MessageInfo[lines.size()];
-            ListIterator<String> iterator = lines.listIterator();
-
-            for (int i = 0, len = messageInfos.length; i < len; i++) {
-                messageInfos[i] = __parseStatus(iterator.next());
-            }
-
-            return messageInfos;
-        }
-
-        return null;
     }
 
     private static Pop3MessageInfo __parseStatus(String line)
@@ -360,6 +266,105 @@ public class Pop3Client extends SocketClient{
             }
         }
         return messageList;
+    }
+
+    public Pop3MessageInfo listMessage(int messageId) throws IOException {
+        String response = sendCommand("LIST " + messageId);
+
+        if (response != null && response.startsWith(OK)) {
+            return __parseStatus(response.substring(3));
+        }
+
+        return null;
+    }
+
+    public Pop3MessageInfo[] listMessages() throws IOException {
+        String response = sendCommand("LIST");
+
+        if (response != null && response.startsWith(OK)) {
+
+            List<String> lines = new ArrayList<String>();
+
+            while (!(response = readResponseLine()).equals(".")) {
+                lines.add(response);
+            }
+
+            Pop3MessageInfo[] messageInfos = new Pop3MessageInfo[lines.size()];
+            ListIterator<String> iterator = lines.listIterator();
+
+            for (int i = 0, len = messageInfos.length; i < len; i++) {
+                messageInfos[i] = __parseStatus(iterator.next());
+            }
+
+            return messageInfos;
+        }
+
+        return null;
+    }
+
+    @Deprecated
+    public Pop3Message getMessageTop(int messageId, int topCount) throws IOException {
+
+        sendCommand("TOP " + messageId + " " + topCount);
+
+        String response;
+        String headerName;
+        Map<String, List<String>> headers = new HashMap<String, List<String>>();
+
+        Map<String, List<Header>> _headers = new HashMap<String, List<Header>>();
+        Header lastHeader = null;
+
+        // process headers
+        while ((response = readResponseLine()).length() != 0) {
+
+            if (response.startsWith(" ") || response.startsWith("\t")) {
+                if (lastHeader != null) {
+                    lastHeader.setValue(lastHeader.getValue() + response);
+                }
+                continue; //no process of multiline headers
+            }
+
+            int colonPosition = response.indexOf(":");
+
+            // no colon
+            if (colonPosition == -1) {
+                LOGGER.debug("ignore header line: " + response);
+                continue;
+            }
+
+            headerName = response.substring(0, colonPosition);
+            String headerValue;
+            if (response.length() > colonPosition + 2) {
+                headerValue = response.substring(colonPosition + 2);
+            } else {
+                headerValue = "";
+            }
+            List<String> headerValues = headers.get(headerName);
+            if (headerValues == null) {
+                headerValues = new ArrayList<String>();
+                headers.put(headerName, headerValues);
+            }
+            headerValues.add(headerValue);
+
+            lastHeader = new Header(headerName, headerValue);
+            List<Header> _headerValues = _headers.get(headerName);
+            if (_headerValues == null) {
+                _headerValues = new ArrayList<Header>();
+                _headers.put(headerName, _headerValues);
+            }
+            _headerValues.add(lastHeader);
+        }
+
+        // process body
+        StringBuilder bodyBuilder = new StringBuilder();
+        while (!(response = readResponseLine()).equals(".")) {
+            bodyBuilder.append(response + "\n");
+        }
+        return new Pop3Message(_headers);
+    }
+
+    private Pop3Message __parseTOP(String substring) {
+        return null;
     }
 
     public static Pop3Client createInstance(String host, int port, boolean sslEnabled) throws IOException {

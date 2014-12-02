@@ -47,10 +47,6 @@ public class MailServiceImpl implements MailService {
         }
     }
 
-    /**
-     * Set FLAG_TRASH, NOT delete it physically  from DB.
-     * @param mail
-     */
     public void trash(Mail mail) {
         if (mail != null) {
             mail.setFlagDel(Mail.FLAG_TRASH);
@@ -58,9 +54,6 @@ public class MailServiceImpl implements MailService {
         }
     }
 
-    /**
-     * Set FLAG_DEL only, NOT delete physically from DB
-     */
     @Override
     public void delete(Mail mail) {
         if (mail != null) {
@@ -170,12 +163,6 @@ public class MailServiceImpl implements MailService {
         return mailDao.findPageByConditions(pageRequest, condition);
     }
 
-    /*@Override
-    //TODO need delete
-    public List<Mail> findByFolder(String folder) {
-        throw new IllegalStateException("Not impl yet");
-    }*/
-
     /**
      * 1. read local UID list
      * 2. pull remote UID list
@@ -210,10 +197,10 @@ public class MailServiceImpl implements MailService {
         List<String> currentUIDs = mailDao.findMailUIDs(account.getId());
 
         Map<String, Long> localUIDMap = _parseLocalUIDMap(currentUIDs);
-        Collection<String> localUIDs = localUIDMap.keySet();
+        //Collection<String> localUIDs = localUIDMap.keySet();
 
         Pop3MessageInfo[] remoteMsgInfos = client.listUniqueIdentifiers();
-        Collection<String> remoteUIDs = _getRemoteUIDs(remoteMsgInfos);
+        //Collection<String> remoteUIDs = _getRemoteUIDs(remoteMsgInfos);
 
         if (remoteMsgInfos == null || remoteMsgInfos.length == 0) {
             return 0;
@@ -241,8 +228,6 @@ public class MailServiceImpl implements MailService {
             // ok, remove it.
             client.removeListener(listener);
 
-
-
             Mail mail = _parseMail(message);
             mail.setUid(rmtUID);
 
@@ -265,20 +250,6 @@ public class MailServiceImpl implements MailService {
 
             updatedCount++;
         }
-
-        // To remove local mail which was deleted from remote server
-        /*Collection<String> localDeleteUIDs = CollectionUtils.subtract(localUIDs,
-                CollectionUtils.intersection(localUIDs, remoteUIDs));
-
-        if (localDeleteUIDs.size() > 0) {
-            for (String uid : localDeleteUIDs) {
-                mailDao.removeByUID(uid);
-
-                if (Constants.DEBUG_MODE) {
-                    LOGGER.debug("MAIL removed, UID=" + uid);
-                }
-            }
-        }*/
 
         if (client != null) {
             client.close();
@@ -320,7 +291,6 @@ public class MailServiceImpl implements MailService {
 
         return ret;
     }
-
 
     static class MailContentListener implements ClientListener {
 
