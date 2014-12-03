@@ -64,7 +64,7 @@ public class WebMailServer{
                 ServletContextHandler(ServletContextHandler.SESSIONS);
         context.setContextPath("/");
         //support https
-        String jettyDistKeystore = "lib/keystore";
+        String jettyDistKeystore = "keystore";
         String keystorePath = jettyDistKeystore;
         File keystoreFile = new File(keystorePath);
 
