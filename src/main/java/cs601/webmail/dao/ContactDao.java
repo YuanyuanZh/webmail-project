@@ -10,12 +10,8 @@ import java.util.List;
  * Created by yuanyuan on 11/17/14.
  */
 public interface ContactDao {
+
     Contact findById(Long id);
-
-    List<Contact> findAll(Long userId);
-
-    List<Contact> findAll();
-
     /**
      * Find a page result with an extra condition.
      *
@@ -27,4 +23,7 @@ public interface ContactDao {
     Page<Contact> findPageByConditions(PageRequest pageRequest, String condition);
 
     Contact save(Contact contact);
+    List<Contact> findAll(Long userId);
+
+    List<Contact> findAll();
 }

@@ -9,7 +9,6 @@ import java.util.List;
  */
 public interface AccountDao {
 
-    // Account findById(Long userid,Long aid);
     Account findById(Long id);
 
     List<Account> findByUserId(Long userId);

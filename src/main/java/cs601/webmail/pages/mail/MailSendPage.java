@@ -21,9 +21,6 @@ import org.apache.commons.codec.binary.Base64;
 import cs601.webmail.Constants;
 import cs601.webmail.frameworks.mail.pop3.ClientListener;
 import cs601.webmail.util.Logger;
-import cs601.webmail.util.ResourceUtils;
-import org.apache.commons.io.FileUtils;
-import java.io.File;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -169,14 +166,8 @@ public class MailSendPage extends ControllerPage {
             }
         }
 
-        //save sent mail to its folder
-        //    /Users/foobar/webmail/mails/5897fe8711774cde9fae5af5bd39b1a4a42d6828/sent/{Message-ID}.mx
-        String rawPath=ResourceUtils.resolveMailFolderPath(account.getEmailUsername(), "sent");
-        File rawFile = new File(rawPath + File.separator + cleanMessageID(msg.getHeader(Message.HeaderNames.MessageID, null)) + ".mx.txt");
-        FileUtils.writeByteArrayToFile(rawFile, listener.getByteContent());
-
         if(Constants.DEBUG_MODE)
-            LOGGER.debug(String.format("Mail has been wrote to file done. Location: (%s)",rawFile.getAbsoluteFile()));
+            LOGGER.debug(String.format("Mail has been wrote to DB"));
         Mail sentMail=new Mail();
         sentMail.setAccountId(account.getId());
         sentMail.setUserId(user.getId());
@@ -188,6 +179,7 @@ public class MailSendPage extends ControllerPage {
         sentMail.setMessageId(cleanMessageID(msg.getMessageID()));
         sentMail.setSubject(msg.getSubject());
         sentMail.setTo(Address.toString(msg.getRecipients(Message.RecipientType.TO)));
+        sentMail.setContent(listener.getContent());
         mailService.save(sentMail);
         if (Constants.DEBUG_MODE)
             LOGGER.debug(("Mail has been wrote to DB. "));
@@ -210,10 +202,11 @@ public class MailSendPage extends ControllerPage {
         public boolean isAccepted(EventType eventType){
             return eventType==EventType.LineWrite;
         }
-        public byte[] getByteContent(){
+
+        public String getContent(){
             if (buf.length()==0)
                 return null;
-            return buf.toString().getBytes();
+            return buf.toString();
         }
 
     }

@@ -71,30 +71,6 @@ public class MailDaoImpl extends BaseDao implements MailDao {
         }
     }
 
-    @Deprecated
-    public List<Mail> findAll() {
-
-        QueryRunner qr = getQueryRunner();
-
-        try {
-            return qr.query("select * from emails", new ResultSetHandler<List<Mail>>() {
-                @Override
-                public List<Mail> handle(ResultSet rs) throws SQLException {
-                    List<Mail> mails = new ArrayList<Mail>();
-
-                    while (rs.next()) {
-                        Mail mail = handleRowMapping(rs);
-                        mails.add(mail);
-                    }
-
-                    return mails;
-                }
-            });
-        } catch (SQLException e) {
-            throw new DaoException(e);
-        }
-    }
-
     private Mail handleRowMapping(ResultSet rs) throws SQLException {
         Mail mail = new Mail();
 
@@ -115,6 +91,7 @@ public class MailDaoImpl extends BaseDao implements MailDao {
         mail.setFlagDel(rs.getInt("FLAG_DEL"));
         mail.setOwnerAddress(rs.getString("OWNER_ADDRESS"));
         mail.setFolder(rs.getString("FOLDER"));
+        mail.setContent(rs.getString("CONTENT"));
 
         return mail;
     }
@@ -203,7 +180,7 @@ public class MailDaoImpl extends BaseDao implements MailDao {
         String sql = "update emails set SUBJECT=?,MFROM=?,MTO=?,CONTENT=?,DATE=?," +
                 "USERSID=?,ACCOUNTID=?,MESSAGE_ID=?,CONTENT_TYPE=?,UID=?," +
                 "FLAG_NEW=?,FLAG_UNREAD=?,FLAG_FAV=?, FLAG_DEL=?," +
-                "OWNER_ADDRESS=?, FOLDER=? where MSGID=" + mail.getId();
+                "OWNER_ADDRESS=?, FOLDER=?, CONTENT=? where MSGID=" + mail.getId();
         Object[] params = new Object[]{
                 mail.getSubject(),
                 mail.getFrom(),
@@ -222,7 +199,8 @@ public class MailDaoImpl extends BaseDao implements MailDao {
                 mail.getFlagFav(),
                 mail.getFlagDel(),
                 mail.getOwnerAddress(),
-                mail.getFolder()
+                mail.getFolder(),
+                mail.getContent()
         };
 
         try {
@@ -243,8 +221,8 @@ public class MailDaoImpl extends BaseDao implements MailDao {
             statement = conn.prepareStatement("insert into emails" +
                     "(SUBJECT, MFROM, MTO, CONTENT, DATE" +
                     ", USERSID, ACCOUNTID, MESSAGE_ID, CONTENT_TYPE, UID" +
-                    ", FLAG_NEW, FLAG_UNREAD, FLAG_FAV, FLAG_DEL, OWNER_ADDRESS, FOLDER)" +
-                    " values (?, ?, ?, ?, ?,  ?, ?, ?, ?, ?,  ?, ?, ?, ?, ?, ?)");
+                    ", FLAG_NEW, FLAG_UNREAD, FLAG_FAV, FLAG_DEL, OWNER_ADDRESS, FOLDER,CONTENT)" +
+                    " values (?, ?, ?, ?, ?,  ?, ?, ?, ?, ?,  ?, ?, ?, ?, ?, ?, ?)");
 
             statement.setString(1, mail.getSubject());
             statement.setString(2, mail.getFrom());
@@ -264,6 +242,7 @@ public class MailDaoImpl extends BaseDao implements MailDao {
             statement.setInt(14, mail.getFlagDel());
             statement.setString(15, mail.getOwnerAddress());
             statement.setString(16, mail.getFolder());
+            statement.setString(17, mail.getContent());
 
             int rows = statement.executeUpdate();
 
@@ -323,19 +302,6 @@ public class MailDaoImpl extends BaseDao implements MailDao {
                     return lines;
                 }
             });
-        } catch (SQLException e) {
-            throw new DaoException(e);
-        }
-    }
-
-    @Deprecated
-    public void removeByUID(String uid) {
-
-        QueryRunner qr = getQueryRunner();
-
-        try {
-            qr.update("delete from emails where UID=?", new Object[]{uid});
-
         } catch (SQLException e) {
             throw new DaoException(e);
         }
@@ -404,6 +370,43 @@ public class MailDaoImpl extends BaseDao implements MailDao {
 
             return pageResult;
 
+        } catch (SQLException e) {
+            throw new DaoException(e);
+        }
+    }
+
+    @Deprecated
+    public void removeByUID(String uid) {
+
+        QueryRunner qr = getQueryRunner();
+
+        try {
+            qr.update("delete from emails where UID=?", new Object[]{uid});
+
+        } catch (SQLException e) {
+            throw new DaoException(e);
+        }
+    }
+
+    @Deprecated
+    public List<Mail> findAll() {
+
+        QueryRunner qr = getQueryRunner();
+
+        try {
+            return qr.query("select * from emails", new ResultSetHandler<List<Mail>>() {
+                @Override
+                public List<Mail> handle(ResultSet rs) throws SQLException {
+                    List<Mail> mails = new ArrayList<Mail>();
+
+                    while (rs.next()) {
+                        Mail mail = handleRowMapping(rs);
+                        mails.add(mail);
+                    }
+
+                    return mails;
+                }
+            });
         } catch (SQLException e) {
             throw new DaoException(e);
         }

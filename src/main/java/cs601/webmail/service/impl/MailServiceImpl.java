@@ -11,9 +11,6 @@ import cs601.webmail.frameworks.mail.pop3.*;
 import cs601.webmail.service.MailService;
 import cs601.webmail.service.ServiceException;
 import cs601.webmail.util.*;
-import org.apache.commons.io.FileUtils;
-
-import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
@@ -197,10 +194,8 @@ public class MailServiceImpl implements MailService {
         List<String> currentUIDs = mailDao.findMailUIDs(account.getId());
 
         Map<String, Long> localUIDMap = _parseLocalUIDMap(currentUIDs);
-        //Collection<String> localUIDs = localUIDMap.keySet();
 
         Pop3MessageInfo[] remoteMsgInfos = client.listUniqueIdentifiers();
-        //Collection<String> remoteUIDs = _getRemoteUIDs(remoteMsgInfos);
 
         if (remoteMsgInfos == null || remoteMsgInfos.length == 0) {
             return 0;
@@ -238,15 +233,10 @@ public class MailServiceImpl implements MailService {
             mail.setFlagUnread(Mail.FLAG_YES);
             mail.setOwnerAddress(account.getEmailUsername());
             mail.setFolder(Mail.VirtualFolder.inbox.getSystemFolder());
+            mail.setContent(listener.getContent());
 
             LOGGER.debug("save mail to DB: " + mail);
             mailDao.save(mail);
-
-            // save raw content to {WorkDir}/raw/SHA-1(mailAddress)/uid.dat
-            // for example: /Users/foobar/webmail/raw/5897fe8711774cde9fae5af5bd39b1a4a42d6828/cDebdfdafd0122.dat
-            String rawPath = ResourceUtils.resolveMailFolderPath(username, Mail.VirtualFolder.inbox);
-            File rawFile = new File(rawPath + File.separator + DigestUtils.digestToSHA(rmtUID) + ".mx.txt");
-            FileUtils.writeByteArrayToFile(rawFile, listener.getByteContent());
 
             updatedCount++;
         }
@@ -256,16 +246,6 @@ public class MailServiceImpl implements MailService {
         }
 
         return updatedCount;
-    }
-
-    private Collection<String> _getRemoteUIDs(Pop3MessageInfo[] remoteMsgInfos) {
-        Set<String> set = new HashSet<String>();
-        if (remoteMsgInfos != null && remoteMsgInfos.length > 0) {
-            for (Pop3MessageInfo info : remoteMsgInfos) {
-                set.add(info.identifier);
-            }
-        }
-        return set;
     }
 
     private Mail _parseMail(Pop3Message message) {
@@ -313,11 +293,11 @@ public class MailServiceImpl implements MailService {
             return eventType==EventType.LineRead;
         }
 
-        public byte[] getByteContent() {
+        public String getContent() {
             if (buf.length() == 0)
                 return null;
 
-            return buf.toString().getBytes();
+            return buf.toString();
         }
     }
 }

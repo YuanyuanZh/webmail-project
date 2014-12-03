@@ -119,8 +119,6 @@ public class DispatchServlet extends HttpServlet {
         }
      }
 
-
-
     public ControllerPage createPage(String uri)
     {
         Class pageClass = mapping.get(uri);

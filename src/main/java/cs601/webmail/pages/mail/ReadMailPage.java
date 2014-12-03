@@ -21,13 +21,13 @@ import cs601.webmail.Constants;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.Map;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.io.*;
 
 /**
  * Created by yuanyuan on 11/6/14.
@@ -66,12 +66,6 @@ public class ReadMailPage extends ControllerPage {
         renderByRawFile(request, response, user, id);
     }
 
-    /**
-     * Parse raw file and wrapped into a java object in real time.
-     *
-     * @param user
-     * @param id Identity of mail object.
-     */
     private void renderByRawFile(HttpServletRequest request, HttpServletResponse response, User user, String id) throws IOException {
         AccountService accountService = new AccountServiceImpl();
         MailService mailService = new MailServiceImpl();
@@ -102,30 +96,8 @@ public class ReadMailPage extends ControllerPage {
         }
 
         Mail.VirtualFolder folder=Mail.VirtualFolder.parseFolder(mail.getFolder());
+
         String uid = mail.getUid();
-        String messageId = mail.getMessageId();
-
-        //try UID(compatible for legacy version)
-        String rawFilePath=ResourceUtils.resolveMailFolderPath(currentAccount.getEmailUsername(), folder);
-        File rawFile=null;
-
-        if (uid!=null){
-            rawFile = findMailFile(rawFilePath + File.separator + DigestUtils.digestToSHA(uid));
-        }
-
-        //try Message-ID
-
-        if(rawFile==null|| !rawFile.exists()){
-            rawFile=findMailFile(rawFilePath+File.separator+cleanMessageID(messageId));
-        }
-
-        // raw file can neither be found nor be readable
-        if (rawFile == null || !rawFile.exists() || !rawFile.canRead()) {
-            response.addHeader("x-state", "error");
-            response.addHeader("x-msg", "Mail raw file not found");
-            return;
-        }
-
         Message message = null;
         Exception exception = null;
         String originalContentType = null;
@@ -136,12 +108,13 @@ public class ReadMailPage extends ControllerPage {
         PageTemplate template = new PageTemplate("/velocity/mail_in_text.vm");
 
         try {
-            message = new Message(new FileInputStream(rawFile));
+            ByteArrayInputStream in = new ByteArrayInputStream(mail.getContent().getBytes());
+            message = new Message(in);
 
             originalContentType = message.getContentType();
 
-            mail.setSubject(MimeUtils.decodeText(message.getSubject()));
             mail.setFrom(MimeUtils.decodeText(getFromField(message)));
+            mail.setSubject(MimeUtils.decodeText(message.getSubject()));
             mail.setUid(uid);
             Date _date = message.getSentDate();
             mail.setDate(_date != null ? MAIL_SDF.format(_date) : null);
@@ -152,8 +125,6 @@ public class ReadMailPage extends ControllerPage {
 
             // try to get content
             msgContent = message.getContent();
-        } catch (IOException e) {
-            exception = e;
         } catch (MessagingException e) {
             exception = e;
         }
@@ -200,27 +171,6 @@ public class ReadMailPage extends ControllerPage {
         response.addHeader("x-Content-Type", originalContentType);
         getOut().print(writer.toString());
     }
-    private String cleanMessageID(String messageId) {
-        if (!Strings.haveLength(messageId)) {
-            return null;
-        }
-        return messageId.replace("<", "").replace(">", "");
-    }
-
-    private File findMailFile(String filename) {
-        File ret = null;
-        for (String subfix : MX_FILE_SUBFIX) {
-            ret = new File(filename + subfix);
-
-            if (Constants.DEBUG_MODE)
-                LOGGER.debug("Testing mx mail @" + ret.getAbsolutePath());
-
-            if (ret.exists() && ret.canRead()) {
-                break;
-            }
-        }
-        return ret;
-    }
 
     private String getPlainAddresses(Address[] addresses) {
         if (addresses == null || addresses.length == 0) {
@@ -238,57 +188,12 @@ public class ReadMailPage extends ControllerPage {
         return  sb.toString();
     }
 
-
     private String getFromField(Message message) throws MessagingException {
         Address[] a = message.getFrom();
         if (a == null || a.length == 0) {
             return null;
         }
         return Address.toString(a);
-    }
-
-    @Deprecated
-    private void renderById(HttpServletRequest request, HttpServletResponse response, String id) throws IOException {
-
-        MailService mailService = new MailServiceImpl();
-        Mail mail = mailService.findById(Long.parseLong(id));
-
-        if (mail == null) {
-            response.addHeader("x-state", "error");
-            response.addHeader("x-msg", "Mail not found");
-            return;
-        }
-
-        // mark as READ
-        if (mail.getFlagUnread() > 0) {
-            mail.setFlagUnread(0);
-            mail.setFlagNew(0);
-            mailService.save(mail);
-        }
-
-        PageTemplate template = new PageTemplate("/velocity/mail_in_text.vm");
-        template.addParam("mail", mail);
-
-        decodeMail(mail);
-
-        StringWriter writer = new StringWriter();
-        template.merge(writer);
-
-        response.addHeader("x-state", "ok");
-        getOut().print(writer.toString());
-    }
-
-    @Deprecated
-    private void decodeMail(Mail mail) {
-
-        String contentType = mail.getContentType();
-        String content = mail.getContent();
-
-        // decode multipart/alternative
-        if (Strings.haveLength(contentType) && contentType.toLowerCase().startsWith("multipart/alternative")) {
-            if (Strings.haveLength(content)) {
-            }
-        }
     }
 
 }
