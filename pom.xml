@@ -10,62 +10,116 @@
 
     <properties>
         <jetty.version>9.3.0.M0</jetty.version>
-        <jackson.version>1.9.3</jackson.version>
-        <pico.version>2.5.1</pico.version>
         <mybatis.version>3.2.7</mybatis.version>
         <!--<jetty.version>8.1.16.v20140903</jetty.version>-->
         <maven.build.timestamp.format>yyyy-MM-dd HH:mm:ss</maven.build.timestamp.format>
     </properties>
 
-    <build>
-        <finalName>webmail</finalName>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <configuration>
-                    <archive>
-                        <manifest>
-                            <addClasspath>true</addClasspath>
-                            <mainClass>cs601.webmail.WebMailServer</mainClass>
-                        </manifest>
-                        <manifestEntries>
-                            <Built-At>${maven.build.timestamp}</Built-At>
-                        </manifestEntries>
-                    </archive>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-resources-plugin</artifactId>
-                <version>2.7</version>
-                <configuration>
-                    <encoding>UTF-8</encoding>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>copy-jar</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>copy-resources</goal>
-                        </goals>
+    <profiles>
+        <profile>
+            <id>product</id>
+            <build>
+                <finalName>webmail</finalName>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-jar-plugin</artifactId>
                         <configuration>
-                            <outputDirectory>${project.basedir}/lib</outputDirectory>
-                            <resources>
-                                <resource>
-                                    <directory>${project.build.directory}/</directory>
-                                    <filtering>false</filtering>
-                                    <includes>
-                                        <include>**/webmail.jar</include>
-                                    </includes>
-                                </resource>
-                            </resources>
+                            <archive>
+                                <manifest>
+                                    <addClasspath>true</addClasspath>
+                                    <classpathPrefix>lib/</classpathPrefix>
+                                    <mainClass>cs601.webmail.WebMailServer</mainClass>
+                                </manifest>
+                                <manifestEntries>
+                                    <Built-At>${maven.build.timestamp}</Built-At>
+                                </manifestEntries>
+                            </archive>
                         </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
-    </build>
+                    </plugin>
+                    <!-- clean dist dir -->
+                    <plugin>
+                        <artifactId>maven-clean-plugin</artifactId>
+                        <configuration>
+                            <filesets>
+                                <fileset>
+                                    <directory>${basedir}/dist</directory>
+                                </fileset>
+                            </filesets>
+                        </configuration>
+                    </plugin>
+                    <!-- copy resource to dist dir -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-resources-plugin</artifactId>
+                        <version>2.7</version>
+                        <configuration>
+                            <encoding>UTF-8</encoding>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>copy-resource</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>copy-resources</goal>
+                                </goals>
+                                <configuration>
+                                    <outputDirectory>${project.basedir}/dist</outputDirectory>
+                                    <resources>
+                                        <resource>
+                                            <directory>${project.build.directory}/</directory>
+                                            <filtering>false</filtering>
+                                            <includes>
+                                                <include>**/webmail.jar</include>
+                                            </includes>
+                                        </resource>
+                                    </resources>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>copy-webroot</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>copy-resources</goal>
+                                </goals>
+                                <configuration>
+                                    <outputDirectory>${project.basedir}/dist/webroot</outputDirectory>
+                                    <resources>
+                                        <resource>
+                                            <directory>${project.basedir}/webroot</directory>
+                                            <filtering>false</filtering>
+                                            <includes>
+                                                <include>**/*.*</include>
+                                            </includes>
+                                        </resource>
+                                    </resources>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>copy-libs</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>copy-resources</goal>
+                                </goals>
+                                <configuration>
+                                    <outputDirectory>${project.basedir}/dist/lib</outputDirectory>
+                                    <resources>
+                                        <resource>
+                                            <directory>${project.basedir}/lib</directory>
+                                            <filtering>false</filtering>
+                                            <includes>
+                                                <include>**/*.jar</include>
+                                            </includes>
+                                        </resource>
+                                    </resources>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 
     <dependencies>
 
@@ -150,17 +204,6 @@
             <scope>provided</scope>
         </dependency>
 
-        <!--<dependency>-->
-        <!--<groupId>org.codehaus.jackson</groupId>-->
-        <!--<artifactId>jackson-core-asl</artifactId>-->
-        <!--<version>${jackson.version}</version>-->
-        <!--</dependency>-->
-        <!--<dependency>-->
-        <!--<groupId>org.codehaus.jackson</groupId>-->
-        <!--<artifactId>jackson-mapper-asl</artifactId>-->
-        <!--<version>${jackson.version}</version>-->
-        <!--</dependency>-->
-
         <!-- jetty -->
         <dependency>
             <groupId>org.eclipse.jetty</groupId>
@@ -202,27 +245,10 @@
         </dependency>
 
         <dependency>
-            <groupId>org.apache.lucene</groupId>
-            <artifactId>lucene-core</artifactId>
-            <version>4.10.2</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.lucene</groupId>
-            <artifactId>lucene-demo</artifactId>
-            <version>4.10.2</version>
-        </dependency>
-
-        <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>4.11</version>
             <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>tanukisoft</groupId>
-            <artifactId>wrapper</artifactId>
-            <version>3.2.3</version>
         </dependency>
 
     </dependencies>

@@ -1,0 +1,215 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Web Mail</title>
+    <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
+    <!-- bootstrap 3.0.2 -->
+    <link href="/resources/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <!--  -->
+    <link href="/resources/css/bootstrap.progress-auto.css" rel="stylesheet" type="text/css" />
+    <!-- font Awesome -->
+    <link href="/resources/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+    <!-- Ionicons -->
+    <!-- <link href="/resources/css/ionicons.min.css" rel="stylesheet" type="text/css" /> -->
+    <!-- bootstrap wysihtml5 - text editor -->
+    <!-- <link href="/resources/css/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css" rel="stylesheet" type="text/css" /> -->
+    <!-- iCheck for checkboxes and radio inputs -->
+    <!-- <link href="/resources/css/iCheck/minimal/blue.css" rel="stylesheet" type="text/css" /> -->
+    <!-- Theme style -->
+    <link href="/resources/css/mail.css" rel="stylesheet" type="text/css" />
+
+    <link href="/resources/css/mail-resp.css" rel="stylesheet" type="text/css" />
+
+    <!-- favicon from https://dribbble.com/shots/1297277-Adline-Social-icons-Retouched?list=searches&tag=mail_icon&offset=11 -->
+    <link rel="shortcut icon" href="/resources/img/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="/resources/img/favicon.ico" type="image/x-icon">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <style>
+        .container{
+        margin-left: auto;
+        margin-right: auto;
+        }
+        .register{
+        /*background-color: #fff;*/
+        /*height: 100%;
+        position: relative;*/
+        }
+        .register-panel{
+        background-color: #f0f0f0;
+        /*border: 1px solid #ccc;*/
+        width: 340px;
+        /*box-shadow: 1px 1px 1px #333;*/
+        margin: 20px auto 40px;
+        }
+        .register-panel-fixed{
+        position: absolute;
+        left: 50%;
+        top: 120px;
+        width: 340px;
+        min-height: 200px;
+        margin-left: -170px;
+        }
+        .register-body{
+        /*background-color: #EAEAEA;*/
+        padding: 10px 20px;
+        }
+        .register-body > div{padding: 10px 0;}
+        .register-panel-header{padding: 25px 0 20px;}
+        .register-footer{padding: 15px 20px 20px;}
+
+
+        h1,.h1,h2,.h2, h3,.h3,h4,.h4,h5,.h5{font-weight: normal;color:#555;}
+        .header{
+        background-color: #eaeaea;
+        padding: 15px;
+        }
+    </style>
+
+</head>
+<body class="" >
+
+
+
+<div class="container row register">
+    <div class="col-md-12">
+
+        <div class="text-center" style="padding: 20px 0 0;">
+            <h2 class="h2">Create your Mail Account</h2>
+        </div>
+
+
+        <!-- <div class="product">
+            <div class="product-slogan">
+              <h2><span>XMail</span></h2>
+              <h2><span>yet another choice to manage you emails</span></h2>
+            </div>
+        </div> -->
+        <form action="/registerNext" method="post">
+            <div class="register-panel">
+                <h4>Step 2: Mail server information</h4>
+
+                <div class="register-body">
+                    <div id="msg" class="hidden alert alert-danger" role="alert"></div>
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <label>Welcome, </label>
+                            <span id="logId"></span>
+                        </div>
+                    </div>
+
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <label>Input your email account</label>
+                            <input type="text" class="form-control" name="emailAddress"
+                                   placeholder="" autocomplete="off" />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <label>Email account password</label>
+                            <input type="password" class="form-control" name="emailPassword"
+                                   placeholder="" autocomplete="off" />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <label>Input PopServer</label>
+                            <input type="text" class="form-control" name="popServer"
+                                   placeholder="" autocomplete="off" />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <label>Input PopPort</label>
+                            <input type="text" class="form-control" name="popPort"
+                                   placeholder="" autocomplete="off" />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <label>Input SMTPServer</label>
+                            <input type="text" class="form-control" name="SMTPServer"
+                                   placeholder="" autocomplete="off" />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <label>Input SMTPPort</label>
+                            <input type="text" class="form-control" name="SMTPPort"
+                                   placeholder="" autocomplete="off" />
+                        </div>
+                    </div>
+                </div>
+                <div class="register-footer">
+                    <div class="row">
+                        <div class="control-group">
+                            <button class="btn btn-primary btn-block">Register</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+
+    </div>
+
+
+    <!-- <div class="col-md-6">
+      <div style="padding-top: 50px;">
+        <div class="text-center">
+          <h4>One account is all you need</h4>
+          <p>A single username and password gets you into everything XMail.</p>
+        </div>
+
+      </div>
+    </div>
+    <div class="col-md-6">
+
+    </div> -->
+
+</div>
+
+<script src="/resources/js/jquery-2.1.1.js"></script>
+<script src="/resources/js/webmail.js"></script>
+<script>
+
+    $(function() {
+        var params = Mail.parseQuery(location.search);
+
+        if (params['error']) {
+            var error = params['error'];
+
+            if (Mail.errors[error]) {
+                $('#msg').html(Mail.errors[error]).removeClass('hidden');
+            }
+        }
+        if (params['logId']) {
+            $('#logId').text(params['logId']);
+        }
+        if (params['EA']) {
+            $('[name=emailAddress]').val(decodeURIComponent(params['EA'] || ''));
+        }
+        if (params['POP_SVR']) {
+            $('[name=popServer]').val(params['POP_SVR']);
+        }
+        if (params['POP_PORT']) {
+            $('[name=popPort]').val(params['POP_PORT']);
+        }
+
+    })
+
+</script>
+
+</body>
+</html>
