@@ -87,6 +87,7 @@ public class ContactEditPage extends ControllerPage {
 
         resp.addHeader("x-state", "ok");
         resp.setContentType("text/html; charset=utf-8");
+        getOut().print(writer.toString());
 
     }
 

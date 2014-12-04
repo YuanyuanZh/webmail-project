@@ -53,6 +53,8 @@ public class Message implements MimePart{
 
     protected Object cachedContent;
 
+
+    //for read malil
     public Message(InputStream in) throws IOException {
         headers = new Headers();
         dataCodec = new DataCodecImpl();
@@ -67,6 +69,7 @@ public class Message implements MimePart{
         parse(in);
     }
 
+    //for SMTP message
     public Message(byte[] content) {
         this.headers = new Headers();
         this.content = content;
@@ -317,6 +320,7 @@ public class Message implements MimePart{
         }
         setHeader(name, s);
     }
+
 
     // Convenience method to get addresses
     private Address[] getAddressHeader(String name)

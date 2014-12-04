@@ -88,7 +88,9 @@ public class RegisterPage extends ControllerPage {
         user.setPassword(DigestUtils.digestToSHA(password1));
         userService.addUser(user);
 
-        response.sendRedirect("/registerNext?logId=" + username);
+        User registerUser = userService.findUserByLogId(username);
+
+        jumpToNextStep(request, response, registerUser);
 
     }
     private void jumpToNextStep(HttpServletRequest request, HttpServletResponse response, User user) throws IOException {
